@@ -222,8 +222,10 @@ const Index = () => {
               <ScrollReveal key={course.id} delay={i * 100}>
                 <Link to={`/course/${course.slug}`} className="group block">
                   <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full">
-                    <div className="h-40 gradient-primary flex items-center justify-center relative">
-                      <Code2 className="h-16 w-16 text-white/30" />
+                    <div className="h-40 relative overflow-hidden">
+                      <img src={categoryImages[course.category]} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      <div className="absolute inset-0 gradient-primary opacity-50" />
+                      <Code2 className="absolute inset-0 m-auto h-16 w-16 text-white/30" />
                       {course.internship && (
                         <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>
                       )}
