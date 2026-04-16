@@ -6,6 +6,20 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import InquiryForm from '@/components/InquiryForm';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
+import catErp from '@/assets/cat-erp.jpg';
+import catProgramming from '@/assets/cat-programming.jpg';
+import catAi from '@/assets/cat-ai.jpg';
+import catManagement from '@/assets/cat-management.jpg';
+import catInternship from '@/assets/cat-internship.jpg';
+
+const categoryImages: Record<string, string> = {
+  erp: catErp,
+  programming: catProgramming,
+  ai: catAi,
+  management: catManagement,
+  internship: catInternship,
+};
+
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
   return <div ref={ref} className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`} style={{ transitionDelay: `${delay}ms` }}>{children}</div>;
@@ -23,8 +37,13 @@ const CourseDetail = () => {
   return (
     <main>
       {/* Hero */}
-      <section className={`bg-gradient-to-br ${catColor} pt-28 pb-16`}>
-        <div className="container mx-auto px-4">
+      <section className="relative pt-28 pb-16 overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={categoryImages[course.category]} alt="" className="w-full h-full object-cover" />
+          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-80`} />
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <Link to={`/courses/${course.category}`} className="text-white/70 hover:text-white text-sm mb-2 inline-flex items-center gap-1">
             ← {course.categoryLabel}
           </Link>
