@@ -2,6 +2,16 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useState } from 'react';
 import { X } from 'lucide-react';
 
+import classroom1 from '@/assets/gallery/classroom-1.jpg';
+import classroom2 from '@/assets/gallery/classroom-2.jpg';
+import classroom3 from '@/assets/gallery/classroom-3.jpg';
+import campus1 from '@/assets/gallery/campus-1.jpg';
+import campus2 from '@/assets/gallery/campus-2.jpg';
+import events1 from '@/assets/gallery/events-1.jpg';
+import events2 from '@/assets/gallery/events-2.jpg';
+import events3 from '@/assets/gallery/events-3.jpg';
+import cert1 from '@/assets/gallery/cert-1.jpg';
+
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
   return <div ref={ref} className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`} style={{ transitionDelay: `${delay}ms` }}>{children}</div>;
@@ -9,15 +19,15 @@ const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React
 
 const galleryCategories = ['All', 'Campus', 'Classroom', 'Events', 'Certifications'];
 const images = [
-  { src: '/placeholder.svg', alt: 'Modern classroom with students', category: 'Classroom' },
-  { src: '/placeholder.svg', alt: 'ASB Training Hub campus exterior', category: 'Campus' },
-  { src: '/placeholder.svg', alt: 'Annual tech event', category: 'Events' },
-  { src: '/placeholder.svg', alt: 'Certificate distribution ceremony', category: 'Certifications' },
-  { src: '/placeholder.svg', alt: 'Computer lab session', category: 'Classroom' },
-  { src: '/placeholder.svg', alt: 'Student group project', category: 'Classroom' },
-  { src: '/placeholder.svg', alt: 'Workshop on AI', category: 'Events' },
-  { src: '/placeholder.svg', alt: 'Campus reception area', category: 'Campus' },
-  { src: '/placeholder.svg', alt: 'Industry expert guest lecture', category: 'Events' },
+  { src: classroom1, alt: 'Students learning coding in modern computer lab', category: 'Classroom' },
+  { src: campus1, alt: 'ASB Training Hub campus near Technopark', category: 'Campus' },
+  { src: events1, alt: 'Annual hackathon and tech event', category: 'Events' },
+  { src: cert1, alt: 'Certificate distribution ceremony', category: 'Certifications' },
+  { src: classroom2, alt: 'Collaborative coding session with laptops', category: 'Classroom' },
+  { src: classroom3, alt: 'Hands-on SAP training workshop', category: 'Classroom' },
+  { src: events2, alt: 'AI workshop with industry expert', category: 'Events' },
+  { src: campus2, alt: 'Modern reception and lobby area', category: 'Campus' },
+  { src: events3, alt: 'Industry expert guest lecture session', category: 'Events' },
 ];
 
 const Gallery = () => {
@@ -49,9 +59,9 @@ const Gallery = () => {
               <ScrollReveal key={i} delay={(i % 6) * 80}>
                 <button onClick={() => setLightbox(i)} className="block w-full group">
                   <div className="aspect-video rounded-xl overflow-hidden border border-border bg-muted relative">
-                    <img src={img.src} alt={img.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-colors flex items-center justify-center">
-                      <span className="opacity-0 group-hover:opacity-100 text-white font-medium text-sm transition-opacity">{img.alt}</span>
+                    <img src={img.src} alt={img.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" width={800} height={600} />
+                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-colors flex items-end p-4">
+                      <span className="opacity-0 group-hover:opacity-100 text-white font-medium text-sm transition-opacity bg-foreground/50 px-3 py-1 rounded-full">{img.alt}</span>
                     </div>
                   </div>
                 </button>
@@ -61,7 +71,6 @@ const Gallery = () => {
         </div>
       </section>
 
-      {/* Lightbox */}
       {lightbox !== null && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/80 backdrop-blur-sm p-4" onClick={() => setLightbox(null)}>
           <button className="absolute top-4 right-4 text-white" onClick={() => setLightbox(null)}><X className="h-8 w-8" /></button>
