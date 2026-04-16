@@ -6,6 +6,7 @@ import InquiryForm from '@/components/InquiryForm';
 import { useScrollReveal, useAnimatedCounter } from '@/hooks/useScrollReveal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import heroBg from '@/assets/hero-bg.jpg';
+import heroVideoAsset from '@/assets/hero-video.mp4.asset.json';
 import catErp from '@/assets/cat-erp.jpg';
 import catProgramming from '@/assets/cat-programming.jpg';
 import catAi from '@/assets/cat-ai.jpg';
@@ -88,7 +89,16 @@ const Index = () => {
       {/* Hero */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroBg} alt="" className="w-full h-full object-cover" width={1920} height={1080} />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={heroBg}
+            className="w-full h-full object-cover"
+          >
+            <source src={heroVideoAsset.url} type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/70 to-navy/90" />
           <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-primary/10 blur-3xl animate-float" />
           <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-secondary/10 blur-3xl animate-float" style={{ animationDelay: '1s' }} />
