@@ -5,6 +5,20 @@ import { courseCategories, courses } from '@/data/courses';
 import InquiryForm from '@/components/InquiryForm';
 import { useScrollReveal, useAnimatedCounter } from '@/hooks/useScrollReveal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import heroBg from '@/assets/hero-bg.jpg';
+import catErp from '@/assets/cat-erp.jpg';
+import catProgramming from '@/assets/cat-programming.jpg';
+import catAi from '@/assets/cat-ai.jpg';
+import catManagement from '@/assets/cat-management.jpg';
+import catInternship from '@/assets/cat-internship.jpg';
+
+const categoryImages: Record<string, string> = {
+  erp: catErp,
+  programming: catProgramming,
+  ai: catAi,
+  management: catManagement,
+  internship: catInternship,
+};
 
 const categoryIcons: Record<string, React.ReactNode> = {
   Database: <Database className="h-8 w-8" />,
@@ -72,11 +86,12 @@ const Index = () => {
   return (
     <main>
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center gradient-bg overflow-hidden">
+      <section className="relative min-h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0">
+          <img src={heroBg} alt="" className="w-full h-full object-cover" width={1920} height={1080} />
+          <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/70 to-navy/90" />
           <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-primary/10 blur-3xl animate-float" />
           <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-secondary/10 blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
         </div>
         <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
@@ -131,15 +146,21 @@ const Index = () => {
             {courseCategories.map((cat, i) => (
               <ScrollReveal key={cat.id} delay={i * 100}>
                 <Link to={`/courses/${cat.id}`} className="group block">
-                  <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 hover-lift h-full">
-                    <div className={`inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${cat.color} text-white mb-4`}>
-                      {categoryIcons[cat.icon]}
+                  <div className="relative overflow-hidden rounded-2xl border border-border bg-card hover-lift h-full">
+                    <div className="h-40 relative overflow-hidden">
+                      <img src={categoryImages[cat.id]} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+                      <div className={`absolute top-3 left-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${cat.color} text-white`}>
+                        {categoryIcons[cat.icon]}
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold font-heading mb-2 group-hover:text-primary transition-colors">{cat.label}</h3>
-                    <p className="text-sm text-muted-foreground mb-3">{cat.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-primary">{cat.count} Courses</span>
-                      <ArrowRight className="h-4 w-4 text-primary group-hover:translate-x-1 transition-transform" />
+                    <div className="p-5">
+                      <h3 className="text-xl font-bold font-heading mb-2 group-hover:text-primary transition-colors">{cat.label}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{cat.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-primary">{cat.count} Courses</span>
+                        <ArrowRight className="h-4 w-4 text-primary group-hover:translate-x-1 transition-transform" />
+                      </div>
                     </div>
                   </div>
                 </Link>
