@@ -29,7 +29,7 @@ const Courses = () => {
     return list;
   }, [activeTab, search]);
 
-  const currentCategory = courseCategories.find(c => c.id === activeTab && activeTab !== 'all');
+  const currentCategory = activeTab !== 'all' ? courseCategories.find(c => c.id === activeTab) : undefined;
   const title = currentCategory ? currentCategory.label : 'All Courses';
 
   return (
