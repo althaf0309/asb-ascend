@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Users, Award, Briefcase, Star, ChevronDown, Sparkles, Brain, Code2, GraduationCap, Database, CheckCircle, TrendingUp, Zap, Play } from 'lucide-react';
+import { ArrowRight, BookOpen, Users, Award, Briefcase, Star, ChevronDown, Sparkles, Brain, Code2, GraduationCap, Database, CheckCircle, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { courseCategories, courses } from '@/data/courses';
 import InquiryForm from '@/components/InquiryForm';
-import { useScrollReveal, useAnimatedCounter } from '@/hooks/useScrollReveal';
+import { useAnimatedCounter } from '@/hooks/useScrollReveal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import heroBg from '@/assets/hero-bg.jpg';
 import heroVideoAsset from '@/assets/hero-video.mp4.asset.json';
@@ -59,7 +59,7 @@ const faqs = [
   { q: 'Can working professionals join?', a: 'Absolutely! We have weekend and evening batches designed specifically for working professionals looking to upskill.' },
 ];
 
-const StatCounter = ({ stat }: { stat: typeof stats[0] }) => {
+function StatCounter({ stat }: { stat: typeof stats[0] }) {
   const { ref, count } = useAnimatedCounter(stat.value);
   return (
     <div ref={ref} className="text-center">
@@ -70,13 +70,9 @@ const StatCounter = ({ stat }: { stat: typeof stats[0] }) => {
       <div className="text-sm text-gray-400 mt-1">{stat.label}</div>
     </div>
   );
-};
+}
 
-const ScrollReveal = ({ children, className = '' }: { children: React.ReactNode; className?: string; delay?: number }) => {
-  return <div className={className}>{children}</div>;
-};
-
-const Index = () => {
+export default function Index() {
   const popularCourses = courses.slice(0, 6);
 
   return (
@@ -84,14 +80,7 @@ const Index = () => {
       {/* Hero */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={heroBg}
-            className="w-full h-full object-cover"
-          >
+          <video autoPlay muted loop playsInline poster={heroBg} className="w-full h-full object-cover">
             <source src={heroVideoAsset.url} type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/70 to-navy/90" />
@@ -140,36 +129,32 @@ const Index = () => {
       {/* Categories */}
       <section className="section-padding bg-background">
         <div className="container mx-auto">
-          <ScrollReveal>
-            <div className="text-center mb-12">
-              <span className="text-sm font-semibold text-primary uppercase tracking-wider">Our Programs</span>
-              <h2 className="text-3xl md:text-4xl font-bold font-heading mt-2">Featured Course Categories</h2>
-              <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">Choose from 50+ industry-focused courses designed to launch or accelerate your career.</p>
-            </div>
-          </ScrollReveal>
+          <div className="text-center mb-12">
+            <span className="text-sm font-semibold text-primary uppercase tracking-wider">Our Programs</span>
+            <h2 className="text-3xl md:text-4xl font-bold font-heading mt-2">Featured Course Categories</h2>
+            <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">Choose from 50+ industry-focused courses designed to launch or accelerate your career.</p>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courseCategories.map((cat, i) => (
-              <ScrollReveal key={cat.id} delay={i * 100}>
-                <Link to={`/courses/${cat.id}`} className="group block">
-                  <div className="relative overflow-hidden rounded-2xl border border-border bg-card hover-lift h-full">
-                    <div className="h-40 relative overflow-hidden">
-                      <img src={categoryImages[cat.id]} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
-                      <div className={`absolute top-3 left-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${cat.color} text-white`}>
-                        {categoryIcons[cat.icon]}
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <h3 className="text-xl font-bold font-heading mb-2 group-hover:text-primary transition-colors">{cat.label}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{cat.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-primary">{cat.count} Courses</span>
-                        <ArrowRight className="h-4 w-4 text-primary group-hover:translate-x-1 transition-transform" />
-                      </div>
+            {courseCategories.map((cat) => (
+              <Link key={cat.id} to={`/courses/${cat.id}`} className="group block">
+                <div className="relative overflow-hidden rounded-2xl border border-border bg-card hover-lift h-full">
+                  <div className="h-40 relative overflow-hidden">
+                    <img src={categoryImages[cat.id]} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+                    <div className={`absolute top-3 left-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${cat.color} text-white`}>
+                      {categoryIcons[cat.icon]}
                     </div>
                   </div>
-                </Link>
-              </ScrollReveal>
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold font-heading mb-2 group-hover:text-primary transition-colors">{cat.label}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{cat.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-primary">{cat.count} Courses</span>
+                      <ArrowRight className="h-4 w-4 text-primary group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -178,21 +163,17 @@ const Index = () => {
       {/* Why Choose */}
       <section className="section-padding gradient-bg">
         <div className="container mx-auto">
-          <ScrollReveal>
-            <div className="text-center mb-12">
-              <span className="text-sm font-semibold text-primary uppercase tracking-wider">Why ASB</span>
-              <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mt-2">Why Choose ASB Training Hub?</h2>
-            </div>
-          </ScrollReveal>
+          <div className="text-center mb-12">
+            <span className="text-sm font-semibold text-primary uppercase tracking-wider">Why ASB</span>
+            <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mt-2">Why Choose ASB Training Hub?</h2>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {whyChoose.map((item, i) => (
-              <ScrollReveal key={item.title} delay={i * 100}>
-                <div className="glass-card rounded-2xl p-6 hover-lift h-full">
-                  <item.icon className="h-10 w-10 text-primary mb-4" />
-                  <h3 className="text-lg font-bold text-white font-heading mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-400">{item.desc}</p>
-                </div>
-              </ScrollReveal>
+            {whyChoose.map((item) => (
+              <div key={item.title} className="glass-card rounded-2xl p-6 hover-lift h-full">
+                <item.icon className="h-10 w-10 text-primary mb-4" />
+                <h3 className="text-lg font-bold text-white font-heading mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-400">{item.desc}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -201,42 +182,38 @@ const Index = () => {
       {/* Popular Courses */}
       <section className="section-padding bg-background">
         <div className="container mx-auto">
-          <ScrollReveal>
-            <div className="flex items-end justify-between mb-12">
-              <div>
-                <span className="text-sm font-semibold text-primary uppercase tracking-wider">Trending</span>
-                <h2 className="text-3xl md:text-4xl font-bold font-heading mt-2">Popular Courses</h2>
-              </div>
-              <Link to="/courses" className="text-primary font-semibold hover:underline flex items-center gap-1">
-                View All <ArrowRight className="h-4 w-4" />
-              </Link>
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <span className="text-sm font-semibold text-primary uppercase tracking-wider">Trending</span>
+              <h2 className="text-3xl md:text-4xl font-bold font-heading mt-2">Popular Courses</h2>
             </div>
-          </ScrollReveal>
+            <Link to="/courses" className="text-primary font-semibold hover:underline flex items-center gap-1">
+              View All <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularCourses.map((course, i) => (
-              <ScrollReveal key={course.id} delay={i * 100}>
-                <Link to={`/course/${course.slug}`} className="group block">
-                  <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full">
-                    <div className="h-40 relative overflow-hidden">
-                      <img src={categoryImages[course.category]} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                      <div className="absolute inset-0 gradient-primary opacity-50" />
-                      <Code2 className="absolute inset-0 m-auto h-16 w-16 text-white/30" />
-                      {course.internship && (
-                        <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>
-                      )}
-                    </div>
-                    <div className="p-5">
-                      <span className="text-xs font-medium text-primary">{course.categoryLabel}</span>
-                      <h3 className="text-lg font-bold font-heading mt-1 mb-2 group-hover:text-primary transition-colors">{course.title}</h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{course.description}</p>
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{course.duration}</span>
-                        <span>{course.mode}</span>
-                      </div>
+            {popularCourses.map((course) => (
+              <Link key={course.id} to={`/course/${course.slug}`} className="group block">
+                <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full">
+                  <div className="h-40 relative overflow-hidden">
+                    <img src={categoryImages[course.category]} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    <div className="absolute inset-0 gradient-primary opacity-50" />
+                    <Code2 className="absolute inset-0 m-auto h-16 w-16 text-white/30" />
+                    {course.internship && (
+                      <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <span className="text-xs font-medium text-primary">{course.categoryLabel}</span>
+                    <h3 className="text-lg font-bold font-heading mt-1 mb-2 group-hover:text-primary transition-colors">{course.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{course.description}</p>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{course.duration}</span>
+                      <span>{course.mode}</span>
                     </div>
                   </div>
-                </Link>
-              </ScrollReveal>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -245,45 +222,39 @@ const Index = () => {
       {/* Internship Banner */}
       <section className="section-padding">
         <div className="container mx-auto">
-          <ScrollReveal>
-            <div className="relative overflow-hidden rounded-3xl gradient-primary p-8 md:p-14 text-center">
-              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,hsla(0,0%,100%,0.1),transparent_50%)]" />
-              <div className="relative z-10">
-                <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mb-4">Internship + Placement Support</h2>
-                <p className="text-lg text-white/80 max-w-2xl mx-auto mb-6">Get hands-on industry experience with our internship programs. We partner with 200+ companies to ensure your career takes off.</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/courses/internship"><Button size="lg" className="bg-white text-foreground font-semibold hover:bg-white/90">Explore Internships</Button></Link>
-                  <Link to="/apply"><Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">Apply Now</Button></Link>
-                </div>
+          <div className="relative overflow-hidden rounded-3xl gradient-primary p-8 md:p-14 text-center">
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_50%,hsla(0,0%,100%,0.1),transparent_50%)]" />
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mb-4">Internship + Placement Support</h2>
+              <p className="text-lg text-white/80 max-w-2xl mx-auto mb-6">Get hands-on industry experience with our internship programs. We partner with 200+ companies to ensure your career takes off.</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/courses/internship"><Button size="lg" className="bg-white text-foreground font-semibold hover:bg-white/90">Explore Internships</Button></Link>
+                <Link to="/apply"><Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">Apply Now</Button></Link>
               </div>
             </div>
-          </ScrollReveal>
+          </div>
         </div>
       </section>
 
       {/* Testimonials */}
       <section className="section-padding gradient-bg">
         <div className="container mx-auto">
-          <ScrollReveal>
-            <div className="text-center mb-12">
-              <span className="text-sm font-semibold text-primary uppercase tracking-wider">Success Stories</span>
-              <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mt-2">What Our Students Say</h2>
-            </div>
-          </ScrollReveal>
+          <div className="text-center mb-12">
+            <span className="text-sm font-semibold text-primary uppercase tracking-wider">Success Stories</span>
+            <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mt-2">What Our Students Say</h2>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {testimonials.map((t, i) => (
-              <ScrollReveal key={t.name} delay={i * 100}>
-                <div className="glass-card rounded-2xl p-6 hover-lift h-full flex flex-col">
-                  <div className="flex gap-1 mb-3">
-                    {Array.from({ length: t.rating }).map((_, j) => <Star key={j} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-                  </div>
-                  <p className="text-sm text-gray-300 flex-1 mb-4">"{t.text}"</p>
-                  <div>
-                    <div className="font-semibold text-white text-sm">{t.name}</div>
-                    <div className="text-xs text-gray-400">{t.role}</div>
-                  </div>
+            {testimonials.map((t) => (
+              <div key={t.name} className="glass-card rounded-2xl p-6 hover-lift h-full flex flex-col">
+                <div className="flex gap-1 mb-3">
+                  {Array.from({ length: t.rating }).map((_, j) => <Star key={j} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
                 </div>
-              </ScrollReveal>
+                <p className="text-sm text-gray-300 flex-1 mb-4">"{t.text}"</p>
+                <div>
+                  <div className="font-semibold text-white text-sm">{t.name}</div>
+                  <div className="text-xs text-gray-400">{t.role}</div>
+                </div>
+              </div>
             ))}
           </div>
           <div className="text-center mt-8">
@@ -295,22 +266,18 @@ const Index = () => {
       {/* FAQ Preview */}
       <section className="section-padding bg-background">
         <div className="container mx-auto max-w-3xl">
-          <ScrollReveal>
-            <div className="text-center mb-10">
-              <span className="text-sm font-semibold text-primary uppercase tracking-wider">FAQ</span>
-              <h2 className="text-3xl md:text-4xl font-bold font-heading mt-2">Frequently Asked Questions</h2>
-            </div>
-          </ScrollReveal>
-          <ScrollReveal>
-            <Accordion type="single" collapsible className="space-y-3">
-              {faqs.map((faq, i) => (
-                <AccordionItem key={i} value={`faq-${i}`} className="border rounded-xl px-4 bg-card">
-                  <AccordionTrigger className="text-left text-sm font-medium">{faq.q}</AccordionTrigger>
-                  <AccordionContent className="text-sm text-muted-foreground">{faq.a}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </ScrollReveal>
+          <div className="text-center mb-10">
+            <span className="text-sm font-semibold text-primary uppercase tracking-wider">FAQ</span>
+            <h2 className="text-3xl md:text-4xl font-bold font-heading mt-2">Frequently Asked Questions</h2>
+          </div>
+          <Accordion type="single" collapsible className="space-y-3">
+            {faqs.map((faq, i) => (
+              <AccordionItem key={i} value={`faq-${i}`} className="border rounded-xl px-4 bg-card">
+                <AccordionTrigger className="text-left text-sm font-medium">{faq.q}</AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground">{faq.a}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
           <div className="text-center mt-6">
             <Link to="/faq" className="text-primary font-semibold hover:underline text-sm">View All FAQs →</Link>
           </div>
@@ -321,30 +288,24 @@ const Index = () => {
       <section className="section-padding gradient-bg">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <ScrollReveal>
-              <div>
-                <span className="text-sm font-semibold text-primary uppercase tracking-wider">Get Started</span>
-                <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mt-2 mb-4">Ready to Transform Your Career?</h2>
-                <p className="text-gray-400 mb-6">Fill out the inquiry form and our team will get back to you within 24 hours. Or simply WhatsApp us for instant support.</p>
-                <div className="space-y-3 text-sm text-gray-300">
-                  <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-400" /> Free career counseling session</div>
-                  <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-400" /> Flexible EMI payment options</div>
-                  <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-400" /> 100% placement assistance</div>
-                  <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-400" /> Certificate on completion</div>
-                </div>
+            <div>
+              <span className="text-sm font-semibold text-primary uppercase tracking-wider">Get Started</span>
+              <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mt-2 mb-4">Ready to Transform Your Career?</h2>
+              <p className="text-gray-400 mb-6">Fill out the inquiry form and our team will get back to you within 24 hours. Or simply WhatsApp us for instant support.</p>
+              <div className="space-y-3 text-sm text-gray-300">
+                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-400" /> Free career counseling session</div>
+                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-400" /> Flexible EMI payment options</div>
+                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-400" /> 100% placement assistance</div>
+                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-400" /> Certificate on completion</div>
               </div>
-            </ScrollReveal>
-            <ScrollReveal delay={200}>
-              <div className="glass-card rounded-2xl p-6 md:p-8">
-                <h3 className="text-xl font-bold text-white font-heading mb-4">Enquire Now</h3>
-                <InquiryForm variant="dark" />
-              </div>
-            </ScrollReveal>
+            </div>
+            <div className="glass-card rounded-2xl p-6 md:p-8">
+              <h3 className="text-xl font-bold text-white font-heading mb-4">Enquire Now</h3>
+              <InquiryForm variant="dark" />
+            </div>
           </div>
         </div>
       </section>
     </main>
   );
-};
-
-export default Index;
+}
