@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Search, ArrowRight, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { courses, courseCategories, getCoursesByCategory, type CourseCategory } from '@/data/courses';
@@ -16,6 +16,10 @@ const Courses = () => {
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<string>(category || 'all');
 
+  useEffect(() => {
+    setActiveTab(category || 'all');
+  }, [category]);
+
   const filtered = useMemo(() => {
     let list = activeTab === 'all' ? courses : getCoursesByCategory(activeTab as CourseCategory);
     if (search.trim()) {
@@ -25,11 +29,8 @@ const Courses = () => {
     return list;
   }, [activeTab, search]);
 
-  const currentCategory = courseCategories.find(c => c.id === category);
+  const currentCategory = courseCategories.find(c => c.id === activeTab && activeTab !== 'all');
   const title = currentCategory ? currentCategory.label : 'All Courses';
-
-  // Sync tab when route category changes
-  if (category && activeTab !== category) setActiveTab(category);
 
   return (
     <main>
@@ -43,7 +44,6 @@ const Courses = () => {
 
       <section className="section-padding bg-background">
         <div className="container mx-auto">
-          {/* Search & Filter */}
           <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -51,19 +51,21 @@ const Courses = () => {
             </div>
           </div>
 
-          {/* Category Tabs */}
           <div className="flex flex-wrap gap-2 mb-8">
-            <Button variant={activeTab === 'all' ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab('all')} className={activeTab === 'all' ? 'gradient-primary border-0 text-white' : ''}>
-              All ({courses.length})
-            </Button>
-            {courseCategories.map(cat => (
-              <Button key={cat.id} variant={activeTab === cat.id ? 'default' : 'outline'} size="sm" onClick={() => setActiveTab(cat.id)} className={activeTab === cat.id ? 'gradient-primary border-0 text-white' : ''}>
-                {cat.label} ({cat.count})
+            <Link to="/courses">
+              <Button variant={activeTab === 'all' ? 'default' : 'outline'} size="sm" className={activeTab === 'all' ? 'gradient-primary border-0 text-white' : ''}>
+                All ({courses.length})
               </Button>
+            </Link>
+            {courseCategories.map(cat => (
+              <Link key={cat.id} to={`/courses/${cat.id}`}>
+                <Button variant={activeTab === cat.id ? 'default' : 'outline'} size="sm" className={activeTab === cat.id ? 'gradient-primary border-0 text-white' : ''}>
+                  {cat.label} ({cat.count})
+                </Button>
+              </Link>
             ))}
           </div>
 
-          {/* Course Grid */}
           {filtered.length === 0 ? (
             <div className="text-center py-16 text-muted-foreground">No courses found matching your search.</div>
           ) : (
