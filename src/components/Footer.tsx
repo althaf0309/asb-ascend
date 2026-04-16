@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Twitter, Youtube, ArrowRight } from 'lucide-react';
+import { GraduationCap, MapPin, Phone, Mail, ArrowRight, Globe, MessageSquare, Users, BookOpen, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -19,7 +19,7 @@ const Footer = () => (
             Expert-led, job-oriented training institute offering practical learning, industry-focused upskilling, career support, and placement-oriented programs in Trivandrum, Kerala.
           </p>
           <div className="flex gap-3">
-            {[Facebook, Instagram, Linkedin, Twitter, Youtube].map((Icon, i) => (
+            {[Globe, MessageSquare, Users, BookOpen, Star].map((Icon, i) => (
               <a key={i} href="#" className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 hover:bg-primary transition-colors">
                 <Icon className="h-4 w-4" />
               </a>
