@@ -11,10 +11,16 @@ const Footer = () => (
         {/* Brand */}
         <div>
           <Link to="/" className="flex items-center gap-3 mb-4">
-            <div className="flex items-center justify-center rounded-lg bg-white px-2 py-1.5">
-              <img src={logo} alt="ASB Training Hub" className="h-8 w-auto" />
+            <div className="flex items-center justify-center rounded-lg bg-white px-2 py-1.5 sm:px-2.5 sm:py-2">
+              <img
+                src={logo}
+                alt="ASB Training Hub"
+                width={160}
+                height={44}
+                className="h-7 w-auto max-w-[130px] sm:h-8 sm:max-w-[150px] lg:h-9 lg:max-w-[170px] block"
+              />
             </div>
-            <span className="text-lg font-bold text-white font-heading">ASB Training Hub</span>
+            <span className="text-base sm:text-lg font-bold text-white font-heading">ASB Training Hub</span>
           </Link>
           <p className="text-sm leading-relaxed mb-4">
             Expert-led, job-oriented training institute offering practical learning, industry-focused upskilling, career support, and placement-oriented programs in Trivandrum, Kerala.
