@@ -124,7 +124,7 @@ export const courses: Course[] = [
 export const courseCategories = [
   { id: 'erp', label: 'ERP / SAP Courses', icon: 'Database', count: courses.filter(c => c.category === 'erp').length, description: 'Enterprise Resource Planning with SAP — the gold standard in business software', color: 'from-orange-500 to-amber-500' },
   { id: 'programming', label: 'Programming Languages', icon: 'Code2', count: courses.filter(c => c.category === 'programming').length, description: 'Master modern programming languages and full-stack development', color: 'from-green-500 to-emerald-500' },
-  { id: 'ai', label: 'AI Trainings', icon: 'Brain', count: courses.filter(c => c.category === 'ai').length, description: 'Artificial Intelligence, Machine Learning, Deep Learning & Generative AI', color: 'from-purple-500 to-pink-500' },
+  { id: 'ai', label: 'AI Trainings', icon: 'Brain', count: courses.filter(c => c.category === 'ai').length, description: 'Artificial Intelligence, Machine Learning, Deep Learning & Generative AI', color: 'from-amber-500 to-orange-600' },
   { id: 'management', label: 'Management Courses', icon: 'GraduationCap', count: courses.filter(c => c.category === 'management').length, description: 'Professional diploma programs in logistics, HR, finance & IT management', color: 'from-orange-500 to-amber-500' },
   { id: 'internship', label: 'Internship Programs', icon: 'Briefcase', count: courses.filter(c => c.category === 'internship').length, description: 'Industry-ready training programs with guaranteed internship experience', color: 'from-rose-500 to-red-500' },
 ] as const;
