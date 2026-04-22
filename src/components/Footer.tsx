@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, MapPin, Phone, Mail, ArrowRight, Globe, MessageSquare, Users, BookOpen, Star } from 'lucide-react';
+import { MapPin, Phone, Mail, ArrowRight, Globe, MessageSquare, Users, BookOpen, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import logo from '@/assets/logo.png';
 
 const Footer = () => (
   <footer className="gradient-bg text-gray-300">
@@ -9,9 +10,9 @@ const Footer = () => (
       <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
         {/* Brand */}
         <div>
-          <Link to="/" className="flex items-center gap-2 mb-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-primary">
-              <GraduationCap className="h-6 w-6 text-white" />
+          <Link to="/" className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center rounded-lg bg-white px-2 py-1.5">
+              <img src={logo} alt="ASB Training Hub" className="h-8 w-auto" />
             </div>
             <span className="text-lg font-bold text-white font-heading">ASB Training Hub</span>
           </Link>
