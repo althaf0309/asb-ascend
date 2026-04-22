@@ -43,7 +43,7 @@ const Navbar = () => {
           </div>
           <div className="hidden md:block">
             <span className="text-sm lg:text-base font-bold text-white font-heading leading-tight">ASB Training Hub</span>
-            <span className="block text-[10px] text-blue-300 leading-none">Career-Focused Learning</span>
+            <span className="block text-[10px] text-orange-300 leading-none">Career-Focused Learning</span>
           </div>
         </Link>
 

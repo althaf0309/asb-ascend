@@ -60,13 +60,13 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         navy: {
-          DEFAULT: "hsl(222 84% 5%)",
-          light: "hsl(217 33% 17%)",
+          DEFAULT: "hsl(20 30% 6%)",
+          light: "hsl(20 15% 14%)",
         },
-        electric: "hsl(217 91% 60%)",
+        electric: "hsl(24 95% 53%)",
         violet: {
-          DEFAULT: "hsl(263 70% 50%)",
-          light: "hsl(263 70% 65%)",
+          DEFAULT: "hsl(16 90% 45%)",
+          light: "hsl(36 100% 60%)",
         },
       },
       borderRadius: {
@@ -82,7 +82,7 @@ export default {
         "fade-in-right": { "0%": { opacity: "0", transform: "translateX(20px)" }, "100%": { opacity: "1", transform: "translateX(0)" } },
         "scale-in": { "0%": { transform: "scale(0.95)", opacity: "0" }, "100%": { transform: "scale(1)", opacity: "1" } },
         "float": { "0%, 100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-10px)" } },
-        "pulse-glow": { "0%, 100%": { boxShadow: "0 0 20px hsl(217 91% 60% / 0.3)" }, "50%": { boxShadow: "0 0 40px hsl(217 91% 60% / 0.6)" } },
+        "pulse-glow": { "0%, 100%": { boxShadow: "0 0 20px hsl(24 95% 53% / 0.35)" }, "50%": { boxShadow: "0 0 40px hsl(24 95% 53% / 0.65)" } },
         "counter": { "0%": { opacity: "0", transform: "translateY(10px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
         "slide-up": { "0%": { opacity: "0", transform: "translateY(40px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
       },
