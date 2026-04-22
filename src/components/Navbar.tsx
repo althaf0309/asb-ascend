@@ -31,12 +31,18 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-dark">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="flex items-center justify-center rounded-lg bg-white px-2 py-1.5">
-            <img src={logo} alt="ASB Training Hub" className="h-7 w-auto" />
+        <Link to="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center justify-center rounded-lg bg-white px-1.5 py-1 sm:px-2 sm:py-1.5">
+            <img
+              src={logo}
+              alt="ASB Training Hub"
+              width={140}
+              height={40}
+              className="h-6 w-auto max-w-[110px] sm:h-7 sm:max-w-[130px] lg:h-8 lg:max-w-[150px] block"
+            />
           </div>
-          <div className="hidden sm:block">
-            <span className="text-base font-bold text-white font-heading leading-tight">ASB Training Hub</span>
+          <div className="hidden md:block">
+            <span className="text-sm lg:text-base font-bold text-white font-heading leading-tight">ASB Training Hub</span>
             <span className="block text-[10px] text-blue-300 leading-none">Career-Focused Learning</span>
           </div>
         </Link>
