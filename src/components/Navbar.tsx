@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, GraduationCap, Phone } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logo from '@/assets/logo.png';
 
 const courseMenuItems = [
   { label: 'ERP / SAP Courses', path: '/courses/erp' },
@@ -30,12 +31,12 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-dark">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-primary">
-            <GraduationCap className="h-6 w-6 text-white" />
+        <Link to="/" className="flex items-center gap-3">
+          <div className="flex items-center justify-center rounded-lg bg-white px-2 py-1.5">
+            <img src={logo} alt="ASB Training Hub" className="h-7 w-auto" />
           </div>
-          <div>
-            <span className="text-lg font-bold text-white font-heading">ASB Training Hub</span>
+          <div className="hidden sm:block">
+            <span className="text-base font-bold text-white font-heading leading-tight">ASB Training Hub</span>
             <span className="block text-[10px] text-blue-300 leading-none">Career-Focused Learning</span>
           </div>
         </Link>
