@@ -8,28 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import InquiryForm from '@/components/InquiryForm';
 
-import courseErp from '@/assets/courses/course-erp.jpg';
-import courseProgramming from '@/assets/courses/course-programming.jpg';
-import courseAi from '@/assets/courses/course-ai.jpg';
-import courseManagement from '@/assets/courses/course-management.jpg';
-import courseInternship from '@/assets/courses/course-internship.jpg';
-
-const heroImages: Record<string, string> = {
-  erp: courseErp,
-  programming: courseProgramming,
-  ai: courseAi,
-  management: courseManagement,
-  internship: courseInternship,
-};
-
-// Secondary illustrative image per category — reuse same set, paired differently
-const secondaryImages: Record<string, string> = {
-  erp: courseManagement,
-  programming: courseAi,
-  ai: courseProgramming,
-  management: courseErp,
-  internship: courseProgramming,
-};
+import { getCourseImages } from '@/data/courseImages';
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
