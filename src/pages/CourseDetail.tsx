@@ -26,8 +26,7 @@ const CourseDetail = () => {
 
   const catColor = courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary';
   const related = courses.filter(c => c.category === course.category && c.id !== course.id).slice(0, 3);
-  const heroImg = heroImages[course.category];
-  const secondaryImg = secondaryImages[course.category];
+  const { primary: heroImg, secondary: secondaryImg } = getCourseImages(course.id, course.category);
 
   return (
     <main className="bg-background">
