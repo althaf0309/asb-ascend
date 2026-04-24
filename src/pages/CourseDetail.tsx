@@ -35,12 +35,12 @@ const CourseDetail = () => {
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0">
           <SmartImage src={heroImg} alt="" wrapperClassName="absolute inset-0" eager />
-          {/* Universal dark scrim — guarantees contrast on any image (light or dark) */}
-          <div className="absolute inset-0 bg-foreground/55" />
-          {/* Extra bottom-up gradient for depth + stats-strip blend */}
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-foreground/20" />
+          {/* Universal dark scrim — guarantees contrast on any image */}
+          <div className="absolute inset-0 bg-black/65" />
+          {/* Bottom-up gradient for depth + smooth blend into stats strip */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20" />
           {/* Subtle category color tint */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-20 mix-blend-overlay`} />
+          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-25 mix-blend-overlay`} />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <Link to={`/courses/${course.category}`} className="text-white/90 hover:text-white text-sm mb-2 inline-flex items-center gap-1 [text-shadow:0_1px_3px_rgba(0,0,0,0.6)]">
@@ -49,9 +49,9 @@ const CourseDetail = () => {
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-heading mt-3 mb-4 max-w-4xl [text-shadow:0_2px_8px_rgba(0,0,0,0.55)]">{course.title}</h1>
           <p className="text-white/95 max-w-3xl text-lg md:text-xl mb-6 leading-relaxed [text-shadow:0_1px_4px_rgba(0,0,0,0.55)]">{course.description}</p>
           <div className="flex flex-wrap gap-3 text-sm text-white mb-6">
-            <span className="flex items-center gap-1.5 bg-foreground/55 backdrop-blur-md ring-1 ring-white/20 px-3 py-1.5 rounded-full"><Clock className="h-4 w-4" />{course.duration}</span>
-            <span className="flex items-center gap-1.5 bg-foreground/55 backdrop-blur-md ring-1 ring-white/20 px-3 py-1.5 rounded-full"><MapPin className="h-4 w-4" />{course.mode}</span>
-            <span className="flex items-center gap-1.5 bg-foreground/55 backdrop-blur-md ring-1 ring-white/20 px-3 py-1.5 rounded-full"><Award className="h-4 w-4" />Certificate</span>
+            <span className="flex items-center gap-1.5 bg-black/55 backdrop-blur-md ring-1 ring-white/20 px-3 py-1.5 rounded-full"><Clock className="h-4 w-4" />{course.duration}</span>
+            <span className="flex items-center gap-1.5 bg-black/55 backdrop-blur-md ring-1 ring-white/20 px-3 py-1.5 rounded-full"><MapPin className="h-4 w-4" />{course.mode}</span>
+            <span className="flex items-center gap-1.5 bg-black/55 backdrop-blur-md ring-1 ring-white/20 px-3 py-1.5 rounded-full"><Award className="h-4 w-4" />Certificate</span>
             {course.internship && (
               <span className="flex items-center gap-1.5 bg-emerald-500/80 backdrop-blur-md ring-1 ring-white/20 text-white px-3 py-1.5 rounded-full">
                 <Briefcase className="h-4 w-4" />Internship Included
@@ -61,7 +61,7 @@ const CourseDetail = () => {
           <div className="flex flex-col sm:flex-row gap-3">
             <Link to="/apply"><Button size="lg" className="bg-white text-foreground font-semibold hover:bg-white/90 shadow-lg">Apply Now</Button></Link>
             <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white/15 bg-foreground/30 backdrop-blur-md shadow-lg">
+              <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white/15 bg-black/30 backdrop-blur-md shadow-lg">
                 <MessageCircle className="h-4 w-4 mr-2" />Chat on WhatsApp
               </Button>
             </a>
