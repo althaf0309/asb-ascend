@@ -9,6 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import InquiryForm from '@/components/InquiryForm';
 
 import { getCourseImages } from '@/data/courseImages';
+import SmartImage from '@/components/SmartImage';
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -33,7 +34,7 @@ const CourseDetail = () => {
       {/* Hero */}
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImg} alt="" className="w-full h-full object-cover" loading="eager" />
+          <SmartImage src={heroImg} alt="" wrapperClassName="absolute inset-0" eager />
           <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-40 mix-blend-multiply`} />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/55 to-foreground/30" />
         </div>
