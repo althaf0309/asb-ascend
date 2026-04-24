@@ -271,7 +271,7 @@ const CourseDetail = () => {
                   <Link key={c.id} to={`/course/${c.slug}`} className="group block">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
                       <div className="aspect-video overflow-hidden">
-                        <img src={heroImages[c.category]} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
+                        <img src={getCourseImages(c.id, c.category).primary} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
                       </div>
                       <div className="p-5 flex-1 flex flex-col">
                         <span className="text-xs text-primary font-semibold uppercase tracking-wide">{c.categoryLabel}</span>
