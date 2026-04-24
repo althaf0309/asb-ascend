@@ -273,9 +273,12 @@ const CourseDetail = () => {
                 {related.map(c => (
                   <Link key={c.id} to={`/course/${c.slug}`} className="group block">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
-                      <div className="aspect-video overflow-hidden">
-                        <img src={getCourseImages(c.id, c.category).primary} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
-                      </div>
+                      <SmartImage
+                        src={getCourseImages(c.id, c.category).primary}
+                        alt={c.title}
+                        wrapperClassName="aspect-video overflow-hidden"
+                        className="group-hover:scale-105 transition-transform"
+                      />
                       <div className="p-5 flex-1 flex flex-col">
                         <span className="text-xs text-primary font-semibold uppercase tracking-wide">{c.categoryLabel}</span>
                         <h3 className="font-bold font-heading mt-1 group-hover:text-primary transition-colors">{c.title}</h3>
