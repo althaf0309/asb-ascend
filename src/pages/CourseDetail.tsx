@@ -9,6 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import InquiryForm from '@/components/InquiryForm';
 
 import { getCourseImages } from '@/data/courseImages';
+import SmartImage from '@/components/SmartImage';
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -33,7 +34,7 @@ const CourseDetail = () => {
       {/* Hero */}
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImg} alt="" className="w-full h-full object-cover" loading="eager" />
+          <SmartImage src={heroImg} alt="" wrapperClassName="absolute inset-0" eager />
           <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-40 mix-blend-multiply`} />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/55 to-foreground/30" />
         </div>
@@ -98,9 +99,11 @@ const CourseDetail = () => {
                 </h2>
                 <div className="grid md:grid-cols-5 gap-6 items-start">
                   <p className="md:col-span-3 text-muted-foreground leading-relaxed text-base">{course.overview}</p>
-                  <div className="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/3] border border-border">
-                    <img src={secondaryImg} alt={`${course.title} learning environment`} className="w-full h-full object-cover" loading="lazy" />
-                  </div>
+                  <SmartImage
+                    src={secondaryImg}
+                    alt={`${course.title} learning environment`}
+                    wrapperClassName="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/3] border border-border"
+                  />
                 </div>
               </div>
 
@@ -270,9 +273,12 @@ const CourseDetail = () => {
                 {related.map(c => (
                   <Link key={c.id} to={`/course/${c.slug}`} className="group block">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
-                      <div className="aspect-video overflow-hidden">
-                        <img src={getCourseImages(c.id, c.category).primary} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
-                      </div>
+                      <SmartImage
+                        src={getCourseImages(c.id, c.category).primary}
+                        alt={c.title}
+                        wrapperClassName="aspect-video overflow-hidden"
+                        className="group-hover:scale-105 transition-transform"
+                      />
                       <div className="p-5 flex-1 flex flex-col">
                         <span className="text-xs text-primary font-semibold uppercase tracking-wide">{c.categoryLabel}</span>
                         <h3 className="font-bold font-heading mt-1 group-hover:text-primary transition-colors">{c.title}</h3>
