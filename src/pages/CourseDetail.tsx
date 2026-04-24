@@ -34,8 +34,8 @@ const CourseDetail = () => {
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImg} alt="" className="w-full h-full object-cover" loading="eager" />
-          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-80`} />
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/20 to-transparent" />
+          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-40 mix-blend-multiply`} />
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/55 to-foreground/30" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <Link to={`/courses/${course.category}`} className="text-white/80 hover:text-white text-sm mb-2 inline-flex items-center gap-1">
