@@ -77,7 +77,7 @@ const Courses = () => {
                   <Link to={`/course/${course.slug}`} className="group block h-full">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
                       <div className="h-36 relative overflow-hidden">
-                        <img src={categoryImages[course.category]} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                        <img src={getCourseImages(course.id, course.category).primary} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                         <div className={`absolute inset-0 bg-gradient-to-br ${courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary'} opacity-60`} />
                         <span className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-white/40 font-heading">{course.title.slice(0, 3)}</span>
                         {course.internship && <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>}
