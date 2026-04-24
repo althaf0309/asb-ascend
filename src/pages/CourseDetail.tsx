@@ -99,9 +99,11 @@ const CourseDetail = () => {
                 </h2>
                 <div className="grid md:grid-cols-5 gap-6 items-start">
                   <p className="md:col-span-3 text-muted-foreground leading-relaxed text-base">{course.overview}</p>
-                  <div className="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/3] border border-border">
-                    <img src={secondaryImg} alt={`${course.title} learning environment`} className="w-full h-full object-cover" loading="lazy" />
-                  </div>
+                  <SmartImage
+                    src={secondaryImg}
+                    alt={`${course.title} learning environment`}
+                    wrapperClassName="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/3] border border-border"
+                  />
                 </div>
               </div>
 
