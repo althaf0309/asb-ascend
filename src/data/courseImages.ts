@@ -31,7 +31,7 @@ export const courseImages: Record<string, CourseImagePair> = {
   'python-fullstack':   { primary: u('photo-1526379095098-d400fd0bf935'), secondary: u('photo-1555066931-4365d14bab8c') }, // python snake/code
   'java':               { primary: u('photo-1517694712202-14dd9538aa97'), secondary: u('photo-1542831371-29b0f74f9713') }, // java code
   'javascript':         { primary: u('photo-1579468118864-1b9ea3c0db4a'), secondary: u('photo-1593720213428-28a5b9e94613') }, // js
-  'c-lang':             { primary: u('photo-1488590528505-98d2b5aba04b'), secondary: u('photo-1629654297299-c8506221b6b9') }, // C code/old hardware
+  'c-lang':             { primary: u('photo-1488590528505-98d2b5aba04b'), secondary: u('photo-1517433670267-08bbd4be890f') }, // C code/old hardware
   'cpp':                { primary: u('photo-1620712943543-bcc4688e7485'), secondary: u('photo-1633419461186-7d40a38105ec') }, // cpp
   'html':               { primary: u('photo-1621839673705-6617adf9e890'), secondary: u('photo-1542831371-d531d36971e6') }, // html
   'css':                { primary: u('photo-1507721999472-8ed4421c4af2'), secondary: u('photo-1559028012-481c04fa702d') }, // css design
