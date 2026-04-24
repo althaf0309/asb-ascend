@@ -6,19 +6,7 @@ import { Button } from '@/components/ui/button';
 import { courses, courseCategories, getCoursesByCategory, type CourseCategory } from '@/data/courses';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
-import catErp from '@/assets/cat-erp.jpg';
-import catProgramming from '@/assets/cat-programming.jpg';
-import catAi from '@/assets/cat-ai.jpg';
-import catManagement from '@/assets/cat-management.jpg';
-import catInternship from '@/assets/cat-internship.jpg';
-
-const categoryImages: Record<string, string> = {
-  erp: catErp,
-  programming: catProgramming,
-  ai: catAi,
-  management: catManagement,
-  internship: catInternship,
-};
+import { getCourseImages } from '@/data/courseImages';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
