@@ -59,7 +59,7 @@ const CourseDetail = () => {
             )}
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link to="/apply"><Button size="lg" className="bg-white text-foreground font-semibold hover:bg-white/90 shadow-lg">Apply Now</Button></Link>
+            <Link to="/apply"><Button size="lg" className="bg-white text-black font-semibold hover:bg-white/90 shadow-lg">Apply Now</Button></Link>
             <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="outline" className="border-white/80 text-white hover:bg-white/15 bg-black/30 backdrop-blur-md shadow-lg">
                 <MessageCircle className="h-4 w-4 mr-2" />Chat on WhatsApp
