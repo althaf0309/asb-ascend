@@ -17,8 +17,8 @@ export const courseImages: Record<string, CourseImagePair> = {
   'erp-mm':             { primary: u('photo-1586528116311-ad8dd3c8310d'), secondary: u('photo-1601598851547-4302969d0614') }, // warehouse/boxes
   'erp-sd':             { primary: u('photo-1556761175-5973dc0f32e7'), secondary: u('photo-1556740758-90de374c12ad') }, // sales meeting
   'erp-pp':             { primary: u('photo-1565514020179-026b92b84bb6'), secondary: u('photo-1581091226825-a6a2a5aee158') }, // factory line
-  'erp-pm':             { primary: u('photo-1581091870622-1c6a55190c8a'), secondary: u('photo-1581094271901-8022df4466f9') }, // wrench/maintenance
-  'erp-qm':             { primary: u('photo-1581093588401-fbb62a02f120'), secondary: u('photo-1581093458791-9d42cc05b6a4') }, // lab/QA
+  'erp-pm':             { primary: u('photo-1504917595217-d4dc5ebe6122'), secondary: u('photo-1530124566582-a618bc2615dc') }, // wrench/maintenance
+  'erp-qm':             { primary: u('photo-1532187863486-abf9dbad1b69'), secondary: u('photo-1582719471384-894fbb16e074') }, // lab/QA
   'erp-ps':             { primary: u('photo-1542626991-cbc4e32524cc'), secondary: u('photo-1454165804606-c3d57bc86b40') }, // project board
   'erp-hcm':            { primary: u('photo-1521737711867-e3b97375f902'), secondary: u('photo-1573497019940-1c28c88b4f3e') }, // HR team
   'erp-scm':            { primary: u('photo-1601584115197-04ecc0da31d7'), secondary: u('photo-1521791136064-7986c2920216') }, // shipping/containers
