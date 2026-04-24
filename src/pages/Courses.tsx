@@ -6,19 +6,7 @@ import { Button } from '@/components/ui/button';
 import { courses, courseCategories, getCoursesByCategory, type CourseCategory } from '@/data/courses';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 
-import catErp from '@/assets/cat-erp.jpg';
-import catProgramming from '@/assets/cat-programming.jpg';
-import catAi from '@/assets/cat-ai.jpg';
-import catManagement from '@/assets/cat-management.jpg';
-import catInternship from '@/assets/cat-internship.jpg';
-
-const categoryImages: Record<string, string> = {
-  erp: catErp,
-  programming: catProgramming,
-  ai: catAi,
-  management: catManagement,
-  internship: catInternship,
-};
+import { getCourseImages } from '@/data/courseImages';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
@@ -89,9 +77,9 @@ const Courses = () => {
                   <Link to={`/course/${course.slug}`} className="group block h-full">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
                       <div className="h-36 relative overflow-hidden">
-                        <img src={categoryImages[course.category]} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                        <div className={`absolute inset-0 bg-gradient-to-br ${courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary'} opacity-60`} />
-                        <span className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-white/40 font-heading">{course.title.slice(0, 3)}</span>
+                        <img src={getCourseImages(course.id, course.category).primary} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                        <div className={`absolute inset-0 bg-gradient-to-br ${courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary'} opacity-25 mix-blend-multiply`} />
+                        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-foreground/70 to-transparent" />
                         {course.internship && <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>}
                       </div>
                       <div className="p-5 flex-1 flex flex-col">

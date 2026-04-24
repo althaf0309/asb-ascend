@@ -8,28 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import InquiryForm from '@/components/InquiryForm';
 
-import courseErp from '@/assets/courses/course-erp.jpg';
-import courseProgramming from '@/assets/courses/course-programming.jpg';
-import courseAi from '@/assets/courses/course-ai.jpg';
-import courseManagement from '@/assets/courses/course-management.jpg';
-import courseInternship from '@/assets/courses/course-internship.jpg';
-
-const heroImages: Record<string, string> = {
-  erp: courseErp,
-  programming: courseProgramming,
-  ai: courseAi,
-  management: courseManagement,
-  internship: courseInternship,
-};
-
-// Secondary illustrative image per category — reuse same set, paired differently
-const secondaryImages: Record<string, string> = {
-  erp: courseManagement,
-  programming: courseAi,
-  ai: courseProgramming,
-  management: courseErp,
-  internship: courseProgramming,
-};
+import { getCourseImages } from '@/data/courseImages';
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -47,8 +26,7 @@ const CourseDetail = () => {
 
   const catColor = courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary';
   const related = courses.filter(c => c.category === course.category && c.id !== course.id).slice(0, 3);
-  const heroImg = heroImages[course.category];
-  const secondaryImg = secondaryImages[course.category];
+  const { primary: heroImg, secondary: secondaryImg } = getCourseImages(course.id, course.category);
 
   return (
     <main className="bg-background">
@@ -56,8 +34,8 @@ const CourseDetail = () => {
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImg} alt="" className="w-full h-full object-cover" loading="eager" />
-          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-80`} />
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/20 to-transparent" />
+          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-40 mix-blend-multiply`} />
+          <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/55 to-foreground/30" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <Link to={`/courses/${course.category}`} className="text-white/80 hover:text-white text-sm mb-2 inline-flex items-center gap-1">
@@ -293,7 +271,7 @@ const CourseDetail = () => {
                   <Link key={c.id} to={`/course/${c.slug}`} className="group block">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
                       <div className="aspect-video overflow-hidden">
-                        <img src={heroImages[c.category]} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
+                        <img src={getCourseImages(c.id, c.category).primary} alt={c.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
                       </div>
                       <div className="p-5 flex-1 flex flex-col">
                         <span className="text-xs text-primary font-semibold uppercase tracking-wide">{c.categoryLabel}</span>
