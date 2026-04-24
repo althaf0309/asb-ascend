@@ -35,8 +35,8 @@ const CourseDetail = () => {
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0">
           <SmartImage src={heroImg} alt="" wrapperClassName="absolute inset-0" eager />
-          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-40 mix-blend-multiply`} />
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/55 to-foreground/30" />
+          {/* Subtle left-to-right scrim only — keeps text readable without tinting the image */}
+          <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 via-foreground/40 to-transparent" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <Link to={`/courses/${course.category}`} className="text-white/80 hover:text-white text-sm mb-2 inline-flex items-center gap-1">
