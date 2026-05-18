@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { ArrowRight, BookOpen, Users, Award, Briefcase, Star, ChevronDown, Sparkles, Brain, Code2, GraduationCap, Database, CheckCircle, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { courseCategories, courses } from '@/data/courses';
@@ -7,6 +8,7 @@ import { useAnimatedCounter } from '@/hooks/useScrollReveal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import heroBg from '@/assets/hero-bg.jpg';
 import heroVideoAsset from '@/assets/hero-video.mp4.asset.json';
+import { setJsonLd, setPageSeo } from '@/lib/seo';
 import catErp from '@/assets/cat-erp.jpg';
 import catProgramming from '@/assets/cat-programming.jpg';
 import catAi from '@/assets/cat-ai.jpg';
@@ -59,6 +61,73 @@ const faqs = [
   { q: 'Can working professionals join?', a: 'Absolutely! We have weekend and evening batches designed specifically for working professionals looking to upskill.' },
 ];
 
+const heroVideoSources = ['/hero-video.mp4', heroVideoAsset.url].filter(Boolean);
+
+function HeroAnimationFallback() {
+  return (
+    <div className="relative h-full w-full overflow-hidden bg-[hsl(20,30%,6%)]" aria-hidden>
+      <img
+        src={heroBg}
+        alt=""
+        title="ASB Training Hub career training animated background"
+        className="hero-fallback-image absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="hero-animated-fallback">
+        <span className="hero-data-ribbon hero-data-ribbon-a" />
+        <span className="hero-data-ribbon hero-data-ribbon-b" />
+        <span className="hero-data-ribbon hero-data-ribbon-c" />
+        <span className="hero-pulse-panel hero-pulse-panel-a" />
+        <span className="hero-pulse-panel hero-pulse-panel-b" />
+      </div>
+    </div>
+  );
+}
+
+function HeroVideo() {
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(heroVideoSources.length === 0);
+  const videoSrc = heroVideoSources[sourceIndex];
+
+  useEffect(() => {
+    setVideoFailed(heroVideoSources.length === 0);
+  }, []);
+
+  const handleVideoError = () => {
+    setVideoReady(false);
+
+    if (sourceIndex < heroVideoSources.length - 1) {
+      setSourceIndex(sourceIndex + 1);
+    } else {
+      setVideoFailed(true);
+    }
+  };
+
+  return (
+    <div className="relative h-full w-full">
+      <HeroAnimationFallback />
+      {!videoFailed && videoSrc && (
+        <video
+          key={videoSrc}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={heroBg}
+          title="ASB Training Hub career training video"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
+          onCanPlay={() => setVideoReady(true)}
+          onLoadedData={() => setVideoReady(true)}
+          onError={handleVideoError}
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      )}
+    </div>
+  );
+}
+
 function StatCounter({ stat }: { stat: typeof stats[0] }) {
   const { ref, count } = useAnimatedCounter(stat.value);
   return (
@@ -75,14 +144,39 @@ function StatCounter({ stat }: { stat: typeof stats[0] }) {
 export default function Index() {
   const popularCourses = courses.slice(0, 6);
 
+  useEffect(() => {
+    setPageSeo({
+      title: 'ASB Training Hub | ERP, SAP, AI & Programming Courses in Trivandrum',
+      description: 'Join ASB Training Hub near Technopark, Trivandrum for job-oriented ERP/SAP, AI, programming, management, and internship courses with practical training and placement support.',
+      keywords: 'ASB Training Hub, best training institute Trivandrum, SAP training Trivandrum, ERP courses Kerala, AI training Trivandrum, programming courses Kerala, internship programs Trivandrum',
+      path: '/',
+    });
+    setJsonLd('organization', {
+      '@context': 'https://schema.org',
+      '@type': 'EducationalOrganization',
+      name: 'ASB Training Hub',
+      url: 'https://www.asbtraininghub.com/',
+      telephone: '+918714773304',
+      email: 'info@asbtraininghub.com',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '105-2, The Atomic, Near Technopark Phase 1, Kazhakootam',
+        addressLocality: 'Trivandrum',
+        addressRegion: 'Kerala',
+        postalCode: '695581',
+        addressCountry: 'IN',
+      },
+      sameAs: ['https://wa.me/918714773304'],
+    });
+  }, []);
+
   return (
     <main>
       {/* Hero */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <video autoPlay muted loop playsInline poster={heroBg} className="w-full h-full object-cover">
-            <source src={heroVideoAsset.url} type="video/mp4" />
-          </video>
+          <HeroVideo />
+          <div className="hero-motion-layer" aria-hidden />
           <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/70 to-navy/90" />
           <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-primary/10 blur-3xl animate-float" />
           <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-secondary/10 blur-3xl animate-float" style={{ animationDelay: '1s' }} />
@@ -101,12 +195,12 @@ export default function Index() {
               Master ERP/SAP, AI, Programming, Management & more with expert-led practical training, internship support, and career-oriented learning at ASB Training Hub.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <Link to="/courses">
+              <Link to="/courses" title="Explore ASB Training Hub courses">
                 <Button size="lg" className="gradient-primary border-0 text-white font-semibold text-lg px-8 py-6 hover:opacity-90">
                   Explore Courses <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <a href="https://wa.me/918714773304?text=Hi%20ASB%20Training%20Hub%2C%20I%20want%20to%20know%20about%20courses" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/918714773304?text=Hi%20ASB%20Training%20Hub%2C%20I%20want%20to%20know%20about%20courses" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp">
                 <Button size="lg" variant="outline" className="border-green-500 text-green-400 hover:bg-green-500/10 text-lg px-8 py-6">
                   WhatsApp Now
                 </Button>
@@ -136,10 +230,10 @@ export default function Index() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {courseCategories.map((cat) => (
-              <Link key={cat.id} to={`/courses/${cat.id}`} className="group block">
+              <Link key={cat.id} to={`/courses/${cat.id}`} title={`${cat.label} | ASB Training Hub`} className="group block">
                 <div className="relative overflow-hidden rounded-2xl border border-border bg-card hover-lift h-full">
                   <div className="h-40 relative overflow-hidden">
-                    <img src={categoryImages[cat.id]} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    <img src={categoryImages[cat.id]} alt={cat.label} title={`${cat.label} at ASB Training Hub`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
                     <div className={`absolute top-3 left-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${cat.color} text-white`}>
                       {categoryIcons[cat.icon]}
@@ -187,16 +281,16 @@ export default function Index() {
               <span className="text-sm font-semibold text-primary uppercase tracking-wider">Trending</span>
               <h2 className="text-3xl md:text-4xl font-bold font-heading mt-2">Popular Courses</h2>
             </div>
-            <Link to="/courses" className="text-primary font-semibold hover:underline flex items-center gap-1">
+            <Link to="/courses" title="View all ASB Training Hub courses" className="text-primary font-semibold hover:underline flex items-center gap-1">
               View All <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {popularCourses.map((course) => (
-              <Link key={course.id} to={`/course/${course.slug}`} className="group block">
+              <Link key={course.id} to={`/course/${course.slug}`} title={`${course.title} course | ASB Training Hub`} className="group block">
                 <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full">
                   <div className="h-40 relative overflow-hidden">
-                    <img src={categoryImages[course.category]} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    <img src={categoryImages[course.category]} alt={course.title} title={`${course.title} course at ASB Training Hub`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                     <div className="absolute inset-0 gradient-primary opacity-50" />
                     <Code2 className="absolute inset-0 m-auto h-16 w-16 text-white/30" />
                     {course.internship && (
@@ -228,8 +322,8 @@ export default function Index() {
               <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mb-4">Internship + Placement Support</h2>
               <p className="text-lg text-white/80 max-w-2xl mx-auto mb-6">Get hands-on industry experience with our internship programs. We partner with 200+ companies to ensure your career takes off.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/courses/internship"><Button size="lg" className="bg-white text-foreground font-semibold hover:bg-white/90">Explore Internships</Button></Link>
-                <Link to="/apply"><Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">Apply Now</Button></Link>
+                <Link to="/courses/internship" title="Explore internship programs at ASB Training Hub"><Button size="lg" className="bg-white text-foreground font-semibold hover:bg-white/90">Explore Internships</Button></Link>
+                <Link to="/apply" title="Apply for admission at ASB Training Hub"><Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">Apply Now</Button></Link>
               </div>
             </div>
           </div>
@@ -258,7 +352,7 @@ export default function Index() {
             ))}
           </div>
           <div className="text-center mt-8">
-            <Link to="/reviews"><Button variant="outline" className="border-white/20 text-white hover:bg-white/10">Read More Reviews <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
+            <Link to="/reviews" title="Read ASB Training Hub student reviews"><Button variant="outline" className="border-white/20 text-white hover:bg-white/10">Read More Reviews <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
           </div>
         </div>
       </section>
@@ -279,7 +373,7 @@ export default function Index() {
             ))}
           </Accordion>
           <div className="text-center mt-6">
-            <Link to="/faq" className="text-primary font-semibold hover:underline text-sm">View All FAQs →</Link>
+            <Link to="/faq" title="View ASB Training Hub frequently asked questions" className="text-primary font-semibold hover:underline text-sm">View All FAQs →</Link>
           </div>
         </div>
       </section>

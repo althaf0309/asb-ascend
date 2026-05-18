@@ -1,14 +1,26 @@
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import InquiryForm from '@/components/InquiryForm';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { setPageSeo } from '@/lib/seo';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
   return <div ref={ref} className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`} style={{ transitionDelay: `${delay}ms` }}>{children}</div>;
 };
 
-const Contact = () => (
+const Contact = () => {
+  useEffect(() => {
+    setPageSeo({
+      title: 'Contact ASB Training Hub | Training Institute Near Technopark',
+      description: 'Contact ASB Training Hub in Kazhakootam, Trivandrum for ERP/SAP, AI, programming, management, and internship course admissions, counseling, and demo classes.',
+      keywords: 'contact ASB Training Hub, training institute Kazhakootam, training institute near Technopark, course admission Trivandrum, ASB Training Hub phone number',
+      path: '/contact',
+    });
+  }, []);
+
+  return (
   <main>
     <section className="gradient-bg pt-28 pb-16">
       <div className="container mx-auto px-4 text-center">
@@ -39,14 +51,14 @@ const Contact = () => (
                     </div>
                     <div>
                       <div className="text-sm font-semibold">{item.label}</div>
-                      {item.href ? <a href={item.href} className="text-sm text-muted-foreground hover:text-primary">{item.value}</a> : <div className="text-sm text-muted-foreground">{item.value}</div>}
+                      {item.href ? <a href={item.href} title={`${item.label} ASB Training Hub`} className="text-sm text-muted-foreground hover:text-primary">{item.value}</a> : <div className="text-sm text-muted-foreground">{item.value}</div>}
                     </div>
                   </div>
                 </ScrollReveal>
               ))}
             </div>
             <ScrollReveal delay={400}>
-              <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp">
                 <Button className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto">
                   <MessageCircle className="h-4 w-4 mr-2" /> Chat on WhatsApp
                 </Button>
@@ -79,6 +91,7 @@ const Contact = () => (
       </div>
     </section>
   </main>
-);
+  );
+};
 
 export default Contact;

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { courses, courseCategories, getCoursesByCategory, type CourseCategory } from '@/data/courses';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { setPageSeo } from '@/lib/seo';
 
 import { getCourseImages } from '@/data/courseImages';
 import SmartImage from '@/components/SmartImage';
@@ -35,6 +36,45 @@ const Courses = () => {
   const currentCategory = activeTab !== 'all' ? courseCategories.find(c => c.id === activeTab) : undefined;
   const title = currentCategory ? currentCategory.label : 'All Courses';
 
+  useEffect(() => {
+    const seoByCategory: Record<string, { title: string; description: string; keywords: string }> = {
+      erp: {
+        title: 'ERP & SAP Courses in Trivandrum | ASB Training Hub',
+        description: 'Explore practical ERP and SAP-style courses in finance, materials, sales, production, HR, quality, supply chain, ABAP, and more at ASB Training Hub, Trivandrum.',
+        keywords: 'ERP courses Trivandrum, SAP training Kerala, SAP FICO course, SAP MM course, SAP SD training, ABAP training, ERP modules Kerala',
+      },
+      programming: {
+        title: 'Programming Courses in Trivandrum | Python, Java, Web Development',
+        description: 'Learn Python full stack, Java, JavaScript, C, C++, HTML, CSS, PHP, Ruby, Kotlin, Swift, and Dart with practical programming courses at ASB Training Hub.',
+        keywords: 'programming courses Trivandrum, Python course Kerala, Java training Trivandrum, web development course, full stack course Kerala, coding classes Trivandrum',
+      },
+      ai: {
+        title: 'AI, Machine Learning & Generative AI Courses in Trivandrum',
+        description: 'Build job-ready AI skills with courses in AI, machine learning, deep learning, data science, NLP, robotics, generative AI, agentic AI, and full stack AI.',
+        keywords: 'AI training Trivandrum, machine learning course Kerala, generative AI course, data science AI training, deep learning course, agentic AI training',
+      },
+      management: {
+        title: 'Management Courses in Trivandrum | HR, Finance, Logistics & IT',
+        description: 'Join professional management diploma courses in logistics, supply chain, warehouse, hospitality, finance, HR, and IT management at ASB Training Hub.',
+        keywords: 'management courses Trivandrum, logistics course Kerala, HR management course, finance management diploma, IT management course, supply chain training',
+      },
+      internship: {
+        title: 'Internship Programs in Trivandrum | Job-Oriented Training with Internship',
+        description: 'Get practical training with internship programs in ERP, accounting, HR, Python full stack, AI, ML, GenAI, data science, agentic AI, and full stack AI.',
+        keywords: 'internship programs Trivandrum, training with internship Kerala, Python internship course, AI internship, ERP internship, accounting internship, HR internship',
+      },
+    };
+    const seo = currentCategory ? seoByCategory[currentCategory.id] : {
+      title: 'Courses | ASB Training Hub ERP, AI, Programming & Management',
+      description: 'Browse 50+ job-oriented courses at ASB Training Hub including ERP/SAP, programming, AI, management, and internship programs in Trivandrum.',
+      keywords: 'ASB Training Hub courses, courses in Trivandrum, ERP courses, SAP training, AI courses, programming courses, management courses, internship programs',
+    };
+    setPageSeo({
+      ...seo,
+      path: currentCategory ? `/courses/${currentCategory.id}` : '/courses',
+    });
+  }, [currentCategory]);
+
   return (
     <main>
       <section className="gradient-bg pt-28 pb-16">
@@ -55,13 +95,13 @@ const Courses = () => {
           </div>
 
           <div className="flex flex-wrap gap-2 mb-8">
-            <Link to="/courses">
+            <Link to="/courses" title="View all ASB Training Hub courses">
               <Button variant={activeTab === 'all' ? 'default' : 'outline'} size="sm" className={activeTab === 'all' ? 'gradient-primary border-0 text-white' : ''}>
                 All ({courses.length})
               </Button>
             </Link>
             {courseCategories.map(cat => (
-              <Link key={cat.id} to={`/courses/${cat.id}`}>
+              <Link key={cat.id} to={`/courses/${cat.id}`} title={`${cat.label} | ASB Training Hub`}>
                 <Button variant={activeTab === cat.id ? 'default' : 'outline'} size="sm" className={activeTab === cat.id ? 'gradient-primary border-0 text-white' : ''}>
                   {cat.label} ({cat.count})
                 </Button>
@@ -75,7 +115,7 @@ const Courses = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((course, i) => (
                 <ScrollReveal key={course.id} delay={(i % 6) * 80}>
-                  <Link to={`/course/${course.slug}`} className="group block h-full">
+                  <Link to={`/course/${course.slug}`} title={`${course.title} course | ASB Training Hub`} className="group block h-full">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
                       <div className="h-36 relative overflow-hidden">
                         <SmartImage

@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { courseCategories } from '@/data/courses';
 import { Send, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { submitInquiry } from '@/lib/api';
 
 interface InquiryFormProps {
   variant?: 'light' | 'dark';
@@ -15,16 +16,30 @@ interface InquiryFormProps {
 const InquiryForm = ({ variant = 'light', preselectedCourse }: InquiryFormProps) => {
   const { toast } = useToast();
   const [form, setForm] = useState({ name: '', email: '', phone: '', course: preselectedCourse || '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
   const isDark = variant === 'dark';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.phone.trim()) {
       toast({ title: 'Please fill required fields', variant: 'destructive' });
       return;
     }
-    toast({ title: 'Inquiry Submitted!', description: 'Our team will contact you shortly.' });
-    setForm({ name: '', email: '', phone: '', course: preselectedCourse || '', message: '' });
+
+    setSubmitting(true);
+    try {
+      await submitInquiry(form);
+      toast({ title: 'Inquiry Submitted!', description: 'Our team will contact you shortly.' });
+      setForm({ name: '', email: '', phone: '', course: preselectedCourse || '', message: '' });
+    } catch (error) {
+      toast({
+        title: 'Submission failed',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputClass = isDark ? 'bg-white/10 border-white/20 text-white placeholder:text-gray-400' : '';
@@ -46,8 +61,8 @@ const InquiryForm = ({ variant = 'light', preselectedCourse }: InquiryFormProps)
       </div>
       <Textarea placeholder="Your Message (optional)" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} className={`min-h-[80px] ${inputClass}`} />
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button type="submit" className="gradient-primary border-0 text-white font-semibold flex-1">
-          <Send className="h-4 w-4 mr-2" /> Submit Inquiry
+        <Button type="submit" disabled={submitting} className="gradient-primary border-0 text-white font-semibold flex-1">
+          <Send className="h-4 w-4 mr-2" /> {submitting ? 'Submitting...' : 'Submit Inquiry'}
         </Button>
         <a
           href="https://wa.me/918714773304?text=Hi%20ASB%20Training%20Hub%2C%20I%20would%20like%20to%20know%20more%20about%20your%20courses."

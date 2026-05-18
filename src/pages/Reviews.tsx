@@ -1,7 +1,9 @@
 import { Star, Quote } from 'lucide-react';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { setPageSeo } from '@/lib/seo';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
@@ -19,7 +21,17 @@ const reviews = [
   { name: 'Lakshmi Devi', role: 'Logistics Manager at DHL', rating: 5, text: 'The Logistics Management diploma gave me the skills and confidence to advance in my career. The trainers brought real industry experience and the curriculum was up-to-date.' },
 ];
 
-const Reviews = () => (
+const Reviews = () => {
+  useEffect(() => {
+    setPageSeo({
+      title: 'Student Reviews | ASB Training Hub Success Stories',
+      description: 'Read ASB Training Hub student reviews and success stories from ERP/SAP, Python, AI, data science, HR, logistics, and management course learners.',
+      keywords: 'ASB Training Hub reviews, student testimonials Trivandrum, SAP course reviews Kerala, AI training reviews, placement success stories',
+      path: '/reviews',
+    });
+  }, []);
+
+  return (
   <main>
     <section className="gradient-bg pt-28 pb-16">
       <div className="container mx-auto px-4 text-center">
@@ -55,10 +67,11 @@ const Reviews = () => (
       <div className="container mx-auto max-w-2xl">
         <h2 className="text-3xl font-bold text-white font-heading mb-4">Write Your Own Success Story</h2>
         <p className="text-gray-400 mb-6">Join thousands of students who have transformed their careers with ASB Training Hub.</p>
-        <Link to="/apply"><Button size="lg" className="gradient-primary border-0 text-white font-semibold">Apply Now</Button></Link>
+        <Link to="/apply" title="Apply for admission at ASB Training Hub"><Button size="lg" className="gradient-primary border-0 text-white font-semibold">Apply Now</Button></Link>
       </div>
     </section>
   </main>
-);
+  );
+};
 
 export default Reviews;

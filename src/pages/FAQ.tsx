@@ -1,7 +1,9 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { setJsonLd, setPageSeo } from '@/lib/seo';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
@@ -35,7 +37,31 @@ const faqSections = [
   ]},
 ];
 
-const FAQ = () => (
+const FAQ = () => {
+  useEffect(() => {
+    setPageSeo({
+      title: 'FAQ | ASB Training Hub Courses, Admission, Fees & Placement',
+      description: 'Find answers about ASB Training Hub courses, admissions, online and offline classes, placement support, internships, certificates, fees, and EMI options.',
+      keywords: 'ASB Training Hub FAQ, course fees Trivandrum, placement support training institute, online courses Kerala, internship course questions',
+      path: '/faq',
+    });
+    setJsonLd('faq', {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqSections.flatMap((section) =>
+        section.faqs.map((faq) => ({
+          '@type': 'Question',
+          name: faq.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: faq.a,
+          },
+        })),
+      ),
+    });
+  }, []);
+
+  return (
   <main>
     <section className="gradient-bg pt-28 pb-16">
       <div className="container mx-auto px-4 text-center">
@@ -66,8 +92,8 @@ const FAQ = () => (
         <div className="text-center mt-8">
           <p className="text-muted-foreground mb-4">Still have questions?</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/contact"><Button className="gradient-primary border-0 text-white">Contact Us</Button></Link>
-            <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer">
+            <Link to="/contact" title="Contact ASB Training Hub"><Button className="gradient-primary border-0 text-white">Contact Us</Button></Link>
+            <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp">
               <Button variant="outline">WhatsApp Us</Button>
             </a>
           </div>
@@ -75,6 +101,7 @@ const FAQ = () => (
       </div>
     </section>
   </main>
-);
+  );
+};
 
 export default FAQ;

@@ -1,0 +1,39 @@
+# ASB Training Hub
+
+ASB Training Hub is a career training institute in Trivandrum, Kerala offering job-oriented ERP/SAP-style, programming, AI, management, and internship courses with practical training and placement support.
+
+## Site
+
+- Website: https://www.asbtraininghub.com/
+- Sitemap: https://www.asbtraininghub.com/sitemap.xml
+- Contact: https://www.asbtraininghub.com/contact
+- Apply: https://www.asbtraininghub.com/apply
+- Email: info@asbtraininghub.com
+- Phone/WhatsApp: +91 87147 73304
+
+## Main Public Pages
+
+- Home: https://www.asbtraininghub.com/
+- About: https://www.asbtraininghub.com/about
+- Courses: https://www.asbtraininghub.com/courses
+- ERP courses: https://www.asbtraininghub.com/courses/erp
+- Programming courses: https://www.asbtraininghub.com/courses/programming
+- AI courses: https://www.asbtraininghub.com/courses/ai
+- Management courses: https://www.asbtraininghub.com/courses/management
+- Internship programs: https://www.asbtraininghub.com/courses/internship
+- Reviews: https://www.asbtraininghub.com/reviews
+- FAQ: https://www.asbtraininghub.com/faq
+- Blog: https://www.asbtraininghub.com/blog
+- Terms and Conditions: https://www.asbtraininghub.com/terms-and-conditions
+
+## Course Areas
+
+- ERP and SAP-style modules: finance and controlling, materials management, sales and distribution, production planning, plant maintenance, quality management, project systems, HCM, SCM, CRM, SRM, cloud HR, and ABAP.
+- Programming: Python full stack, Java, JavaScript, C, C++, HTML, CSS, PHP, Ruby, Kotlin, Swift, and Dart.
+- AI: artificial intelligence, machine learning, deep learning, generative AI, data science with AI, NLP, robotics AI, agentic AI, and full stack AI.
+- Management: logistics, supply chain, warehouse management, hospitality, finance, HR, and IT management.
+- Internships: ERP, accounting, HR, Python full stack, AI, ML, GenAI, data science AI, agentic AI, and full stack AI internship programs.
+
+## Crawling Guidance
+
+Use the sitemap for the complete canonical URL list. Do not index admin pages under `/admin/`.

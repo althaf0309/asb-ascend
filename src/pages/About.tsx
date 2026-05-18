@@ -1,8 +1,10 @@
 import { CheckCircle, Target, Eye, BookOpen, Users, Award, MapPin, Calendar, TrendingUp, Zap, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import InquiryForm from '@/components/InquiryForm';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { setPageSeo } from '@/lib/seo';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
@@ -19,7 +21,17 @@ const timeline = [
   { year: '2024', title: 'Expansion', desc: 'Expanded course catalog to 50+ programs including Agentic AI and GenAI.' },
 ];
 
-const About = () => (
+const About = () => {
+  useEffect(() => {
+    setPageSeo({
+      title: 'About ASB Training Hub | Career Training Institute in Trivandrum',
+      description: 'Learn about ASB Training Hub, a career-focused training institute near Technopark, Trivandrum offering practical ERP, programming, AI, management, and internship programs.',
+      keywords: 'about ASB Training Hub, career training institute Trivandrum, professional training Kerala, job oriented courses Trivandrum, Technopark training institute',
+      path: '/about',
+    });
+  }, []);
+
+  return (
   <main>
     {/* Hero */}
     <section className="gradient-bg pt-28 pb-16">
@@ -40,7 +52,7 @@ const About = () => (
               <h2 className="text-3xl font-bold font-heading mt-2 mb-4">From a Vision to Kerala's Leading Training Hub</h2>
               <p className="text-muted-foreground mb-4">ASB Training Hub was founded with a simple belief — quality education should be practical, industry-relevant, and career-focused. Located near Technopark in Kazhakootam, we bring together top industry professionals as trainers, cutting-edge curriculum, and a supportive learning environment.</p>
               <p className="text-muted-foreground mb-6">Our programs span ERP/SAP, Programming, AI, Management, and Internship tracks — all designed with one goal: making our students job-ready from day one.</p>
-              <Link to="/courses"><Button className="gradient-primary border-0 text-white">Explore Our Courses <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
+              <Link to="/courses" title="Explore ASB Training Hub courses"><Button className="gradient-primary border-0 text-white">Explore Our Courses <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={200}>
@@ -122,13 +134,14 @@ const About = () => (
           <h2 className="text-3xl font-bold text-white font-heading mb-4">Join ASB Training Hub Today</h2>
           <p className="text-gray-400 mb-6">Take the first step toward a rewarding career. Talk to our advisors or apply now.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/apply"><Button size="lg" className="gradient-primary border-0 text-white font-semibold">Apply for Admission</Button></Link>
-            <Link to="/contact"><Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">Talk to an Advisor</Button></Link>
+            <Link to="/apply" title="Apply for admission at ASB Training Hub"><Button size="lg" className="gradient-primary border-0 text-white font-semibold">Apply for Admission</Button></Link>
+            <Link to="/contact" title="Talk to an ASB Training Hub advisor"><Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">Talk to an Advisor</Button></Link>
           </div>
         </ScrollReveal>
       </div>
     </section>
   </main>
-);
+  );
+};
 
 export default About;

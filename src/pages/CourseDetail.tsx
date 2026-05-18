@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { getCourseBySlug, courses, courseCategories } from '@/data/courses';
 import {
   CheckCircle, Clock, MapPin, Award, Users, ArrowRight, BookOpen, Briefcase,
@@ -10,17 +11,57 @@ import InquiryForm from '@/components/InquiryForm';
 
 import { getCourseImages } from '@/data/courseImages';
 import SmartImage from '@/components/SmartImage';
+import { setJsonLd, setPageSeo } from '@/lib/seo';
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const course = getCourseBySlug(slug || '');
+
+  useEffect(() => {
+    if (!course) {
+      setPageSeo({
+        title: 'Course Not Found | ASB Training Hub',
+        description: 'The requested ASB Training Hub course could not be found. Browse all ERP, AI, programming, management, and internship courses.',
+        keywords: 'ASB Training Hub courses, course not found, training courses Trivandrum',
+        path: slug ? `/course/${slug}` : '/courses',
+        noindex: true,
+      });
+    }
+  }, [course, slug]);
+
+  useEffect(() => {
+    if (!course) return;
+    const { primary: heroImg } = getCourseImages(course.id, course.category);
+    setPageSeo({
+      title: `${course.title} Course in Trivandrum | ASB Training Hub`,
+      description: `${course.description} Learn with practical syllabus, hands-on projects, certificate, ${course.internship ? 'internship support, ' : ''}and career guidance at ASB Training Hub.`,
+      keywords: `${course.title}, ${course.categoryLabel}, ${course.title} course Trivandrum, ${course.title} training Kerala, ASB Training Hub, job oriented course, placement support`,
+      path: `/course/${course.slug}`,
+      image: heroImg,
+    });
+    setJsonLd('course', {
+      '@context': 'https://schema.org',
+      '@type': 'Course',
+      name: course.title,
+      description: course.description,
+      provider: {
+        '@type': 'EducationalOrganization',
+        name: 'ASB Training Hub',
+        sameAs: 'https://www.asbtraininghub.com/',
+      },
+      educationalCredentialAwarded: course.certificate,
+      courseMode: course.mode,
+      timeRequired: course.duration,
+      url: `https://www.asbtraininghub.com/course/${course.slug}`,
+    });
+  }, [course]);
 
   if (!course) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center pt-24 pb-12 px-4 text-center">
         <h1 className="text-3xl font-bold font-heading mb-3">Course not found</h1>
         <p className="text-muted-foreground mb-6">The course you're looking for may have been renamed.</p>
-        <Link to="/courses"><Button>Browse all courses</Button></Link>
+        <Link to="/courses" title="Browse all ASB Training Hub courses"><Button>Browse all courses</Button></Link>
       </main>
     );
   }
@@ -34,7 +75,7 @@ const CourseDetail = () => {
       {/* Hero */}
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0">
-          <SmartImage src={heroImg} alt="" wrapperClassName="absolute inset-0" eager />
+          <SmartImage src={heroImg} alt={`${course.title} course training at ASB Training Hub`} wrapperClassName="absolute inset-0" eager />
           {/* Strong universal scrim — keeps text readable on any image (incl. very light ones) */}
           <div className="absolute inset-0 bg-black/70" />
           {/* Bottom-up depth gradient that blends into the stats strip */}
@@ -43,7 +84,7 @@ const CourseDetail = () => {
           <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-25 mix-blend-overlay`} />
         </div>
         <div className="container mx-auto px-4 relative z-10">
-          <Link to={`/courses/${course.category}`} className="text-white/90 hover:text-white text-sm mb-2 inline-flex items-center gap-1 [text-shadow:0_1px_3px_rgba(0,0,0,0.7)]">
+          <Link to={`/courses/${course.category}`} title={`${course.categoryLabel} courses at ASB Training Hub`} className="text-white/90 hover:text-white text-sm mb-2 inline-flex items-center gap-1 [text-shadow:0_1px_3px_rgba(0,0,0,0.7)]">
             ← {course.categoryLabel}
           </Link>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-heading mt-3 mb-4 max-w-4xl [text-shadow:0_2px_12px_rgba(0,0,0,0.75)]">{course.title}</h1>
@@ -59,10 +100,10 @@ const CourseDetail = () => {
             )}
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link to="/apply">
+            <Link to="/apply" title={`Apply for ${course.title} at ASB Training Hub`}>
               <Button size="lg" className="bg-white !text-black font-semibold hover:bg-white/90 shadow-lg">Apply Now</Button>
             </Link>
-            <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title={`Chat on WhatsApp about ${course.title}`}>
               <Button size="lg" variant="outline" className="border-white/80 !text-white hover:bg-white/15 bg-black/40 shadow-lg">
                 <MessageCircle className="h-4 w-4 mr-2" />Chat on WhatsApp
               </Button>
@@ -262,6 +303,7 @@ const CourseDetail = () => {
                 href="https://wa.me/918714773304"
                 target="_blank"
                 rel="noopener noreferrer"
+                title="Chat with ASB Training Hub course counsellor"
                 className="block rounded-2xl gradient-primary p-6 text-white text-center hover:opacity-90 transition-opacity"
               >
                 <MessageCircle className="h-8 w-8 mx-auto mb-2" />
@@ -277,7 +319,7 @@ const CourseDetail = () => {
               <h2 className="text-2xl md:text-3xl font-bold font-heading mb-6">Related Courses</h2>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {related.map(c => (
-                  <Link key={c.id} to={`/course/${c.slug}`} className="group block">
+                  <Link key={c.id} to={`/course/${c.slug}`} title={`${c.title} course | ASB Training Hub`} className="group block">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
                       <SmartImage
                         src={getCourseImages(c.id, c.category).primary}

@@ -1,6 +1,7 @@
 import { useScrollReveal } from '@/hooks/useScrollReveal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
+import { setPageSeo } from '@/lib/seo';
 
 import classroom1 from '@/assets/gallery/classroom-1.jpg';
 import classroom2 from '@/assets/gallery/classroom-2.jpg';
@@ -35,6 +36,16 @@ const Gallery = () => {
   const [lightbox, setLightbox] = useState<number | null>(null);
   const filtered = filter === 'All' ? images : images.filter(img => img.category === filter);
 
+  useEffect(() => {
+    setPageSeo({
+      title: 'Gallery | ASB Training Hub Campus, Classes & Events',
+      description: 'View ASB Training Hub gallery with campus, classroom, certification, and event photos from our career training institute in Trivandrum.',
+      keywords: 'ASB Training Hub gallery, training institute photos Trivandrum, ASB campus, classroom training Kerala, Technopark institute gallery',
+      path: '/gallery',
+      noindex: true,
+    });
+  }, []);
+
   return (
     <main>
       <section className="gradient-bg pt-28 pb-16">
@@ -59,7 +70,7 @@ const Gallery = () => {
               <ScrollReveal key={i} delay={(i % 6) * 80}>
                 <button onClick={() => setLightbox(i)} className="block w-full group">
                   <div className="aspect-video rounded-xl overflow-hidden border border-border bg-muted relative">
-                    <img src={img.src} alt={img.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" width={800} height={600} />
+                    <img src={img.src} alt={img.alt} title={img.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" width={800} height={600} />
                     <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-colors flex items-end p-4">
                       <span className="opacity-0 group-hover:opacity-100 text-white font-medium text-sm transition-opacity bg-foreground/50 px-3 py-1 rounded-full">{img.alt}</span>
                     </div>
@@ -74,7 +85,7 @@ const Gallery = () => {
       {lightbox !== null && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/80 backdrop-blur-sm p-4" onClick={() => setLightbox(null)}>
           <button className="absolute top-4 right-4 text-white" onClick={() => setLightbox(null)}><X className="h-8 w-8" /></button>
-          <img src={filtered[lightbox].src} alt={filtered[lightbox].alt} className="max-w-full max-h-[80vh] rounded-xl" />
+          <img src={filtered[lightbox].src} alt={filtered[lightbox].alt} title={filtered[lightbox].alt} className="max-w-full max-h-[80vh] rounded-xl" />
         </div>
       )}
     </main>

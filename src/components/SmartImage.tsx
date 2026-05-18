@@ -97,6 +97,7 @@ const SmartImage = ({
         <img
           src={src}
           alt={alt}
+          title={alt || undefined}
           loading={eager ? 'eager' : 'lazy'}
           decoding="async"
           onLoad={() => setLoaded(true)}

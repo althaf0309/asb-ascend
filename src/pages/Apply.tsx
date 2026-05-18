@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,6 +7,8 @@ import { courses } from '@/data/courses';
 import { Send, MessageCircle, CheckCircle, Phone, Mail, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { submitApplication } from '@/lib/api';
+import { setPageSeo } from '@/lib/seo';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
@@ -18,15 +20,38 @@ const Apply = () => {
   const [form, setForm] = useState({
     name: '', email: '', phone: '', course: '', qualification: '', experience: '', message: '', preferredMode: '', callbackTime: '',
   });
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    setPageSeo({
+      title: 'Apply Now | ASB Training Hub Course Admission',
+      description: 'Apply for ASB Training Hub courses in ERP/SAP, AI, programming, management, and internships. Submit your admission form and get counseling within 24 hours.',
+      keywords: 'apply ASB Training Hub, course admission Trivandrum, SAP course admission Kerala, AI course admission, programming course application, internship admission',
+      path: '/apply',
+    });
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.phone.trim() || !form.course) {
+    if (!form.name.trim() || !form.email.trim() || !form.phone.trim() || !form.course) {
       toast({ title: 'Please fill required fields', variant: 'destructive' });
       return;
     }
-    toast({ title: 'Application Submitted!', description: 'Our admissions team will contact you within 24 hours.' });
-    setForm({ name: '', email: '', phone: '', course: '', qualification: '', experience: '', message: '', preferredMode: '', callbackTime: '' });
+
+    setSubmitting(true);
+    try {
+      await submitApplication(form);
+      toast({ title: 'Application Submitted!', description: 'Our admissions team will contact you within 24 hours.' });
+      setForm({ name: '', email: '', phone: '', course: '', qualification: '', experience: '', message: '', preferredMode: '', callbackTime: '' });
+    } catch (error) {
+      toast({
+        title: 'Submission failed',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -77,10 +102,10 @@ const Apply = () => {
                     </div>
                     <Textarea placeholder="Any message or questions?" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} className="min-h-[80px]" />
                     <div className="flex flex-col sm:flex-row gap-3">
-                      <Button type="submit" size="lg" className="gradient-primary border-0 text-white font-semibold flex-1">
-                        <Send className="h-4 w-4 mr-2" /> Submit Application
+                      <Button type="submit" size="lg" disabled={submitting} className="gradient-primary border-0 text-white font-semibold flex-1">
+                        <Send className="h-4 w-4 mr-2" /> {submitting ? 'Submitting...' : 'Submit Application'}
                       </Button>
-                      <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer">
+                      <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp">
                         <Button type="button" size="lg" variant="outline" className="w-full border-green-500 text-green-600 hover:bg-green-50">
                           <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp Us
                         </Button>
@@ -106,8 +131,8 @@ const Apply = () => {
                 <div className="rounded-2xl border border-border bg-card p-6">
                   <h3 className="font-bold font-heading mb-4">Contact Admissions</h3>
                   <div className="space-y-3 text-sm text-muted-foreground">
-                    <a href="tel:+918714773304" className="flex items-center gap-2 hover:text-primary"><Phone className="h-4 w-4" />+91 8714773304</a>
-                    <a href="mailto:info@asbtraininghub.com" className="flex items-center gap-2 hover:text-primary"><Mail className="h-4 w-4" />info@asbtraininghub.com</a>
+                    <a href="tel:+918714773304" title="Call ASB Training Hub" className="flex items-center gap-2 hover:text-primary"><Phone className="h-4 w-4" />+91 8714773304</a>
+                    <a href="mailto:info@asbtraininghub.com" title="Email ASB Training Hub" className="flex items-center gap-2 hover:text-primary"><Mail className="h-4 w-4" />info@asbtraininghub.com</a>
                     <div className="flex items-start gap-2"><MapPin className="h-4 w-4 shrink-0 mt-0.5" />Near Technopark, Kazhakootam, Trivandrum</div>
                   </div>
                 </div>

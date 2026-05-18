@@ -17,7 +17,6 @@ const navLinks = [
   { label: 'About', path: '/about' },
   { label: 'Courses', path: '/courses', children: courseMenuItems },
   { label: 'Reviews', path: '/reviews' },
-  { label: 'Gallery', path: '/gallery' },
   { label: 'FAQ', path: '/faq' },
   { label: 'Blog', path: '/blog' },
   { label: 'Contact', path: '/contact' },
@@ -31,11 +30,12 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-dark">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
-        <Link to="/" className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <Link to="/" title="ASB Training Hub home" className="flex items-center gap-2 sm:gap-3 shrink-0">
           <div className="flex items-center justify-center rounded-lg bg-white px-1.5 py-1 sm:px-2 sm:py-1.5">
             <img
               src={logo}
               alt="ASB Training Hub"
+              title="ASB Training Hub"
               width={140}
               height={40}
               className="h-6 w-auto max-w-[110px] sm:h-7 sm:max-w-[130px] lg:h-8 lg:max-w-[150px] block"
@@ -53,6 +53,7 @@ const Navbar = () => {
             <div key={link.path} className="relative group">
               <Link
                 to={link.path}
+                title={link.label === 'Home' ? 'ASB Training Hub home' : `${link.label} | ASB Training Hub`}
                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-1 ${
                   location.pathname === link.path ? 'text-white bg-white/10' : 'text-gray-300 hover:text-white hover:bg-white/5'
                 }`}
@@ -67,6 +68,7 @@ const Navbar = () => {
                       <Link
                         key={child.path}
                         to={child.path}
+                        title={`${child.label} | ASB Training Hub`}
                         className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                       >
                         {child.label}
@@ -74,6 +76,7 @@ const Navbar = () => {
                     ))}
                     <Link
                       to="/courses"
+                      title="View all ASB Training Hub courses"
                       className="block px-4 py-2.5 text-sm font-medium text-primary hover:bg-white/10 rounded-lg transition-colors border-t border-white/10 mt-1 pt-3"
                     >
                       View All Courses →
@@ -86,11 +89,11 @@ const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-3">
-          <a href="tel:+918714773304" className="flex items-center gap-1 text-sm text-gray-300 hover:text-white transition-colors">
+          <a href="tel:+918714773304" title="Call ASB Training Hub" className="flex items-center gap-1 text-sm text-gray-300 hover:text-white transition-colors">
             <Phone className="h-4 w-4" />
             <span>+91 8714773304</span>
           </a>
-          <Link to="/apply">
+          <Link to="/apply" title="Apply for admission at ASB Training Hub">
             <Button className="gradient-primary border-0 text-white font-semibold hover:opacity-90">
               Apply Now
             </Button>
@@ -120,7 +123,7 @@ const Navbar = () => {
                   {courseOpen && (
                     <div className="pl-4 space-y-1">
                       {link.children.map((child) => (
-                        <Link key={child.path} to={child.path} onClick={() => setOpen(false)} className="block py-2 text-sm text-gray-400 hover:text-white">
+                        <Link key={child.path} to={child.path} title={`${child.label} | ASB Training Hub`} onClick={() => setOpen(false)} className="block py-2 text-sm text-gray-400 hover:text-white">
                           {child.label}
                         </Link>
                       ))}
@@ -128,17 +131,17 @@ const Navbar = () => {
                   )}
                 </>
               ) : (
-                <Link to={link.path} onClick={() => setOpen(false)} className="block py-3 text-sm text-gray-300 hover:text-white">
+                <Link to={link.path} title={link.label === 'Home' ? 'ASB Training Hub home' : `${link.label} | ASB Training Hub`} onClick={() => setOpen(false)} className="block py-3 text-sm text-gray-300 hover:text-white">
                   {link.label}
                 </Link>
               )}
             </div>
           ))}
           <div className="mt-4 flex flex-col gap-2">
-            <a href="tel:+918714773304" className="flex items-center justify-center gap-2 py-2 text-sm text-gray-300">
+            <a href="tel:+918714773304" title="Call ASB Training Hub" className="flex items-center justify-center gap-2 py-2 text-sm text-gray-300">
               <Phone className="h-4 w-4" /> +91 8714773304
             </a>
-            <Link to="/apply" onClick={() => setOpen(false)}>
+            <Link to="/apply" title="Apply for admission at ASB Training Hub" onClick={() => setOpen(false)}>
               <Button className="w-full gradient-primary border-0 text-white">Apply Now</Button>
             </Link>
           </div>

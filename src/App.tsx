@@ -15,7 +15,10 @@ import Reviews from "./pages/Reviews";
 import Gallery from "./pages/Gallery";
 import FAQ from "./pages/FAQ";
 import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
+import AdminBlog from "./pages/AdminBlog";
 import Apply from "./pages/Apply";
+import TermsAndConditions from "./pages/TermsAndConditions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,7 +41,10 @@ const App = () => (
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
+          <Route path="/admin/blog" element={<AdminBlog />} />
           <Route path="/apply" element={<Apply />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
