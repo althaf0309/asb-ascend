@@ -22,6 +22,26 @@ type NewsletterPayload = {
   email: string;
 };
 
+export type AdminSubmission = {
+  id: string;
+  type: 'inquiry' | 'application' | 'newsletter';
+  createdAt: string;
+  updatedAt?: string;
+  status?: string;
+  note?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  course?: string;
+  qualification?: string;
+  experience?: string;
+  preferredMode?: string;
+  callbackTime?: string;
+  message?: string;
+  ip?: string;
+  userAgent?: string;
+};
+
 export type BlogPost = {
   slug: string;
   title: string;
@@ -101,38 +121,56 @@ const submitJson = async (path: string, payload: unknown) => {
   return data;
 };
 
-export const submitInquiry = (payload: InquiryPayload) =>
-  submitWeb3Form({
-    subject: 'New Course Inquiry - ASB Training Hub',
-    form_type: 'Course Inquiry',
-    name: payload.name,
-    email: payload.email,
-    phone: payload.phone,
-    course_interest: payload.course || 'Not selected',
-    message: payload.message || 'No message provided',
-  });
+export const submitInquiry = async (payload: InquiryPayload) => {
+  const [stored] = await Promise.all([
+    submitJson('/api/inquiries', payload),
+    submitWeb3Form({
+      subject: 'New Course Inquiry - ASB Training Hub',
+      form_type: 'Course Inquiry',
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      course_interest: payload.course || 'Not selected',
+      message: payload.message || 'No message provided',
+    }),
+  ]);
 
-export const submitApplication = (payload: ApplicationPayload) =>
-  submitWeb3Form({
-    subject: 'New Course Application - ASB Training Hub',
-    form_type: 'Course Application',
-    name: payload.name,
-    email: payload.email,
-    phone: payload.phone,
-    course: payload.course,
-    qualification: payload.qualification || 'Not provided',
-    experience: payload.experience || 'Not provided',
-    preferred_mode: payload.preferredMode || 'Not selected',
-    callback_time: payload.callbackTime || 'Not provided',
-    message: payload.message || 'No message provided',
-  });
+  return stored;
+};
 
-export const submitNewsletter = (payload: NewsletterPayload) =>
-  submitWeb3Form({
-    subject: 'New Newsletter Subscription - ASB Training Hub',
-    form_type: 'Newsletter Subscription',
-    email: payload.email,
-  });
+export const submitApplication = async (payload: ApplicationPayload) => {
+  const [stored] = await Promise.all([
+    submitJson('/api/applications', payload),
+    submitWeb3Form({
+      subject: 'New Course Application - ASB Training Hub',
+      form_type: 'Course Application',
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      course: payload.course,
+      qualification: payload.qualification || 'Not provided',
+      experience: payload.experience || 'Not provided',
+      preferred_mode: payload.preferredMode || 'Not selected',
+      callback_time: payload.callbackTime || 'Not provided',
+      message: payload.message || 'No message provided',
+    }),
+  ]);
+
+  return stored;
+};
+
+export const submitNewsletter = async (payload: NewsletterPayload) => {
+  const [stored] = await Promise.all([
+    submitJson('/api/newsletters', payload),
+    submitWeb3Form({
+      subject: 'New Newsletter Subscription - ASB Training Hub',
+      form_type: 'Newsletter Subscription',
+      email: payload.email,
+    }),
+  ]);
+
+  return stored;
+};
 
 export const fetchBlogs = async (): Promise<BlogPost[]> => {
   const response = await fetch('/api/blogs');
@@ -211,4 +249,35 @@ export const deleteBlog = async (slug: string, token: string) => {
   }
 
   return data;
+};
+
+export const fetchAdminSubmissions = async (token: string): Promise<AdminSubmission[]> => {
+  const response = await fetch('/api/admin/submissions', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) throw new Error('Unable to load submissions.');
+  return response.json();
+};
+
+export const updateAdminSubmission = async (
+  submission: Pick<AdminSubmission, 'id' | 'type'> & { status?: string; note?: string },
+  token: string,
+): Promise<AdminSubmission> => {
+  const response = await fetch(`/api/admin/submissions/${submission.type}/${submission.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status: submission.status, note: submission.note }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Unable to update submission.');
+  }
+
+  return data.submission;
 };

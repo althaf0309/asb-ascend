@@ -1,7 +1,9 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import {
   Edit,
+  FileDown,
   AlignCenter, AlignLeft, AlignRight, Bold, Code, Eye, Heading1, Image, Italic,
+  Inbox,
   Link as LinkIcon, List, ListOrdered, LogOut, Quote, Redo, Save, Strikethrough,
   Table, Trash2, Underline, Undo, Upload, X,
 } from 'lucide-react';
@@ -9,7 +11,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { adminLogin, createBlog, deleteBlog, fetchAdminBlogs, updateBlog, type BlogPost } from '@/lib/api';
+import {
+  adminLogin,
+  createBlog,
+  deleteBlog,
+  fetchAdminBlogs,
+  fetchAdminSubmissions,
+  updateAdminSubmission,
+  updateBlog,
+  type AdminSubmission,
+  type BlogPost,
+} from '@/lib/api';
 import { setPageSeo } from '@/lib/seo';
 
 const tokenKey = 'asb-admin-token';
@@ -64,6 +76,9 @@ const AdminBlog = () => {
   const [login, setLogin] = useState({ username: '', password: '' });
   const [form, setForm] = useState(emptyForm);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [submissions, setSubmissions] = useState<AdminSubmission[]>([]);
+  const [activeView, setActiveView] = useState<'blogs' | 'submissions'>('blogs');
+  const [submissionDrafts, setSubmissionDrafts] = useState<Record<string, { status: string; note: string }>>({});
   const [editingSlug, setEditingSlug] = useState('');
   const [existingImageUrl, setExistingImageUrl] = useState('');
   const [removeImage, setRemoveImage] = useState(false);
@@ -73,6 +88,7 @@ const AdminBlog = () => {
   const [submitting, setSubmitting] = useState(false);
   const [loggingIn, setLoggingIn] = useState(false);
   const [loadingBlogs, setLoadingBlogs] = useState(false);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(false);
 
   useEffect(() => {
     setPageSeo({
@@ -100,9 +116,33 @@ const AdminBlog = () => {
     }
   }, [toast, token]);
 
+  const loadSubmissions = useCallback(async (authToken = token) => {
+    if (!authToken) return;
+    setLoadingSubmissions(true);
+    try {
+      const nextSubmissions = await fetchAdminSubmissions(authToken);
+      setSubmissions(nextSubmissions);
+      setSubmissionDrafts(Object.fromEntries(nextSubmissions.map((submission) => [
+        `${submission.type}:${submission.id}`,
+        { status: submission.status || 'new', note: submission.note || '' },
+      ])));
+    } catch (error) {
+      toast({
+        title: 'Unable to load submissions',
+        description: error instanceof Error ? error.message : 'Please login again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoadingSubmissions(false);
+    }
+  }, [toast, token]);
+
   useEffect(() => {
-    if (token) void loadBlogs(token);
-  }, [loadBlogs, token]);
+    if (token) {
+      void loadBlogs(token);
+      void loadSubmissions(token);
+    }
+  }, [loadBlogs, loadSubmissions, token]);
 
   const runCommand = (command: string, value?: string) => {
     editorRef.current?.focus();
@@ -128,7 +168,8 @@ const AdminBlog = () => {
       localStorage.setItem(tokenKey, nextToken);
       setToken(nextToken);
       await loadBlogs(nextToken);
-      toast({ title: 'Logged in', description: 'You can add blog posts now.' });
+      await loadSubmissions(nextToken);
+      toast({ title: 'Logged in', description: 'You can manage blog posts and form submissions now.' });
     } catch (error) {
       toast({
         title: 'Login failed',
@@ -220,6 +261,10 @@ const AdminBlog = () => {
       toast({ title: 'Title and content are required', variant: 'destructive' });
       return;
     }
+    if ((imageData || existingImageUrl) && !form.imageAlt.trim()) {
+      toast({ title: 'Image alt text is required for SEO', variant: 'destructive' });
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -248,7 +293,73 @@ const AdminBlog = () => {
     localStorage.removeItem(tokenKey);
     setToken('');
     setBlogs([]);
+    setSubmissions([]);
+    setSubmissionDrafts({});
     resetEditor();
+  };
+
+  const formatDateTime = (value?: string) => {
+    if (!value) return '-';
+    return new Intl.DateTimeFormat('en-IN', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(new Date(value));
+  };
+
+  const submissionKey = (submission: AdminSubmission) => `${submission.type}:${submission.id}`;
+
+  const updateDraft = (submission: AdminSubmission, patch: Partial<{ status: string; note: string }>) => {
+    const key = submissionKey(submission);
+    setSubmissionDrafts((current) => ({
+      ...current,
+      [key]: {
+        status: current[key]?.status || submission.status || 'new',
+        note: current[key]?.note || submission.note || '',
+        ...patch,
+      },
+    }));
+  };
+
+  const saveSubmission = async (submission: AdminSubmission) => {
+    const key = submissionKey(submission);
+    const draft = submissionDrafts[key] || { status: submission.status || 'new', note: submission.note || '' };
+
+    try {
+      await updateAdminSubmission({ id: submission.id, type: submission.type, ...draft }, token);
+      await loadSubmissions();
+      toast({ title: 'Submission updated', description: 'Status and notes were saved.' });
+    } catch (error) {
+      toast({
+        title: 'Update failed',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const exportSubmissions = () => {
+    const headers = ['Type', 'Status', 'Name', 'Email', 'Phone', 'Course', 'Message', 'Note', 'Created At'];
+    const rows = submissions.map((submission) => [
+      submission.type,
+      submission.status || 'new',
+      submission.name || '',
+      submission.email || '',
+      submission.phone || '',
+      submission.course || '',
+      submission.message || '',
+      submission.note || '',
+      formatDateTime(submission.createdAt),
+    ]);
+
+    const escapeCsv = (value: string) => `"${String(value).replace(/"/g, '""')}"`;
+    const csv = [headers, ...rows].map((row) => row.map(escapeCsv).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `asb-form-submissions-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   if (!token) {
@@ -287,6 +398,111 @@ const AdminBlog = () => {
       </section>
 
       <section className="py-10 px-4">
+        <div className="container mx-auto max-w-6xl mb-6">
+          <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row">
+            <Button type="button" variant={activeView === 'blogs' ? 'default' : 'outline'} className={activeView === 'blogs' ? 'gradient-primary border-0 text-white' : ''} onClick={() => setActiveView('blogs')}>
+              <Edit className="h-4 w-4 mr-2" /> Blog Posts
+            </Button>
+            <Button type="button" variant={activeView === 'submissions' ? 'default' : 'outline'} className={activeView === 'submissions' ? 'gradient-primary border-0 text-white' : ''} onClick={() => setActiveView('submissions')}>
+              <Inbox className="h-4 w-4 mr-2" /> Form Submissions ({submissions.length})
+            </Button>
+          </div>
+        </div>
+
+        {activeView === 'submissions' ? (
+          <div className="container mx-auto max-w-6xl space-y-6">
+            <div className="rounded-lg border border-border bg-card p-5">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
+                <div>
+                  <h2 className="font-heading text-xl font-bold">Contact Form Submissions</h2>
+                  <p className="text-sm text-muted-foreground">View inquiries, applications, and newsletter submissions saved in the backend.</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button type="button" variant="outline" onClick={() => loadSubmissions()}>
+                    Refresh
+                  </Button>
+                  <Button type="button" className="gradient-primary border-0 text-white" onClick={exportSubmissions} disabled={submissions.length === 0}>
+                    <FileDown className="h-4 w-4 mr-2" /> Export CSV
+                  </Button>
+                </div>
+              </div>
+
+              {loadingSubmissions ? (
+                <div className="py-8 text-center text-sm text-muted-foreground">Loading submissions...</div>
+              ) : submissions.length === 0 ? (
+                <div className="py-8 text-center text-sm text-muted-foreground">No form submissions yet.</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[980px] text-sm">
+                    <thead>
+                      <tr className="border-b border-border text-left text-muted-foreground">
+                        <th className="py-3 pr-3 font-medium">Lead</th>
+                        <th className="py-3 pr-3 font-medium">Type</th>
+                        <th className="py-3 pr-3 font-medium">Details</th>
+                        <th className="py-3 pr-3 font-medium">Time</th>
+                        <th className="py-3 pr-3 font-medium">Status / Note</th>
+                        <th className="py-3 pr-3 font-medium text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {submissions.map((submission) => {
+                        const key = submissionKey(submission);
+                        const draft = submissionDrafts[key] || { status: submission.status || 'new', note: submission.note || '' };
+                        return (
+                          <tr key={key} className="border-b border-border align-top last:border-0">
+                            <td className="py-3 pr-3">
+                              <div className="font-medium">{submission.name || submission.email || 'Newsletter subscriber'}</div>
+                              {submission.email && <a href={`mailto:${submission.email}`} className="block text-xs text-primary">{submission.email}</a>}
+                              {submission.phone && <a href={`tel:${submission.phone}`} className="block text-xs text-muted-foreground">{submission.phone}</a>}
+                            </td>
+                            <td className="py-3 pr-3 capitalize">{submission.type}</td>
+                            <td className="py-3 pr-3">
+                              <div className="max-w-xs space-y-1 text-xs text-muted-foreground">
+                                {submission.course && <div><span className="font-medium text-foreground">Course:</span> {submission.course}</div>}
+                                {submission.qualification && <div><span className="font-medium text-foreground">Qualification:</span> {submission.qualification}</div>}
+                                {submission.preferredMode && <div><span className="font-medium text-foreground">Mode:</span> {submission.preferredMode}</div>}
+                                {submission.callbackTime && <div><span className="font-medium text-foreground">Callback:</span> {submission.callbackTime}</div>}
+                                {submission.message && <div className="line-clamp-3"><span className="font-medium text-foreground">Message:</span> {submission.message}</div>}
+                              </div>
+                            </td>
+                            <td className="py-3 pr-3 text-xs text-muted-foreground">{formatDateTime(submission.createdAt)}</td>
+                            <td className="py-3 pr-3">
+                              <div className="space-y-2">
+                                <select
+                                  value={draft.status}
+                                  onChange={(event) => updateDraft(submission, { status: event.target.value })}
+                                  className="h-9 w-full rounded-md border border-border bg-background px-2 text-sm"
+                                  aria-label="Submission status"
+                                >
+                                  <option value="new">New</option>
+                                  <option value="contacted">Contacted</option>
+                                  <option value="follow-up">Follow-up</option>
+                                  <option value="converted">Converted</option>
+                                  <option value="closed">Closed</option>
+                                </select>
+                                <Textarea
+                                  value={draft.note}
+                                  onChange={(event) => updateDraft(submission, { note: event.target.value })}
+                                  placeholder="Admin note"
+                                  className="min-h-[70px]"
+                                />
+                              </div>
+                            </td>
+                            <td className="py-3 pr-3 text-right">
+                              <Button type="button" size="sm" variant="outline" onClick={() => saveSubmission(submission)}>
+                                Save
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
         <form onSubmit={handleSave} className="container mx-auto max-w-6xl space-y-6">
           <div className="rounded-lg border border-border bg-card p-5">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5">
@@ -321,7 +537,7 @@ const AdminBlog = () => {
                           <div className="text-xs text-muted-foreground">/{blog.slug}</div>
                         </td>
                         <td className="py-3 pr-3">{blog.category}</td>
-                        <td className="py-3 pr-3 text-muted-foreground">{new Date(blog.updatedAt || blog.createdAt).toLocaleDateString()}</td>
+                        <td className="py-3 pr-3 text-muted-foreground">{formatDateTime(blog.updatedAt || blog.createdAt)}</td>
                         <td className="py-3 pr-3">
                           <div className="flex justify-end gap-2">
                             <Button type="button" variant="outline" size="sm" onClick={() => startEdit(blog)}>
@@ -365,14 +581,14 @@ const AdminBlog = () => {
                     <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImage(e.target.files?.[0])} />
                   </label>
                 )}
-                <Input className="mt-3" placeholder="Image alt text for SEO/accessibility" value={form.imageAlt} onChange={(e) => setForm({ ...form, imageAlt: e.target.value })} />
+                <Input className="mt-3" placeholder="Image alt text for SEO/accessibility *" value={form.imageAlt} onChange={(e) => setForm({ ...form, imageAlt: e.target.value })} />
               </div>
             </div>
             <div className="rounded-lg border border-border bg-card p-5 space-y-4">
               <Input placeholder="Slug (optional)" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
               <Input placeholder="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
               <Input placeholder="Author" value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} />
-              <Input placeholder="Read time" value={form.readTime} onChange={(e) => setForm({ ...form, readTime: e.target.value })} />
+              <Input placeholder="Read time (example: 5 min)" value={form.readTime} onChange={(e) => setForm({ ...form, readTime: e.target.value })} />
             </div>
           </div>
 
@@ -380,9 +596,9 @@ const AdminBlog = () => {
             <h2 className="font-heading text-lg font-bold mb-1">SEO Settings</h2>
             <p className="text-sm text-muted-foreground mb-4">These values are saved in the backend and applied on the public blog page.</p>
             <div className="grid gap-4 md:grid-cols-2">
-              <Input placeholder="Meta title" value={form.metaTitle} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} />
-              <Input placeholder="Keywords, comma separated" value={form.keywords} onChange={(e) => setForm({ ...form, keywords: e.target.value })} />
-              <Textarea className="md:col-span-2 min-h-[90px]" placeholder="Meta description" value={form.metaDescription} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} />
+              <Input placeholder="Meta title for SEO" value={form.metaTitle} onChange={(e) => setForm({ ...form, metaTitle: e.target.value })} />
+              <Input placeholder="SEO keywords, comma separated" value={form.keywords} onChange={(e) => setForm({ ...form, keywords: e.target.value })} />
+              <Textarea className="md:col-span-2 min-h-[90px]" placeholder="Meta description for Google search" value={form.metaDescription} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} />
             </div>
           </div>
 
@@ -431,6 +647,7 @@ const AdminBlog = () => {
             </Button>
           </div>
         </form>
+        )}
       </section>
     </main>
   );

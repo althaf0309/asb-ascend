@@ -4,11 +4,13 @@ import { ArrowRight, BookOpen, Users, Award, Briefcase, Star, ChevronDown, Spark
 import { Button } from '@/components/ui/button';
 import { courseCategories, courses } from '@/data/courses';
 import InquiryForm from '@/components/InquiryForm';
+import SmartImage from '@/components/SmartImage';
 import { useAnimatedCounter } from '@/hooks/useScrollReveal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import heroBg from '@/assets/hero-bg.jpg';
 import heroVideoAsset from '@/assets/hero-video.mp4.asset.json';
 import { setJsonLd, setPageSeo } from '@/lib/seo';
+import { getCourseImages } from '@/data/courseImages';
 import catErp from '@/assets/cat-erp.jpg';
 import catProgramming from '@/assets/cat-programming.jpg';
 import catAi from '@/assets/cat-ai.jpg';
@@ -290,9 +292,15 @@ export default function Index() {
               <Link key={course.id} to={`/course/${course.slug}`} title={`${course.title} course | ASB Training Hub`} className="group block">
                 <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full">
                   <div className="h-40 relative overflow-hidden">
-                    <img src={categoryImages[course.category]} alt={course.title} title={`${course.title} course at ASB Training Hub`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                    <div className="absolute inset-0 gradient-primary opacity-50" />
-                    <Code2 className="absolute inset-0 m-auto h-16 w-16 text-white/30" />
+                    <SmartImage
+                      src={getCourseImages(course.id, course.category).primary}
+                      alt={`${course.title} course at ASB Training Hub`}
+                      wrapperClassName="absolute inset-0"
+                      className="group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 gradient-primary opacity-25 mix-blend-multiply pointer-events-none" />
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-card/90 to-transparent pointer-events-none" />
+                    <Code2 className="absolute inset-0 m-auto h-16 w-16 text-white/20" />
                     {course.internship && (
                       <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>
                     )}
