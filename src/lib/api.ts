@@ -77,7 +77,7 @@ type BlogPayload = {
   removeImage?: boolean;
 };
 
-const WEB3FORMS_ACCESS_KEY = '1f6ef811-86bb-414d-bd19-0dd70acef36e';
+const WEB3FORMS_ACCESS_KEY = '98fcdd83-84c0-4eb4-8af0-58a22fd19caf';
 const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
 const submitWeb3Form = async (payload: Record<string, unknown>) => {
