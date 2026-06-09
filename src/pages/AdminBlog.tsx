@@ -181,25 +181,48 @@ const AdminBlog = () => {
     }
   };
 
+  const compressImage = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const img = new window.Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const MAX = 1200;
+        let { width, height } = img;
+        if (width > MAX || height > MAX) {
+          if (width > height) { height = Math.round(height * MAX / width); width = MAX; }
+          else { width = Math.round(width * MAX / height); height = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { reject(new Error('Canvas unavailable')); return; }
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Failed to load image')); };
+      img.src = url;
+    });
+
   const handleImage = (file?: File) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       toast({ title: 'Please upload an image file', variant: 'destructive' });
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: 'Image must be smaller than 5 MB', variant: 'destructive' });
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: 'Image must be smaller than 10 MB', variant: 'destructive' });
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = String(reader.result || '');
+    compressImage(file).then((result) => {
       setImageData(result);
       setImagePreview(result);
       setRemoveImage(false);
-    };
-    reader.readAsDataURL(file);
+    }).catch(() => {
+      toast({ title: 'Failed to process image', variant: 'destructive' });
+    });
   };
 
   const resetEditor = () => {
@@ -635,7 +658,7 @@ const AdminBlog = () => {
                   contentEditable
                   suppressContentEditableWarning
                   onInput={() => setContent(editorRef.current?.innerHTML || '')}
-                  className="blog-editor min-h-[330px] bg-white p-6 text-sm leading-relaxed outline-none"
+                  className="blog-editor min-h-[330px] bg-white p-6 text-sm leading-relaxed outline-none text-gray-900"
                 />
               </div>
             </div>

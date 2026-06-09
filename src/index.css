@@ -246,6 +246,9 @@
   .editor-btn {
     @apply inline-flex h-8 w-8 items-center justify-center rounded border border-transparent text-muted-foreground hover:border-border hover:bg-background hover:text-foreground transition-colors;
   }
+  .blog-editor {
+    color: #111827;
+  }
   .blog-editor h2,
   .blog-content h2 {
     @apply text-2xl font-bold font-heading mt-8 mb-3;
