@@ -5,6 +5,33 @@ import InquiryForm from '@/components/InquiryForm';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { setPageSeo } from '@/lib/seo';
 
+const socialLinks = [
+  {
+    label: 'Facebook', color: 'hover:bg-blue-600', href: 'https://www.facebook.com/share/1CsFkSP9E2/',
+    icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>,
+  },
+  {
+    label: 'Instagram', color: 'hover:bg-pink-600', href: 'https://www.instagram.com/asbtraininghub',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>,
+  },
+  {
+    label: 'Threads', color: 'hover:bg-gray-800', href: 'https://www.threads.com/@asbtraininghub',
+    icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.474 12.01v-.024c.026-3.576.876-6.43 2.521-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.02-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.594 12c.022 3.086.713 5.496 2.051 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.541-.02 4.495-.624 5.807-1.799 1.504-1.336 2.257-3.334 2.257-5.942v-.323H12.18v-2.08H22.3v2.402c0 3.237-1.017 5.81-2.984 7.455-1.672 1.42-3.975 2.156-6.809 2.156z" /></svg>,
+  },
+  {
+    label: 'LinkedIn', color: 'hover:bg-blue-700', href: 'https://www.linkedin.com/company/asb-training-hub/',
+    icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" /><circle cx="4" cy="4" r="2" /></svg>,
+  },
+  {
+    label: 'X (Twitter)', color: 'hover:bg-black', href: 'https://x.com/Asbtraininghub',
+    icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>,
+  },
+  {
+    label: 'YouTube', color: 'hover:bg-red-600', href: 'https://www.youtube.com/@ASBTrainingHub',
+    icon: <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.41 19.1C5.12 19.56 12 19.56 12 19.56s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" /><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="white" /></svg>,
+  },
+];
+
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
   return <div ref={ref} className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`} style={{ transitionDelay: `${delay}ms` }}>{children}</div>;
@@ -63,6 +90,20 @@ const Contact = () => {
                   <MessageCircle className="h-4 w-4 mr-2" /> Chat on WhatsApp
                 </Button>
               </a>
+            </ScrollReveal>
+            <ScrollReveal delay={480}>
+              <div className="mt-6">
+                <div className="text-sm font-semibold mb-3">Follow Us</div>
+                <div className="flex flex-wrap gap-3">
+                  {socialLinks.map((s) => (
+                    <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" title={`ASB Training Hub on ${s.label}`}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg border border-border bg-muted/40 text-sm text-muted-foreground transition-colors ${s.color} hover:text-white hover:border-transparent`}>
+                      {s.icon}
+                      <span>{s.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </ScrollReveal>
             <ScrollReveal delay={500}>
               <div className="mt-8 rounded-xl overflow-hidden border border-border h-64">
