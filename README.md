@@ -1,3 +1,3 @@
-# Welcome to your Lovable project
+# ASB Training Hub Website
 
-TODO: Document your project here
+Frontend website for ASB Training Hub.

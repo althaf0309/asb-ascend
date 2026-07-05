@@ -61,7 +61,7 @@ export const setPageSeo = ({
   description,
   keywords,
   path = '/',
-  image = '/favicon.ico',
+  image = '/site-logo.png',
   type = 'website',
   noindex = false,
 }: {
