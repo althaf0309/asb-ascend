@@ -4,7 +4,8 @@
  * they are checked as text rather than through the React tree.
  */
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 const root = path.resolve(__dirname, "../..");
@@ -12,6 +13,12 @@ const read = (relative: string) => readFileSync(path.join(root, relative), "utf8
 
 const indexHtml = read("index.html");
 const robots = read("public/robots.txt");
+
+// public/sitemap.xml is a build artifact rather than a committed file, so a
+// fresh clone will not have one until something generates it.
+if (!existsSync(path.join(root, "public/sitemap.xml"))) {
+  execFileSync("node", ["scripts/generate-sitemap.mjs"], { cwd: root, stdio: "ignore" });
+}
 const sitemap = read("public/sitemap.xml");
 const manifest = JSON.parse(read("public/site.webmanifest"));
 
