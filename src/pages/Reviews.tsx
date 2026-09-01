@@ -67,7 +67,7 @@ const Reviews = () => {
       <div className="container mx-auto max-w-2xl">
         <h2 className="text-3xl font-bold text-white font-heading mb-4">Write Your Own Success Story</h2>
         <p className="text-gray-400 mb-6">Join thousands of students who have transformed their careers with ASB Training Hub.</p>
-        <Link to="/apply" title="Apply for admission at ASB Training Hub"><Button size="lg" className="gradient-primary border-0 text-white font-semibold">Apply Now</Button></Link>
+        <Link to="/apply" title="Apply for admission at ASB Training Hub" className="inline-flex self-center"><Button size="lg" className="gradient-primary border-0 text-white font-semibold">Apply Now</Button></Link>
       </div>
     </section>
   </main>

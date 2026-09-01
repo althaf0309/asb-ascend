@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import {
   adminLogin,
+  logoutRequest,
   createBlog,
   deleteBlog,
   fetchAdminBlogs,
@@ -23,8 +24,12 @@ import {
   type BlogPost,
 } from '@/lib/api';
 import { setPageSeo } from '@/lib/seo';
+import { sanitizeBlogHtml } from '@/lib/sanitize';
 
-const tokenKey = 'asb-admin-token';
+// The session itself is an HttpOnly cookie the browser sends automatically.
+// Only this non-sensitive "am I signed in" flag is persisted, so a page reload
+// does not bounce the user to the login form before the session check returns.
+const signedInKey = 'asb-admin-signed-in';
 
 const emptyForm = {
   title: '',
@@ -72,7 +77,9 @@ const toolbarGroups = [
 const AdminBlog = () => {
   const { toast } = useToast();
   const editorRef = useRef<HTMLDivElement>(null);
-  const [token, setToken] = useState(() => localStorage.getItem(tokenKey) || '');
+  const [token, setToken] = useState(() =>
+    sessionStorage.getItem(signedInKey) ? 'cookie-session' : '',
+  );
   const [login, setLogin] = useState({ username: '', password: '' });
   const [form, setForm] = useState(emptyForm);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -165,7 +172,7 @@ const AdminBlog = () => {
     setLoggingIn(true);
     try {
       const nextToken = await adminLogin(login.username, login.password);
-      localStorage.setItem(tokenKey, nextToken);
+      sessionStorage.setItem(signedInKey, '1');
       setToken(nextToken);
       await loadBlogs(nextToken);
       await loadSubmissions(nextToken);
@@ -254,8 +261,9 @@ const AdminBlog = () => {
     setRemoveImage(false);
     setImageData('');
     setImagePreview('');
-    setContent(blog.content || '');
-    if (editorRef.current) editorRef.current.innerHTML = blog.content || '';
+    const safe = sanitizeBlogHtml(blog.content || '');
+    setContent(safe);
+    if (editorRef.current) editorRef.current.innerHTML = safe;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -279,7 +287,10 @@ const AdminBlog = () => {
 
   const handleSave = async (e: FormEvent) => {
     e.preventDefault();
-    const html = editorRef.current?.innerHTML || content;
+    // The editor is a contenteditable driven by document.execCommand, so its
+    // innerHTML carries whatever markup a paste brought with it. Sanitise
+    // before it leaves the browser; the server sanitises again on write.
+    const html = sanitizeBlogHtml(editorRef.current?.innerHTML || content);
     if (!form.title.trim() || !html.trim()) {
       toast({ title: 'Title and content are required', variant: 'destructive' });
       return;
@@ -313,7 +324,8 @@ const AdminBlog = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem(tokenKey);
+    sessionStorage.removeItem(signedInKey);
+    void logoutRequest();
     setToken('');
     setBlogs([]);
     setSubmissions([]);
@@ -398,7 +410,6 @@ const AdminBlog = () => {
               {loggingIn ? 'Signing in...' : 'Login'}
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground mt-4">Default: admin / admin123</p>
         </form>
       </main>
     );
@@ -414,7 +425,7 @@ const AdminBlog = () => {
               {editingSlug ? 'Edit Blog Post' : 'Add Blog Post'}
             </h1>
           </div>
-          <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 w-fit" onClick={logout}>
+          <Button variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10 w-fit" onClick={logout}>
             <LogOut className="h-4 w-4 mr-2" /> Logout
           </Button>
         </div>

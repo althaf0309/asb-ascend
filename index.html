@@ -3,19 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ASB Training Hub | ERP, SAP, AI & Programming Courses in Trivandrum</title>
+    <title>ASB Training Hub | SAP, AI &amp; Programming Courses Trivandrum</title>
     <meta name="description" content="ASB Training Hub in Trivandrum offers job-oriented ERP/SAP, AI, programming, management, and internship courses with practical training and placement support.">
     <meta name="keywords" content="ASB Training Hub, training institute Trivandrum, ERP courses Kerala, SAP training Trivandrum, AI training Kerala, programming courses Trivandrum, internship programs Kerala">
     <meta name="author" content="ASB Training Hub" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-W7JXM8VD');</script>
-    <!-- End Google Tag Manager -->
+    <!-- Fonts are self-hosted (see @font-face in index.css), so there is no
+         third-party stylesheet in the critical path. Preloading the two files
+         starts them in parallel with the CSS instead of after it. -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="/fonts/inter-latin-variable.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="/fonts/space-grotesk-latin-variable.woff2">
+
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+
+    <!-- Analytics
+         GTM and gtag were loading in the head and blocking the main thread for
+         ~1s on mobile. The queue (dataLayer/gtag) is set up immediately so no
+         events are lost, but the container itself is fetched after first paint,
+         or on the first interaction - whichever comes first. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      (function () {
+        var loaded = false;
+        function loadAnalytics() {
+          if (loaded) return;
+          loaded = true;
+
+          // Only the GTM container is loaded here. It already configures
+          // G-1MSBPYNK3L (and G-NJCYZDHX8T), so the standalone gtag.js snippet
+          // that used to sit alongside it was fetching the same 168KB library
+          // for the same property a second time.
+          window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+          var gtm = document.createElement('script');
+          gtm.async = true;
+          gtm.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-W7JXM8VD';
+          document.head.appendChild(gtm);
+        }
+
+        // Whichever comes first: the page settling, or the visitor doing
+        // something. The interaction listeners matter for bounce tracking on
+        // slow connections where load fires late.
+        ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (evt) {
+          window.addEventListener(evt, loadAnalytics, { once: true, passive: true });
+        });
+
+        if (document.readyState === 'complete') {
+          setTimeout(loadAnalytics, 1200);
+        } else {
+          window.addEventListener('load', function () { setTimeout(loadAnalytics, 1200); });
+        }
+      })();
+    </script>
     <meta name="google-site-verification" content="y9sfFdvKJuN-P4rgIHtEgUvRgWek5mZqw-i9MU1H-a0" />
     <link rel="canonical" href="https://www.asbtraininghub.com/" />
 
@@ -36,14 +82,56 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#ff6c00">
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1MSBPYNK3L"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-1MSBPYNK3L');
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "@id": "https://www.asbtraininghub.com/#organization",
+      "name": "ASB Training Hub",
+      "alternateName": "ASB Training Hub Trivandrum",
+      "url": "https://www.asbtraininghub.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.asbtraininghub.com/site-logo.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://www.asbtraininghub.com/site-logo.png",
+      "description": "Career training institute in Trivandrum offering job-oriented ERP/SAP, AI, programming, management, and internship courses with placement support.",
+      "telephone": "+918714773304",
+      "email": "info@asbtraininghub.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "105-2, The Atomic, Near Technopark Phase 1, Kazhakootam",
+        "addressLocality": "Trivandrum",
+        "addressRegion": "Kerala",
+        "postalCode": "695581",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 8.5644,
+        "longitude": 76.8792
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "09:00",
+          "closes": "18:00"
+        }
+      ],
+      "areaServed": {
+        "@type": "State",
+        "name": "Kerala"
+      },
+      "sameAs": [
+        "https://wa.me/918714773304",
+        "https://www.google.com/maps/search/?api=1&query=ASB+Training+Hub+Trivandrum"
+      ]
+    }
     </script>
   </head>
 

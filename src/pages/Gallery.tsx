@@ -3,15 +3,15 @@ import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { setPageSeo } from '@/lib/seo';
 
-import classroom1 from '@/assets/gallery/classroom-1.jpg';
-import classroom2 from '@/assets/gallery/classroom-2.jpg';
-import classroom3 from '@/assets/gallery/classroom-3.jpg';
-import campus1 from '@/assets/gallery/campus-1.jpg';
-import campus2 from '@/assets/gallery/campus-2.jpg';
-import events1 from '@/assets/gallery/events-1.jpg';
-import events2 from '@/assets/gallery/events-2.jpg';
-import events3 from '@/assets/gallery/events-3.jpg';
-import cert1 from '@/assets/gallery/cert-1.jpg';
+import classroom1 from '@/assets/gallery/classroom-1.webp';
+import classroom2 from '@/assets/gallery/classroom-2.webp';
+import classroom3 from '@/assets/gallery/classroom-3.webp';
+import campus1 from '@/assets/gallery/campus-1.webp';
+import campus2 from '@/assets/gallery/campus-2.webp';
+import events1 from '@/assets/gallery/events-1.webp';
+import events2 from '@/assets/gallery/events-2.webp';
+import events3 from '@/assets/gallery/events-3.webp';
+import cert1 from '@/assets/gallery/cert-1.webp';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();

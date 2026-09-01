@@ -105,7 +105,7 @@ const Apply = () => {
                       <Button type="submit" size="lg" disabled={submitting} className="gradient-primary border-0 text-white font-semibold flex-1">
                         <Send className="h-4 w-4 mr-2" /> {submitting ? 'Submitting...' : 'Submit Application'}
                       </Button>
-                      <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp">
+                      <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp" className="inline-flex self-center">
                         <Button type="button" size="lg" variant="outline" className="w-full border-green-500 text-green-600 hover:bg-green-50">
                           <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp Us
                         </Button>

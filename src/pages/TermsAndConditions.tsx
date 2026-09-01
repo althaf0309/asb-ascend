@@ -132,10 +132,10 @@ const TermsAndConditions = () => {
           </div>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Link to="/contact" title="Contact ASB Training Hub">
+            <Link to="/contact" title="Contact ASB Training Hub" className="inline-flex self-center">
               <Button className="gradient-primary border-0 text-white">Contact Us</Button>
             </Link>
-            <Link to="/apply" title="Apply for ASB Training Hub courses">
+            <Link to="/apply" title="Apply for ASB Training Hub courses" className="inline-flex self-center">
               <Button variant="outline">Apply Now</Button>
             </Link>
           </div>

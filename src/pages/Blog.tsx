@@ -6,10 +6,10 @@ import { fetchBlogs, type BlogPost } from '@/lib/api';
 import { setPageSeo } from '@/lib/seo';
 
 const blogFallbackImages: Record<string, string> = {
-  Career: '/blog/internship-tips.png',
-  Programming: '/blog/python-vs-java.png',
-  AI: '/blog/ai-jobs-kerala.png',
-  ERP: '/blog/erp-implementation.png',
+  Career: '/blog/internship-tips.webp',
+  Programming: '/blog/python-vs-java.webp',
+  AI: '/blog/ai-jobs-kerala.webp',
+  ERP: '/blog/erp-implementation.webp',
 };
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
@@ -56,7 +56,7 @@ const Blog = () => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post, i) => {
-              const imageSrc = post.imageUrl || blogFallbackImages[post.category] || '/blog/why-sap-career-2024.png';
+              const imageSrc = post.imageUrl || blogFallbackImages[post.category] || '/blog/why-sap-career-2024.webp';
               const imageAlt = post.imageAlt || `${post.title} blog cover`;
               return (
               <ScrollReveal key={post.slug} delay={(i % 6) * 80}>

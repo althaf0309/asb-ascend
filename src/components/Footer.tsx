@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 import { useToast } from '@/hooks/use-toast';
 import { submitNewsletter } from '@/lib/api';
 
@@ -121,18 +121,23 @@ const Footer = () => (
       <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
         {/* Brand */}
         <div>
-          <Link to="/" title="ASB Training Hub home" className="flex items-center gap-3 mb-4">
+          <Link
+            to="/"
+            title="ASB Training Hub home"
+            className="flex items-center gap-3 mb-4"
+          >
+            <span className="sr-only">ASB Training Hub home</span>
             <div className="flex items-center justify-center rounded-lg bg-white px-2 py-1.5 sm:px-2.5 sm:py-2">
               <img
                 src={logo}
-                alt="ASB Training Hub"
-                title="ASB Training Hub"
+                alt=""
+                aria-hidden
                 width={160}
                 height={44}
                 className="h-7 w-auto max-w-[130px] sm:h-8 sm:max-w-[150px] lg:h-9 lg:max-w-[170px] block"
               />
             </div>
-            <span className="text-base sm:text-lg font-bold text-white font-heading">ASB Training Hub</span>
+            <span className="text-base sm:text-lg font-bold text-white font-heading" aria-hidden>ASB Training Hub</span>
           </Link>
           <p className="text-sm leading-relaxed mb-4">
             Expert-led, job-oriented training institute offering practical learning, industry-focused upskilling, career support, and placement-oriented programs in Trivandrum, Kerala.

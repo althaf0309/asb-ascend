@@ -85,8 +85,8 @@ const Contact = () => {
               ))}
             </div>
             <ScrollReveal delay={400}>
-              <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp">
-                <Button className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto">
+              <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp" className="inline-flex self-center">
+                <Button className="bg-green-700 hover:bg-green-800 text-white w-full sm:w-auto">
                   <MessageCircle className="h-4 w-4 mr-2" /> Chat on WhatsApp
                 </Button>
               </a>

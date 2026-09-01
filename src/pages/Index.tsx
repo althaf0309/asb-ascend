@@ -1,21 +1,26 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { ArrowRight, BookOpen, Users, Award, Briefcase, Star, ChevronDown, Sparkles, Brain, Code2, GraduationCap, Database, CheckCircle, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { courseCategories, courses } from '@/data/courses';
-import InquiryForm from '@/components/InquiryForm';
+import { courseCategories } from '@/data/courseCategories';
+import { courseSummaries } from '@/data/courseSummaries';
+// The inquiry form sits well below the fold but drags Radix Select and
+// floating-ui (~150KB) into whatever chunk imports it. Loading it lazily keeps
+// that off the homepage's critical path.
+const InquiryForm = lazy(() => import('@/components/InquiryForm'));
 import SmartImage from '@/components/SmartImage';
+import { srcSetFor } from '@/lib/responsiveImages';
 import { useAnimatedCounter } from '@/hooks/useScrollReveal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import heroBg from '@/assets/hero-bg.jpg';
+import heroBg from '@/assets/hero-bg.webp';
 import heroVideoAsset from '@/assets/hero-video.mp4.asset.json';
 import { setJsonLd, setPageSeo } from '@/lib/seo';
 import { getCourseImages } from '@/data/courseImages';
-import catErp from '@/assets/cat-erp.jpg';
-import catProgramming from '@/assets/cat-programming.jpg';
-import catAi from '@/assets/cat-ai.jpg';
-import catManagement from '@/assets/cat-management.jpg';
-import catInternship from '@/assets/cat-internship.jpg';
+import catErp from '@/assets/cat-erp.webp';
+import catProgramming from '@/assets/cat-programming.webp';
+import catAi from '@/assets/cat-ai.webp';
+import catManagement from '@/assets/cat-management.webp';
+import catInternship from '@/assets/cat-internship.webp';
 
 const categoryImages: Record<string, string> = {
   erp: catErp,
@@ -70,7 +75,11 @@ function HeroAnimationFallback() {
     <div className="relative h-full w-full overflow-hidden bg-[hsl(20,30%,6%)]" aria-hidden>
       <img
         src={heroBg}
+        srcSet={srcSetFor(heroBg)}
+        sizes="100vw"
         alt=""
+        fetchPriority="high"
+        decoding="async"
         title="ASB Training Hub career training animated background"
         className="hero-fallback-image absolute inset-0 h-full w-full object-cover"
       />
@@ -89,10 +98,45 @@ function HeroVideo() {
   const [sourceIndex, setSourceIndex] = useState(0);
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(heroVideoSources.length === 0);
+  // The clip is ~950KB and purely decorative - the poster carries the hero on
+  // its own. Holding it back until the page has painted stops it competing
+  // with the LCP text for bandwidth.
+  const [videoAllowed, setVideoAllowed] = useState(false);
   const videoSrc = heroVideoSources[sourceIndex];
 
   useEffect(() => {
     setVideoFailed(heroVideoSources.length === 0);
+  }, []);
+
+  useEffect(() => {
+    if (heroVideoSources.length === 0) return;
+
+    // Respect the visitor's stated preferences before spending their data.
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const connection = (navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string };
+    }).connection;
+
+    if (
+      prefersReducedMotion ||
+      connection?.saveData ||
+      (connection?.effectiveType && /(^|-)2g$/.test(connection.effectiveType))
+    ) {
+      return;
+    }
+
+    let timer: number | undefined;
+    const start = () => {
+      timer = window.setTimeout(() => setVideoAllowed(true), 600);
+    };
+
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('load', start);
+    };
   }, []);
 
   const handleVideoError = () => {
@@ -108,15 +152,16 @@ function HeroVideo() {
   return (
     <div className="relative h-full w-full">
       <HeroAnimationFallback />
-      {!videoFailed && videoSrc && (
+      {!videoFailed && videoAllowed && videoSrc && (
         <video
           key={videoSrc}
           autoPlay
           muted
           loop
           playsInline
-          preload="auto"
+          preload="none"
           poster={heroBg}
+          aria-hidden
           title="ASB Training Hub career training video"
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
           onCanPlay={() => setVideoReady(true)}
@@ -144,20 +189,31 @@ function StatCounter({ stat }: { stat: typeof stats[0] }) {
 }
 
 export default function Index() {
-  const popularCourses = courses.slice(0, 6);
+  const popularCourses = courseSummaries.slice(0, 6);
 
   useEffect(() => {
     setPageSeo({
       title: 'ASB Training Hub | ERP, SAP, AI & Programming Courses in Trivandrum',
-      description: 'Join ASB Training Hub near Technopark, Trivandrum for job-oriented ERP/SAP, AI, programming, management, and internship courses with practical training and placement support.',
+      description: 'Job-oriented ERP/SAP, AI, programming, management and internship courses near Technopark, Trivandrum, with practical training and placement support.',
       keywords: 'ASB Training Hub, best training institute Trivandrum, SAP training Trivandrum, ERP courses Kerala, AI training Trivandrum, programming courses Kerala, internship programs Trivandrum',
       path: '/',
     });
     setJsonLd('organization', {
       '@context': 'https://schema.org',
       '@type': 'EducationalOrganization',
+      '@id': 'https://www.asbtraininghub.com/#organization',
       name: 'ASB Training Hub',
+      alternateName: 'ASB Training Hub Trivandrum',
       url: 'https://www.asbtraininghub.com/',
+      description:
+        'Career training institute in Trivandrum offering job-oriented ERP/SAP, AI, programming, management, and internship courses with placement support.',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.asbtraininghub.com/site-logo.png',
+        width: 512,
+        height: 512,
+      },
+      image: 'https://www.asbtraininghub.com/site-logo.png',
       telephone: '+918714773304',
       email: 'info@asbtraininghub.com',
       address: {
@@ -168,7 +224,34 @@ export default function Index() {
         postalCode: '695581',
         addressCountry: 'IN',
       },
-      sameAs: ['https://wa.me/918714773304'],
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 8.5644,
+        longitude: 76.8792,
+      },
+      openingHours: 'Mo-Sa 09:00-18:00',
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+          opens: '09:00',
+          closes: '18:00',
+        },
+      ],
+      areaServed: { '@type': 'State', name: 'Kerala' },
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Course catalogue',
+        itemListElement: courseCategories.map((category) => ({
+          '@type': 'OfferCatalog',
+          name: category.label,
+          url: `https://www.asbtraininghub.com/courses/${category.id}`,
+        })),
+      },
+      sameAs: [
+        'https://wa.me/918714773304',
+        'https://www.google.com/maps/search/?api=1&query=ASB+Training+Hub+Trivandrum',
+      ],
     });
   }, []);
 
@@ -197,12 +280,12 @@ export default function Index() {
               Master ERP/SAP, AI, Programming, Management & more with expert-led practical training, internship support, and career-oriented learning at ASB Training Hub.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <Link to="/courses" title="Explore ASB Training Hub courses">
+              <Link to="/courses" title="Explore ASB Training Hub courses" className="inline-flex self-center">
                 <Button size="lg" className="gradient-primary border-0 text-white font-semibold text-lg px-8 py-6 hover:opacity-90">
                   Explore Courses <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <a href="https://wa.me/918714773304?text=Hi%20ASB%20Training%20Hub%2C%20I%20want%20to%20know%20about%20courses" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp">
+              <a href="https://wa.me/918714773304?text=Hi%20ASB%20Training%20Hub%2C%20I%20want%20to%20know%20about%20courses" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp" className="inline-flex self-center">
                 <Button size="lg" variant="outline" className="border-green-500 text-green-400 hover:bg-green-500/10 text-lg px-8 py-6">
                   WhatsApp Now
                 </Button>
@@ -295,6 +378,7 @@ export default function Index() {
                     <SmartImage
                       src={getCourseImages(course.id, course.category).primary}
                       alt={`${course.title} course at ASB Training Hub`}
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                       wrapperClassName="absolute inset-0"
                       className="group-hover:scale-105 transition-transform duration-500"
                     />
@@ -302,7 +386,7 @@ export default function Index() {
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-card/90 to-transparent pointer-events-none" />
                     <Code2 className="absolute inset-0 m-auto h-16 w-16 text-white/20" />
                     {course.internship && (
-                      <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>
+                      <span className="absolute top-3 right-3 bg-green-700 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>
                     )}
                   </div>
                   <div className="p-5">
@@ -330,8 +414,8 @@ export default function Index() {
               <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mb-4">Internship + Placement Support</h2>
               <p className="text-lg text-white/80 max-w-2xl mx-auto mb-6">Get hands-on industry experience with our internship programs. We partner with 200+ companies to ensure your career takes off.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/courses/internship" title="Explore internship programs at ASB Training Hub"><Button size="lg" className="bg-white text-foreground font-semibold hover:bg-white/90">Explore Internships</Button></Link>
-                <Link to="/apply" title="Apply for admission at ASB Training Hub"><Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">Apply Now</Button></Link>
+                <Link to="/courses/internship" title="Explore internship programs at ASB Training Hub" className="inline-flex self-center"><Button size="lg" className="bg-white text-navy font-semibold hover:bg-white/90">Explore Internships</Button></Link>
+                <Link to="/apply" title="Apply for admission at ASB Training Hub" className="inline-flex self-center"><Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">Apply Now</Button></Link>
               </div>
             </div>
           </div>
@@ -360,7 +444,7 @@ export default function Index() {
             ))}
           </div>
           <div className="text-center mt-8">
-            <Link to="/reviews" title="Read ASB Training Hub student reviews"><Button variant="outline" className="border-white/20 text-white hover:bg-white/10">Read More Reviews <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
+            <Link to="/reviews" title="Read ASB Training Hub student reviews" className="inline-flex self-center"><Button variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10">Read More Reviews <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
           </div>
         </div>
       </section>
@@ -403,7 +487,11 @@ export default function Index() {
             </div>
             <div className="glass-card rounded-2xl p-6 md:p-8">
               <h3 className="text-xl font-bold text-white font-heading mb-4">Enquire Now</h3>
-              <InquiryForm variant="dark" />
+              <Suspense
+                fallback={<div className="h-[320px] rounded-xl bg-white/5" aria-hidden />}
+              >
+                <InquiryForm variant="dark" />
+              </Suspense>
             </div>
           </div>
         </div>

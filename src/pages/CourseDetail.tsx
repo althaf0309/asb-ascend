@@ -11,7 +11,7 @@ import InquiryForm from '@/components/InquiryForm';
 
 import { getCourseImages } from '@/data/courseImages';
 import SmartImage from '@/components/SmartImage';
-import { setJsonLd, setPageSeo } from '@/lib/seo';
+import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo, truncateForSerp } from '@/lib/seo';
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -34,7 +34,13 @@ const CourseDetail = () => {
     const { primary: heroImg } = getCourseImages(course.id, course.category);
     setPageSeo({
       title: `${course.title} Course in Trivandrum | ASB Training Hub`,
-      description: `${course.description} Learn with practical syllabus, hands-on projects, certificate, ${course.internship ? 'internship support, ' : ''}and career guidance at ASB Training Hub.`,
+      // Kept under the ~160-character SERP budget: the course description is
+      // already a full sentence, so only a short qualifier is appended.
+      description: truncateForSerp(
+        `${course.description} ${course.duration}, ${course.mode.toLowerCase()}${
+          course.internship ? ', with internship support' : ''
+        }.`,
+      ),
       keywords: `${course.title}, ${course.categoryLabel}, ${course.title} course Trivandrum, ${course.title} training Kerala, ASB Training Hub, job oriented course, placement support`,
       path: `/course/${course.slug}`,
       image: heroImg,
@@ -43,17 +49,86 @@ const CourseDetail = () => {
       '@context': 'https://schema.org',
       '@type': 'Course',
       name: course.title,
-      description: course.description,
+      description: course.overview || course.description,
       provider: {
         '@type': 'EducationalOrganization',
+        '@id': 'https://www.asbtraininghub.com/#organization',
         name: 'ASB Training Hub',
         sameAs: 'https://www.asbtraininghub.com/',
       },
       educationalCredentialAwarded: course.certificate,
       courseMode: course.mode,
       timeRequired: course.duration,
+      inLanguage: 'en',
+      teaches: course.learningOutcomes,
+      coursePrerequisites: course.prerequisites,
       url: `https://www.asbtraininghub.com/course/${course.slug}`,
+      image: absoluteUrl(heroImg),
+      // Google requires at least one instance with a mode and duration before a
+      // course is eligible for course rich results.
+      hasCourseInstance: [
+        {
+          '@type': 'CourseInstance',
+          courseMode: course.mode.toLowerCase().includes('online') ? 'blended' : 'onsite',
+          courseWorkload: course.duration,
+          location: {
+            '@type': 'Place',
+            name: 'ASB Training Hub',
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: '105-2, The Atomic, Near Technopark Phase 1, Kazhakootam',
+              addressLocality: 'Trivandrum',
+              addressRegion: 'Kerala',
+              postalCode: '695581',
+              addressCountry: 'IN',
+            },
+          },
+        },
+      ],
     });
+
+    setJsonLd('breadcrumb', {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
+        { '@type': 'ListItem', position: 2, name: 'Courses', item: absoluteUrl('/courses') },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: course.categoryLabel,
+          item: absoluteUrl(`/courses/${course.category}`),
+        },
+        {
+          '@type': 'ListItem',
+          position: 4,
+          name: course.title,
+          item: absoluteUrl(`/course/${course.slug}`),
+        },
+      ],
+    });
+
+    // The FAQs are already on the page; publishing them as schema is what makes
+    // them answerable.
+    if (course.faqs.length) {
+      setJsonLd('course-faq', {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: course.faqs.map((faq) => ({
+          '@type': 'Question',
+          name: faq.q,
+          acceptedAnswer: { '@type': 'Answer', text: faq.a },
+        })),
+      });
+    } else {
+      removeJsonLd('course-faq');
+    }
+
+    return () => {
+      removeJsonLd('course');
+      removeJsonLd('breadcrumb');
+      removeJsonLd('course-faq');
+    };
   }, [course]);
 
   if (!course) {
@@ -61,7 +136,7 @@ const CourseDetail = () => {
       <main className="min-h-screen flex flex-col items-center justify-center pt-24 pb-12 px-4 text-center">
         <h1 className="text-3xl font-bold font-heading mb-3">Course not found</h1>
         <p className="text-muted-foreground mb-6">The course you're looking for may have been renamed.</p>
-        <Link to="/courses" title="Browse all ASB Training Hub courses"><Button>Browse all courses</Button></Link>
+        <Link to="/courses" title="Browse all ASB Training Hub courses" className="inline-flex self-center"><Button>Browse all courses</Button></Link>
       </main>
     );
   }
@@ -100,10 +175,10 @@ const CourseDetail = () => {
             )}
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link to="/apply" title={`Apply for ${course.title} at ASB Training Hub`}>
+            <Link to="/apply" title={`Apply for ${course.title} at ASB Training Hub`} className="inline-flex self-center">
               <Button size="lg" className="bg-white !text-black font-semibold hover:bg-white/90 shadow-lg">Apply Now</Button>
             </Link>
-            <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title={`Chat on WhatsApp about ${course.title}`}>
+            <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title={`Chat on WhatsApp about ${course.title}`} className="inline-flex self-center">
               <Button size="lg" variant="outline" className="border-white/80 !text-white hover:bg-white/15 bg-black/40 shadow-lg">
                 <MessageCircle className="h-4 w-4 mr-2" />Chat on WhatsApp
               </Button>
@@ -149,6 +224,7 @@ const CourseDetail = () => {
                   <SmartImage
                     src={secondaryImg}
                     alt={`${course.title} learning environment`}
+                    sizes="(min-width: 768px) 40vw, 100vw"
                     wrapperClassName="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/3] border border-border"
                   />
                 </div>
@@ -324,6 +400,7 @@ const CourseDetail = () => {
                       <SmartImage
                         src={getCourseImages(c.id, c.category).primary}
                         alt={c.title}
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                         wrapperClassName="aspect-video overflow-hidden"
                         className="group-hover:scale-105 transition-transform"
                       />

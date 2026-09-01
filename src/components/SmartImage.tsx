@@ -1,5 +1,6 @@
 import { useState, ImgHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
+import { srcSetFor } from '@/lib/responsiveImages';
 
 interface SmartImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -10,6 +11,12 @@ interface SmartImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   className?: string;
   /** Eager loads skip the skeleton fade-in for above-the-fold hero images. */
   eager?: boolean;
+  /**
+   * Media-condition hint for srcset selection. Defaults to a full-width
+   * assumption, which is correct for the hero and safe (if conservative)
+   * elsewhere.
+   */
+  sizes?: string;
 }
 
 /**
@@ -24,10 +31,15 @@ const SmartImage = ({
   wrapperClassName,
   className,
   eager = false,
+  sizes = '100vw',
   ...rest
 }: SmartImageProps) => {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
+
+  // Present only for sources that actually have variants; a plain src is left
+  // exactly as it was.
+  const srcSet = srcSetFor(src);
 
   // Build a 24px blurred preview for Unsplash URLs by swapping the `w=` param.
   const blurSrc = (() => {
@@ -96,9 +108,12 @@ const SmartImage = ({
       {!errored && (
         <img
           src={src}
+          srcSet={srcSet}
+          sizes={srcSet ? sizes : undefined}
           alt={alt}
           title={alt || undefined}
           loading={eager ? 'eager' : 'lazy'}
+          fetchPriority={eager ? 'high' : undefined}
           decoding="async"
           onLoad={() => setLoaded(true)}
           onError={() => {

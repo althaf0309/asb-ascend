@@ -77,38 +77,19 @@ type BlogPayload = {
   removeImage?: boolean;
 };
 
-const WEB3FORMS_ACCESS_KEY = '98fcdd83-84c0-4eb4-8af0-58a22fd19caf';
-const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+/** The cookie carries the session; a literal token is only for non-browser callers. */
+const authHeader = (token?: string): Record<string, string> =>
+  token && token !== 'cookie-session' ? { Authorization: `Bearer ${token}` } : {};
 
-const submitWeb3Form = async (payload: Record<string, unknown>) => {
-  const response = await fetch(WEB3FORMS_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      access_key: WEB3FORMS_ACCESS_KEY,
-      from_name: 'ASB Training Hub Website',
-      botcheck: false,
-      ...payload,
-    }),
-  });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok || data.success === false) {
-    const message = data.message || data?.body?.message || 'Submission failed. Please try again.';
-    throw new Error(message);
-  }
-
-  return data;
-};
-
+/**
+ * All admin auth rides on an HttpOnly session cookie, so every request must
+ * send credentials. Form notification emails are dispatched server-side.
+ */
 const submitJson = async (path: string, payload: unknown) => {
   const response = await fetch(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
     body: JSON.stringify(payload),
   });
 
@@ -121,56 +102,13 @@ const submitJson = async (path: string, payload: unknown) => {
   return data;
 };
 
-export const submitInquiry = async (payload: InquiryPayload) => {
-  const [stored] = await Promise.all([
-    submitJson('/api/inquiries', payload),
-    submitWeb3Form({
-      subject: 'New Course Inquiry - ASB Training Hub',
-      form_type: 'Course Inquiry',
-      name: payload.name,
-      email: payload.email,
-      phone: payload.phone,
-      course_interest: payload.course || 'Not selected',
-      message: payload.message || 'No message provided',
-    }),
-  ]);
+export const submitInquiry = (payload: InquiryPayload) => submitJson('/api/inquiries', payload);
 
-  return stored;
-};
+export const submitApplication = (payload: ApplicationPayload) =>
+  submitJson('/api/applications', payload);
 
-export const submitApplication = async (payload: ApplicationPayload) => {
-  const [stored] = await Promise.all([
-    submitJson('/api/applications', payload),
-    submitWeb3Form({
-      subject: 'New Course Application - ASB Training Hub',
-      form_type: 'Course Application',
-      name: payload.name,
-      email: payload.email,
-      phone: payload.phone,
-      course: payload.course,
-      qualification: payload.qualification || 'Not provided',
-      experience: payload.experience || 'Not provided',
-      preferred_mode: payload.preferredMode || 'Not selected',
-      callback_time: payload.callbackTime || 'Not provided',
-      message: payload.message || 'No message provided',
-    }),
-  ]);
-
-  return stored;
-};
-
-export const submitNewsletter = async (payload: NewsletterPayload) => {
-  const [stored] = await Promise.all([
-    submitJson('/api/newsletters', payload),
-    submitWeb3Form({
-      subject: 'New Newsletter Subscription - ASB Training Hub',
-      form_type: 'Newsletter Subscription',
-      email: payload.email,
-    }),
-  ]);
-
-  return stored;
-};
+export const submitNewsletter = (payload: NewsletterPayload) =>
+  submitJson('/api/newsletters', payload);
 
 export const fetchBlogs = async (): Promise<BlogPost[]> => {
   const response = await fetch('/api/blogs');
@@ -189,13 +127,29 @@ export const adminLogin = async (username: string, password: string): Promise<st
   return data.token;
 };
 
+/** Ends the server-side session and clears the auth cookie. */
+export const logoutRequest = async () => {
+  await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }).catch(
+    () => undefined,
+  );
+};
+
+/** Returns true when the session cookie is still valid. */
+export const checkSession = async (): Promise<boolean> => {
+  const response = await fetch('/api/admin/session', { credentials: 'same-origin' }).catch(
+    () => null,
+  );
+  return Boolean(response?.ok);
+};
+
 export const createBlog = async (payload: BlogPayload, token: string): Promise<BlogPost> => {
   const response = await fetch('/api/admin/blogs', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...authHeader(token),
     },
+    credentials: 'same-origin',
     body: JSON.stringify(payload),
   });
 
@@ -210,7 +164,8 @@ export const createBlog = async (payload: BlogPayload, token: string): Promise<B
 
 export const fetchAdminBlogs = async (token: string): Promise<BlogPost[]> => {
   const response = await fetch('/api/admin/blogs', {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeader(token),
+    credentials: 'same-origin',
   });
 
   if (!response.ok) throw new Error('Unable to load admin blogs.');
@@ -222,8 +177,9 @@ export const updateBlog = async (slug: string, payload: BlogPayload, token: stri
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...authHeader(token),
     },
+    credentials: 'same-origin',
     body: JSON.stringify(payload),
   });
 
@@ -239,7 +195,8 @@ export const updateBlog = async (slug: string, payload: BlogPayload, token: stri
 export const deleteBlog = async (slug: string, token: string) => {
   const response = await fetch(`/api/admin/blogs/${slug}`, {
     method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeader(token),
+    credentials: 'same-origin',
   });
 
   const data = await response.json().catch(() => ({}));
@@ -253,7 +210,8 @@ export const deleteBlog = async (slug: string, token: string) => {
 
 export const fetchAdminSubmissions = async (token: string): Promise<AdminSubmission[]> => {
   const response = await fetch('/api/admin/submissions', {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeader(token),
+    credentials: 'same-origin',
   });
 
   if (!response.ok) throw new Error('Unable to load submissions.');
@@ -268,8 +226,9 @@ export const updateAdminSubmission = async (
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...authHeader(token),
     },
+    credentials: 'same-origin',
     body: JSON.stringify({ status: submission.status, note: submission.note }),
   });
 

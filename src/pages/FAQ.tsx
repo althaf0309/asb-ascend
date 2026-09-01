@@ -92,8 +92,8 @@ const FAQ = () => {
         <div className="text-center mt-8">
           <p className="text-muted-foreground mb-4">Still have questions?</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/contact" title="Contact ASB Training Hub"><Button className="gradient-primary border-0 text-white">Contact Us</Button></Link>
-            <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp">
+            <Link to="/contact" title="Contact ASB Training Hub" className="inline-flex self-center"><Button className="gradient-primary border-0 text-white">Contact Us</Button></Link>
+            <a href="https://wa.me/918714773304" target="_blank" rel="noopener noreferrer" title="Chat with ASB Training Hub on WhatsApp" className="inline-flex self-center">
               <Button variant="outline">WhatsApp Us</Button>
             </a>
           </div>

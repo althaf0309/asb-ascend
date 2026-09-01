@@ -5,14 +5,15 @@ import { Button } from '@/components/ui/button';
 import { fetchBlog, type BlogPost } from '@/lib/api';
 import InquiryForm from '@/components/InquiryForm';
 import { removeJsonLd, setJsonLd, setPageSeo } from '@/lib/seo';
+import { sanitizeBlogHtml } from '@/lib/sanitize';
 
 const formatDate = (value: string) => new Intl.DateTimeFormat('en', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(value));
 
 const blogFallbackImages: Record<string, string> = {
-  Career: '/blog/internship-tips.png',
-  Programming: '/blog/python-vs-java.png',
-  AI: '/blog/ai-jobs-kerala.png',
-  ERP: '/blog/erp-implementation.png',
+  Career: '/blog/internship-tips.webp',
+  Programming: '/blog/python-vs-java.webp',
+  AI: '/blog/ai-jobs-kerala.webp',
+  ERP: '/blog/erp-implementation.webp',
 };
 
 const blogCategoryToCourseInterest = (category: string) => {
@@ -34,7 +35,7 @@ const BlogDetail = () => {
     if (!slug) return;
     fetchBlog(slug)
       .then((blog) => {
-        const seoImage = blog.imageUrl || blogFallbackImages[blog.category] || '/blog/why-sap-career-2024.png';
+        const seoImage = blog.imageUrl || blogFallbackImages[blog.category] || '/blog/why-sap-career-2024.webp';
         setPost(blog);
         setPageSeo({
           title: blog.metaTitle || `${blog.title} | ASB Training Hub`,
@@ -87,12 +88,12 @@ const BlogDetail = () => {
       <main className="min-h-screen flex flex-col items-center justify-center pt-24 px-4 text-center">
         <h1 className="text-3xl font-bold font-heading mb-3">Blog not found</h1>
         <p className="text-muted-foreground mb-6">{error || 'This post may have been removed.'}</p>
-        <Link to="/blog" title="Back to ASB Training Hub blog"><Button>Back to Blog</Button></Link>
+        <Link to="/blog" title="Back to ASB Training Hub blog" className="inline-flex self-center"><Button>Back to Blog</Button></Link>
       </main>
     );
   }
 
-  const imageSrc = post.imageUrl || blogFallbackImages[post.category] || '/blog/why-sap-career-2024.png';
+  const imageSrc = post.imageUrl || blogFallbackImages[post.category] || '/blog/why-sap-career-2024.webp';
   const imageAlt = post.imageAlt || `${post.title} blog cover`;
 
   return (
@@ -118,7 +119,7 @@ const BlogDetail = () => {
       <section className="section-padding bg-background">
         <article className="container mx-auto max-w-3xl">
           <p className="text-xl text-muted-foreground leading-relaxed mb-8">{post.excerpt}</p>
-          <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div className="blog-content" dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(post.content) }} />
         </article>
       </section>
 

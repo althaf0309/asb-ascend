@@ -1,4 +1,5 @@
-export type CourseCategory = 'erp' | 'programming' | 'ai' | 'management' | 'internship';
+export type { CourseCategory } from './courseCategories';
+import type { CourseCategory } from './courseCategories';
 
 export interface Course {
   id: string;
@@ -104,6 +105,9 @@ export const courses: Course[] = [
     faqs: [
       { q: 'What does ERP MM cover?', a: 'It handles end-to-end procurement, inventory and material master data — the supply side of any enterprise.' },
       { q: 'Is MM in demand globally?', a: 'Yes, MM consultants are recruited heavily across the Middle East, Europe and India.' },
+      { q: 'Do I need a supply chain background to join?', a: 'No. Procurement concepts are taught from first principles, though an operations or logistics background helps you move faster through the business process modules.' },
+      { q: 'How much of the course is hands-on configuration?', a: 'Roughly two-thirds. You configure procurement org structures, run full procure-to-pay cycles, and build release strategies in a sandbox system rather than only studying screenshots.' },
+      { q: 'Which roles can I apply for after this course?', a: 'Graduates typically target ERP MM consultant, procurement analyst, inventory systems specialist, and supply chain functional lead roles across manufacturing, retail, pharma and logistics.' },
     ],
   },
   {
@@ -119,6 +123,7 @@ export const courses: Course[] = [
     faqs: [
       { q: 'Is sales experience required?', a: 'Not at all — we teach the business process and the system together from day one.' },
       { q: 'What career paths open up?', a: 'ERP SD Consultant, Sales Operations Lead, Pre-sales Consultant and Business Analyst roles.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: ERP SD Consultant; Order Management Specialist; Sales Operations Analyst; Revenue Systems Analyst. Placement support covers resume building, mock interviews and referrals.' },
     ],
   },
   {
@@ -133,6 +138,8 @@ export const courses: Course[] = [
     projects: ['BOM and routing for a 5-level assembly product', 'MRP simulation for a make-to-stock factory', 'Capacity levelling for a bottleneck work center', 'Process order build for pharma manufacturing'],
     faqs: [
       { q: 'Is this for the manufacturing industry only?', a: 'Primarily yes — but PP knowledge also opens roles in supply chain consulting and ERP support.' },
+      { q: 'Is an internship included?', a: 'This course focuses on training and portfolio projects. Internship placements are available separately through our internship programmes, and the admissions team can advise on combining the two.' },
+      { q: 'How long is the ERP Production Planning course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
     ],
   },
   {
@@ -147,6 +154,8 @@ export const courses: Course[] = [
     projects: ['Asset hierarchy for an oil refinery', 'Preventive maintenance plan for a fleet', 'Shutdown project planning case study', 'Mobile maintenance app pilot design'],
     faqs: [
       { q: 'Which industries hire ERP PM consultants?', a: 'Oil & gas, utilities, chemicals, manufacturing, infrastructure and metro rail are the largest recruiters.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Build a complete asset hierarchy; Set up preventive maintenance plans; Handle breakdown to closure workflows; Integrate PM with spares, costing and HR.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Maintenance & reliability engineers; Plant operations leads; Mechanical / Electrical engineers; EAM software users.' },
     ],
   },
   {
@@ -161,6 +170,8 @@ export const courses: Course[] = [
     projects: ['Inspection plan for an automotive component', 'Stability study build for pharma', 'Vendor quality scorecard configuration', 'QM notification analytics dashboard'],
     faqs: [
       { q: 'Is QM certification valuable?', a: 'Yes — regulated industries (pharma, food, automotive) actively hire ERP QM consultants at premium rates.' },
+      { q: 'Is an internship included?', a: 'This course focuses on training and portfolio projects. Internship placements are available separately through our internship programmes, and the admissions team can advise on combining the two.' },
+      { q: 'How long is the ERP Quality Management course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
     ],
   },
   {
@@ -175,6 +186,8 @@ export const courses: Course[] = [
     projects: ['EPC project structure for a power plant', 'Capital expenditure project budget control', 'Resource-related billing for a consulting firm', 'Earned value reporting dashboard'],
     faqs: [
       { q: 'How is ERP PS different from MS Project?', a: 'PS integrates natively with finance, procurement and HR, giving a real-time financial view of every project.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: EPC project structure for a power plant; Capital expenditure project budget control; Resource-related billing for a consulting firm. All of it goes into your portfolio.' },
+      { q: 'Do I receive a certificate?', a: 'ASB Training Hub Course Completion Certificate with a project portfolio.' },
     ],
   },
   {
@@ -189,6 +202,8 @@ export const courses: Course[] = [
     projects: ['Org structure for a multi-country company', 'Payroll configuration case study', 'Time evaluation rule building', 'ESS portal design walkthrough'],
     faqs: [
       { q: 'Is on-premise HCM still relevant?', a: 'Yes — thousands of enterprises still run HCM, and migration projects to cloud HR are a huge growth area.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with ERP ECC HCM, Cloud HR Suite and Fiori HR Apps throughout the course, rather than only studying them in theory.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Configure personnel & org structures; Build payroll schemas and rules; Run time evaluation accurately; Position for HR-tech consulting roles.' },
     ],
   },
   {
@@ -203,6 +218,8 @@ export const courses: Course[] = [
     projects: ['Demand forecast for a CPG company', 'Network optimization for a 3-plant manufacturer', 'Freight optimization case study', 'IBP scenario planning workshop'],
     faqs: [
       { q: 'What is IBP?', a: 'Integrated Business Planning is the modern cloud-based supply chain planning suite — the future of ERP SCM.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Build statistical demand forecasts; Run network optimization scenarios; Configure TM shipments end-to-end; Lead an IBP implementation discovery.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Supply chain professionals; Logistics & planning managers; MBA Operations graduates; ERP consultants expanding scope.' },
     ],
   },
   {
@@ -217,6 +234,8 @@ export const courses: Course[] = [
     projects: ['RFx event for capex procurement', 'Contract lifecycle build-out', 'Supplier scorecard dashboard', 'Self-service procurement portal design'],
     faqs: [
       { q: 'Is the cloud suite replacing SRM?', a: 'Yes — most enterprises are migrating to cloud procurement, and trained consultants are in very high demand.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: ERP SRM Consultant; Cloud Procurement Specialist; Sourcing Manager; Procurement Transformation Lead. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with ERP SRM, Cloud Procurement Suite and Spend Analytics Tools throughout the course, rather than only studying them in theory.' },
     ],
   },
   {
@@ -231,6 +250,8 @@ export const courses: Course[] = [
     projects: ['Lead-to-opportunity pipeline for B2B', 'Marketing campaign with segmentation', 'Service contract & SLA build', 'Interaction center scripting case study'],
     faqs: [
       { q: 'What is the modern customer experience suite?', a: 'It is the cloud-based successor that unifies sales, marketing, service and commerce on a single data model.' },
+      { q: 'Is an internship included?', a: 'This course focuses on training and portfolio projects. Internship placements are available separately through our internship programmes, and the admissions team can advise on combining the two.' },
+      { q: 'How long is the ERP Customer Relationship Management course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
     ],
   },
   {
@@ -245,6 +266,8 @@ export const courses: Course[] = [
     projects: ['Employee Central build for a 5-country employer', 'Recruiting marketing campaign', 'Performance & goals cycle setup', 'Compensation planning sheet design'],
     faqs: [
       { q: 'Why learn cloud HR?', a: 'It is the fastest-growing HR-tech segment globally with critical talent shortages — perfect for premium consulting roles.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: Cloud HR Consultant; People Analytics Specialist; Talent Tech Lead; HR Transformation Architect. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Cloud HR Suite, People Analytics and Business Technology Platform throughout the course, rather than only studying them in theory.' },
     ],
   },
   {
@@ -259,6 +282,8 @@ export const courses: Course[] = [
     projects: ['Interactive ALV report with drill-down', 'Smart form for purchase order printing', 'BAPI-based mass upload program', 'CDS view-based Fiori analytical app'],
     faqs: [
       { q: 'Do I need programming experience?', a: 'Basic logic helps — we teach ABAP from scratch including OOP and HANA development.' },
+      { q: 'How long is the ERP Programming (ABAP) course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: ABAP Developer; ERP Technical Consultant; Full-stack ERP Engineer; Enhancement & Integration Specialist. Placement support covers resume building, mock interviews and referrals.' },
     ],
   },
 
@@ -275,6 +300,8 @@ export const courses: Course[] = [
     projects: ['SaaS dashboard with auth and billing', 'Realtime chat app with WebSockets', 'E-commerce store with payment gateway', 'Portfolio website with CMS backend'],
     faqs: [
       { q: 'Is Python good for web dev?', a: 'Absolutely — Django and Flask power some of the largest sites on the internet, including Instagram and Pinterest.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: SaaS dashboard with auth and billing; Realtime chat app with WebSockets; E-commerce store with payment gateway. All of it goes into your portfolio.' },
+      { q: 'Do I receive a certificate?', a: 'ASB Training Hub Course Completion Certificate with a project portfolio.' },
     ],
   },
   {
@@ -289,6 +316,8 @@ export const courses: Course[] = [
     projects: ['Banking microservices with JWT auth', 'Inventory management REST API', 'Event-driven order processing', 'Secure file-sharing service'],
     faqs: [
       { q: 'Is Java still in demand?', a: 'Yes — Java remains the #1 enterprise backend language, especially in banking, fintech and telecom.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Java 17, Spring Boot, IntelliJ IDEA, Maven, Postman and Docker throughout the course, rather than only studying them in theory.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Build resilient microservices; Apply security best practices; Use JPA/Hibernate effectively; Crack DSA + system design rounds with confidence.' },
     ],
   },
   {
@@ -303,6 +332,8 @@ export const courses: Course[] = [
     projects: ['Interactive todo app with local storage', 'Weather dashboard using public APIs', 'Mini blog with Node + Express backend', 'React-based portfolio site'],
     faqs: [
       { q: 'Is JavaScript enough to get a job?', a: 'JS plus React/Node opens the largest pool of frontend, backend and full-stack jobs available.' },
+      { q: 'Is an internship included?', a: 'This course focuses on training and portfolio projects. Internship placements are available separately through our internship programmes, and the admissions team can advise on combining the two.' },
+      { q: 'How long is the Modern JavaScript course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
     ],
   },
   {
@@ -317,6 +348,8 @@ export const courses: Course[] = [
     projects: ['Mini banking system with file storage', 'Dynamic library implementation', 'Custom shell program', 'Hash table from scratch'],
     faqs: [
       { q: 'Why learn C in 2025?', a: 'Because every great engineer should understand the machine — and embedded, IoT and OS work all run on C.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Reason about memory and pointers fluently; Implement core data structures from scratch; Debug with GDB confidently; Read and contribute to open-source C projects.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: CS / Engineering freshers; Self-taught coders building fundamentals; Embedded systems aspirants.' },
     ],
   },
   {
@@ -331,6 +364,8 @@ export const courses: Course[] = [
     projects: ['2D game engine prototype', 'In-memory key-value store', 'Concurrent producer/consumer system', '50+ DSA solutions repo'],
     faqs: [
       { q: 'Is C++ used in industry?', a: 'Heavily — gaming, fintech, browsers, OSes, robotics and embedded systems all run modern C++.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Write idiomatic modern C++; Use STL effectively; Solve advanced DSA problems; Build a multithreaded mini-engine.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: CS / Engineering students; Competitive programmers; Game development aspirants.' },
     ],
   },
   {
@@ -345,6 +380,8 @@ export const courses: Course[] = [
     projects: ['Personal portfolio landing page', 'Accessible signup form', 'Responsive product page'],
     faqs: [
       { q: 'Can I build websites with just HTML?', a: 'You can build static pages — for full sites, pair HTML with CSS and JavaScript.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Personal portfolio landing page; Accessible signup form; Responsive product page. All of it goes into your portfolio.' },
+      { q: 'Do I receive a certificate?', a: 'ASB Training Hub Course Completion Certificate with a project portfolio.' },
     ],
   },
   {
@@ -359,6 +396,8 @@ export const courses: Course[] = [
     projects: ['CSS-only landing page', 'Animated portfolio with Grid', 'Tailwind dashboard rebuild', 'Design tokens-based theme system'],
     faqs: [
       { q: 'Is CSS enough for frontend?', a: 'CSS is one of three core skills — pair it with HTML and JavaScript for a complete frontend stack.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: Frontend Developer; UI Developer; Design Engineer. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with VS Code, Tailwind CSS, Figma and Chrome DevTools throughout the course, rather than only studying them in theory.' },
     ],
   },
   {
@@ -373,11 +412,13 @@ export const courses: Course[] = [
     projects: ['Multi-tenant SaaS starter', 'E-commerce backend with REST API', 'CRM dashboard with role permissions', 'Newsletter system with queues'],
     faqs: [
       { q: 'Is PHP still relevant?', a: 'Very — PHP + Laravel remains one of the most productive backend stacks, with strong demand in product and agency roles.' },
+      { q: 'How long is the PHP & Laravel course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: PHP Developer; Backend Developer; WordPress Developer; Laravel Engineer. Placement support covers resume building, mock interviews and referrals.' },
     ],
   },
   {
     ...progDefaults, id: 'ruby', title: 'Ruby on Rails', slug: 'ruby', icon: 'Gem',
-    description: 'Rapid web development with Ruby and the Rails framework.',
+    description: 'Build and ship production web applications fast with Ruby and the Rails framework, from MVC fundamentals to deployment.',
     overview: 'Ruby on Rails is famous for productivity — it powers GitHub, Shopify and many of the world\'s top startups. This course teaches Ruby fundamentals, the Rails framework, MVC architecture, ActiveRecord, testing and deployment — perfect for product-minded developers who want to ship fast.',
     syllabus: ['Ruby Language Fundamentals', 'OOP & Blocks', 'Rails MVC', 'ActiveRecord & Migrations', 'Action Cable & WebSockets', 'Testing with RSpec', 'Background Jobs', 'Deployment'],
     tools: ['Ruby 3', 'Rails 7', 'PostgreSQL', 'RSpec', 'Sidekiq'],
@@ -387,6 +428,8 @@ export const courses: Course[] = [
     projects: ['Marketplace MVP with Stripe', 'Realtime collaboration app', 'API-only Rails backend', 'Background-job-powered workflow'],
     faqs: [
       { q: 'Is Ruby good for startups?', a: 'Excellent — Rails remains the fastest way to ship a credible MVP, and remote Rails roles pay well.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Ruby 3, Rails 7, PostgreSQL, RSpec and Sidekiq throughout the course, rather than only studying them in theory.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Build full Rails apps; Use ActiveRecord effectively; Write tests with RSpec; Deploy a Rails MVP in days.' },
     ],
   },
   {
@@ -401,6 +444,8 @@ export const courses: Course[] = [
     projects: ['Habit tracker app', 'News app with offline cache', 'Realtime chat with Firebase', 'Capstone: Play Store app'],
     faqs: [
       { q: 'Is Kotlin better than Java for Android?', a: 'Yes — Google officially recommends Kotlin, and it is now the standard for new Android development.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: Android Developer; Mobile Developer; Kotlin Engineer. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Android Studio, Kotlin, Jetpack Compose, Gradle and Firebase throughout the course, rather than only studying them in theory.' },
     ],
   },
   {
@@ -415,6 +460,8 @@ export const courses: Course[] = [
     projects: ['Notes app with iCloud sync', 'Weather app with maps', 'Habit tracker with widgets', 'Capstone TestFlight submission'],
     faqs: [
       { q: 'Do I need a Mac?', a: 'Yes — Xcode and iOS development require macOS. You can rent cloud Macs if needed for the duration.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Notes app with iCloud sync; Weather app with maps; Habit tracker with widgets. All of it goes into your portfolio.' },
+      { q: 'Do I receive a certificate?', a: 'ASB Training Hub Course Completion Certificate with a project portfolio.' },
     ],
   },
   {
@@ -429,6 +476,8 @@ export const courses: Course[] = [
     projects: ['E-commerce mobile app', 'Realtime chat with Firebase', 'Fitness tracker with charts', 'Capstone published to both stores'],
     faqs: [
       { q: 'Can Flutter build for web too?', a: 'Yes — Flutter supports mobile, web, and desktop from a single codebase.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Build cross-platform apps from one codebase; Manage state cleanly; Integrate Firebase auth & Firestore; Publish to Play Store and App Store.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Mobile app aspirants; Web developers entering mobile; Startup developers shipping fast.' },
     ],
   },
 
@@ -445,6 +494,8 @@ export const courses: Course[] = [
     projects: ['Image classifier deployed to web', 'Recommendation engine for e-commerce', 'GenAI chatbot with custom data', 'Capstone with industry mentor'],
     faqs: [
       { q: 'Do I need a strong math background?', a: 'Basic high-school math is enough — we cover all required statistics and linear algebra inside the course.' },
+      { q: 'How long is the Artificial Intelligence Training course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: AI Engineer; AI Researcher; Applied Scientist; AI Product Engineer. Placement support covers resume building, mock interviews and referrals.' },
     ],
   },
   {
@@ -459,6 +510,8 @@ export const courses: Course[] = [
     projects: ['Customer churn prediction', 'Credit risk scoring model', 'Demand forecasting for retail', 'Deployed ML API on cloud'],
     faqs: [
       { q: 'How is ML different from AI?', a: 'ML is the subset of AI focused on learning patterns from data — and it\'s where most jobs actually are today.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Python, Scikit-learn, Pandas, NumPy, XGBoost, FastAPI and MLflow throughout the course, rather than only studying them in theory.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Build end-to-end ML pipelines; Tune and validate models like a pro; Deploy models as REST APIs; Communicate results to business stakeholders.' },
     ],
   },
   {
@@ -473,6 +526,8 @@ export const courses: Course[] = [
     projects: ['Object detection on custom dataset', 'Sentiment analysis with transformers', 'Image generation with diffusion', 'Speech recognition mini-project'],
     faqs: [
       { q: 'Do I need my own GPU?', a: 'No — we provide cloud GPU access (Colab Pro) for the entire training period.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Train CNNs and transformers from scratch; Fine-tune models with transfer learning; Build a generative model end-to-end; Deploy DL models to production.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: ML practitioners; Research aspirants; Engineers building advanced AI products.' },
     ],
   },
   {
@@ -487,6 +542,8 @@ export const courses: Course[] = [
     projects: ['Document Q&A chatbot with RAG', 'Custom fine-tuned support assistant', 'Multi-tool AI agent', 'AI-powered SaaS MVP'],
     faqs: [
       { q: 'Is coding required?', a: 'Basic Python is needed — we cover everything else, including the latest LLM APIs and frameworks.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: GenAI Developer; Prompt Engineer; AI Solutions Architect; AI Product Engineer. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with OpenAI API, Anthropic Claude, LangChain, Hugging Face, Pinecone / Chroma and Streamlit throughout the course, rather than only studying them in theory.' },
     ],
   },
   {
@@ -501,6 +558,8 @@ export const courses: Course[] = [
     projects: ['EDA & dashboard for retail', 'Predictive maintenance model', 'NLP analytics on social data', 'Capstone deployed dashboard'],
     faqs: [
       { q: 'How is this different from pure AI?', a: 'Data Science emphasises analysis, business storytelling and decision-support alongside ML — perfect for analytics roles.' },
+      { q: 'How long is the Data Science + AI Training course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: Data Scientist; AI Analyst; Business Intelligence Analyst; Data Science Engineer. Placement support covers resume building, mock interviews and referrals.' },
     ],
   },
   {
@@ -515,6 +574,8 @@ export const courses: Course[] = [
     projects: ['Customer review sentiment analyzer', 'Resume parser with NER', 'Domain-specific chatbot', 'Semantic search engine'],
     faqs: [
       { q: 'Can I build chatbots after this?', a: 'Yes — chatbot development is a core part of the curriculum, including modern LLM-powered bots.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with NLTK, spaCy, Hugging Face, OpenAI API, LangChain and Python throughout the course, rather than only studying them in theory.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Build NLP pipelines end-to-end; Use transformers for real tasks; Ship a working chatbot; Extract structured data from documents.' },
     ],
   },
   {
@@ -529,6 +590,8 @@ export const courses: Course[] = [
     projects: ['Line-following robot with CV', 'Voice-controlled robotic arm', 'Autonomous wheeled robot in Gazebo', 'Capstone hardware demo'],
     faqs: [
       { q: 'Do I get hands-on with real robots?', a: 'Yes — we have practical sessions with Arduino/Pi-based kits and ROS-Gazebo simulation.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Engineering students; Automation professionals; AI engineers entering robotics.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Line-following robot with CV; Voice-controlled robotic arm; Autonomous wheeled robot in Gazebo. All of it goes into your portfolio.' },
     ],
   },
   {
@@ -543,6 +606,8 @@ export const courses: Course[] = [
     projects: ['Research agent with web tools', 'Multi-agent customer support', 'Code-writing developer agent', 'Capstone production agent'],
     faqs: [
       { q: 'What is Agentic AI?', a: 'AI systems that can autonomously plan, use tools and execute multi-step tasks toward a goal — far beyond chatbot answers.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with LangChain, LangGraph, AutoGen, CrewAI, OpenAI / Claude APIs and Python throughout the course, rather than only studying them in theory.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Design robust agent architectures; Build multi-agent workflows; Implement memory and guardrails; Deploy production AI agents.' },
     ],
   },
   {
@@ -557,6 +622,8 @@ export const courses: Course[] = [
     projects: ['Image-recognition SaaS', 'Document Q&A product with RAG', 'Predictive analytics dashboard', 'Capstone deployed AI startup MVP'],
     faqs: [
       { q: 'How is this different from regular AI training?', a: 'It teaches the complete production stack — not just notebooks — so you can actually ship AI products to real users.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Image-recognition SaaS; Document Q&A product with RAG; Predictive analytics dashboard. All of it goes into your portfolio.' },
+      { q: 'Do I receive a certificate?', a: 'ASB Training Hub Course Completion Certificate with a project portfolio.' },
     ],
   },
 
@@ -573,6 +640,8 @@ export const courses: Course[] = [
     projects: ['TM implementation case study', 'Warehouse automation proposal', 'Last-mile optimization plan', 'Sustainability scorecard'],
     faqs: [
       { q: 'Is this a recognized diploma?', a: 'Yes — it is a professional diploma program with placement support.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Logistics professionals; MBA students; Operations executives.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: TM implementation case study; Warehouse automation proposal; Last-mile optimization plan. All of it goes into your portfolio.' },
     ],
   },
   {
@@ -587,6 +656,8 @@ export const courses: Course[] = [
     projects: ['Network design for an e-commerce brand', 'Procurement strategy case study', 'Inventory optimization model', 'Global logistics risk assessment'],
     faqs: [
       { q: 'What is the job outlook?', a: 'Supply chain management is one of the fastest-growing managerial career fields globally.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Design end-to-end supply chains; Lead procurement strategy; Analyze supply chain KPIs; Manage global logistics operations.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Commerce graduates; Working operations professionals; MBA aspirants.' },
     ],
   },
   {
@@ -601,6 +672,8 @@ export const courses: Course[] = [
     projects: ['Layout redesign for a DC', 'Cycle count program', 'WMS rollout simulation', 'Lean warehousing assessment'],
     faqs: [
       { q: 'Is hands-on training included?', a: 'Yes — we include practical sessions with WMS software and warehouse case studies.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Layout redesign for a DC; Cycle count program; WMS rollout simulation. All of it goes into your portfolio.' },
+      { q: 'Do I receive a certificate?', a: 'ASB Training Hub Course Completion Certificate with a project portfolio.' },
     ],
   },
   {
@@ -615,6 +688,8 @@ export const courses: Course[] = [
     projects: ['Hotel SOPs documentation', 'Revenue management case study', 'Guest experience redesign', 'Event planning project'],
     faqs: [
       { q: 'Are placements provided?', a: 'Yes — we offer placement assistance with partner hotels, resorts and cruise lines.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Hospitality aspirants; Hotel staff; +2 / Graduates entering hospitality.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Hotel SOPs documentation; Revenue management case study; Guest experience redesign. All of it goes into your portfolio.' },
     ],
   },
   {
@@ -629,6 +704,8 @@ export const courses: Course[] = [
     projects: ['Annual budget for a mid-size company', 'Profitability dashboard in Power BI', 'Internal control audit case', 'Capex appraisal project'],
     faqs: [
       { q: 'Is ERP Finance included?', a: 'Yes — fundamentals of ERP Finance & Controlling are part of the curriculum.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Commerce graduates; Working finance professionals; CA/CMA aspirants levelling up.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Annual budget for a mid-size company; Profitability dashboard in Power BI; Internal control audit case. All of it goes into your portfolio.' },
     ],
   },
   {
@@ -643,6 +720,8 @@ export const courses: Course[] = [
     projects: ['Recruitment funnel design', 'Payroll case study', 'Employee engagement plan', 'HR dashboard build'],
     faqs: [
       { q: 'Can freshers join?', a: 'Yes — this diploma is designed for both freshers and working professionals.' },
+      { q: 'How long is the Diploma in Human Resource Management course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: HR Manager; Recruiter; Payroll Specialist; HRBP. Placement support covers resume building, mock interviews and referrals.' },
     ],
   },
   {
@@ -657,6 +736,8 @@ export const courses: Course[] = [
     projects: ['IT project plan with risk register', 'ITIL incident process design', 'Digital transformation roadmap', 'Vendor SLA scorecard'],
     faqs: [
       { q: 'Is ITIL certification included?', a: 'We cover ITIL concepts thoroughly; separate official ITIL certification can be pursued after the course.' },
+      { q: 'Is an internship included?', a: 'This course focuses on training and portfolio projects. Internship placements are available separately through our internship programmes, and the admissions team can advise on combining the two.' },
+      { q: 'How long is the Diploma in IT Management course and how is it delivered?', a: 'The programme runs for 3-6 months and is available online & offline, with weekend and evening batches for working professionals.' },
     ],
   },
 
@@ -673,6 +754,8 @@ export const courses: Course[] = [
     projects: ['Internship project at partner company', 'Module configuration document', 'Blueprint deliverable', 'Placement interview portfolio'],
     faqs: [
       { q: 'How long is the internship?', a: 'Between 1 and 3 months depending on the program track and partner company.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: ERP Consultant; ERP Functional Analyst; ERP Support Engineer. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with ERP ECC, ERP S/4HANA and Fiori Apps throughout the course, rather than only studying them in theory.' },
     ],
   },
   {
@@ -687,6 +770,8 @@ export const courses: Course[] = [
     projects: ['Tally end-to-end company books', 'GST filing simulation', 'Bank reconciliation case', 'Internship at partner firm'],
     faqs: [
       { q: 'Which companies offer internships?', a: 'We partner with CA firms, corporate finance teams and growing startups for internship placements.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Commerce students; Accounting aspirants; Career changers entering finance.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Tally end-to-end company books; GST filing simulation; Bank reconciliation case. All of it goes into your portfolio.' },
     ],
   },
   {
@@ -701,6 +786,8 @@ export const courses: Course[] = [
     projects: ['Live recruitment drive', 'Payroll cycle simulation', 'Employee handbook draft', 'Internship project at partner'],
     faqs: [
       { q: 'Is remote internship available?', a: 'Yes — both in-office and remote internship options are available based on partner availability.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Source and screen candidates; Run a payroll cycle; Use HRMS confidently; Demonstrate real HR experience.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: MBA HR students; HR aspirants; Graduates entering HR.' },
     ],
   },
   {
@@ -715,6 +802,8 @@ export const courses: Course[] = [
     projects: ['SaaS feature in real codebase', 'Internal tool for partner company', 'Deployed personal portfolio project', 'Code review log + recommendation letter'],
     faqs: [
       { q: 'Will I build real projects?', a: 'Yes — you ship real features in a real codebase, with code reviews from senior engineers.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: Python Developer; Full Stack Developer; Junior Backend Engineer. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Python, Django, React, PostgreSQL, Git and Docker throughout the course, rather than only studying them in theory.' },
     ],
   },
   {
@@ -729,6 +818,8 @@ export const courses: Course[] = [
     projects: ['Real AI problem at partner company', 'Deployed model with API', 'Portfolio of 3 AI projects', 'Internship recommendation letter'],
     faqs: [
       { q: 'What kind of internship projects?', a: 'Real industry problems in computer vision, NLP, recommendation systems and AI automation.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Solve a real AI problem in industry; Deploy at least one model to production; Build a recruiter-ready AI portfolio; Crack AI engineer interviews.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: Tech graduates; AI enthusiasts; Career changers entering AI.' },
     ],
   },
   {
@@ -743,6 +834,8 @@ export const courses: Course[] = [
     projects: ['Production ML model at partner', 'A/B test analysis report', 'MLOps pipeline build', 'Recommendation letter'],
     faqs: [
       { q: 'Is prior ML knowledge needed?', a: 'Basic Python is enough — we cover ML from fundamentals through production.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Scikit-learn, Python, Jupyter, MLflow, FastAPI and Docker throughout the course, rather than only studying them in theory.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Deploy production ML models; Run A/B tests; Monitor and retrain models; Demonstrate real ML experience.' },
     ],
   },
   {
@@ -757,6 +850,8 @@ export const courses: Course[] = [
     projects: ['Production GenAI app at partner', 'RAG knowledge base build', 'Fine-tuned domain model', 'Recommendation letter'],
     faqs: [
       { q: 'Will I work on real GenAI products?', a: 'Yes — internship involves building production-grade AI applications used by real teams.' },
+      { q: 'Do I build real projects?', a: 'Yes. Project work includes: Production GenAI app at partner; RAG knowledge base build; Fine-tuned domain model. All of it goes into your portfolio.' },
+      { q: 'Do I receive a certificate?', a: 'ASB Training Hub Course Completion Certificate with a project portfolio.' },
     ],
   },
   {
@@ -771,6 +866,8 @@ export const courses: Course[] = [
     projects: ['Real client analytics project', 'Deployed dashboard at partner', 'ML model in production', 'Recommendation letter'],
     faqs: [
       { q: 'How does the internship work?', a: 'You work on real data projects with industry mentors and present findings to stakeholders.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: Data Scientist; Data Analyst; AI Engineer; BI Analyst. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Python, SQL, Tableau, Spark, TensorFlow and Power BI throughout the course, rather than only studying them in theory.' },
     ],
   },
   {
@@ -785,6 +882,8 @@ export const courses: Course[] = [
     projects: ['Production AI agent at partner', 'Multi-agent workflow build', 'Internship recommendation letter', 'Open-source agent contribution'],
     faqs: [
       { q: 'What makes this different?', a: 'It is focused on the cutting-edge field of autonomous AI agents — the next big wave in AI — combined with real industry internship.' },
+      { q: 'What will I be able to do by the end?', a: 'By the end you can: Build production AI agents; Implement multi-agent collaboration; Add memory and guardrails; Demonstrate real product experience.' },
+      { q: 'Who is this course designed for?', a: 'It is designed for: AI practitioners; Senior developers; Founders building AI products.' },
     ],
   },
   {
@@ -799,17 +898,15 @@ export const courses: Course[] = [
     projects: ['Production AI product at partner', 'Cloud-deployed model with monitoring', 'Frontend AI interface', 'Recommendation letter'],
     faqs: [
       { q: 'Is cloud deployment covered?', a: 'Yes — you will learn to deploy AI models on AWS or GCP during the internship.' },
+      { q: 'What roles can I apply for after finishing?', a: 'Common target roles are: Full Stack AI Developer; MLOps Engineer; AI Product Engineer; Founding AI Engineer. Placement support covers resume building, mock interviews and referrals.' },
+      { q: 'Which tools and technologies will I actually use?', a: 'You work hands-on with Python, FastAPI, React, Docker, AWS / GCP and MLflow throughout the course, rather than only studying them in theory.' },
     ],
   },
 ];
 
-export const courseCategories = [
-  { id: 'erp', label: 'ERP Modules', icon: 'Database', count: courses.filter(c => c.category === 'erp').length, description: 'Enterprise Resource Planning — finance, supply chain, HR, manufacturing and beyond', color: 'from-orange-500 to-amber-500' },
-  { id: 'programming', label: 'Programming Languages', icon: 'Code2', count: courses.filter(c => c.category === 'programming').length, description: 'Master modern programming languages and full-stack development', color: 'from-green-500 to-emerald-500' },
-  { id: 'ai', label: 'AI Trainings', icon: 'Brain', count: courses.filter(c => c.category === 'ai').length, description: 'Artificial Intelligence, Machine Learning, Deep Learning & Generative AI', color: 'from-amber-500 to-orange-600' },
-  { id: 'management', label: 'Management Courses', icon: 'GraduationCap', count: courses.filter(c => c.category === 'management').length, description: 'Professional diploma programs in logistics, HR, finance & IT management', color: 'from-orange-500 to-amber-500' },
-  { id: 'internship', label: 'Internship Programs', icon: 'Briefcase', count: courses.filter(c => c.category === 'internship').length, description: 'Industry-ready training programs with guaranteed internship experience', color: 'from-rose-500 to-red-500' },
-] as const;
+// Category tiles live in courseCategories.ts so pages that only need them do
+// not pull this file's 100KB+ of syllabus and FAQ text into their chunk.
+export { courseCategories } from './courseCategories';
 
 export const getCoursesByCategory = (cat: CourseCategory) => courses.filter(c => c.category === cat);
 export const getCourseBySlug = (slug: string) => courses.find(c => c.slug === slug);

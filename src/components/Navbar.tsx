@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo.webp';
 
 const courseMenuItems = [
   { label: 'ERP / SAP Courses', path: '/courses/erp' },
@@ -30,18 +30,23 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-dark">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
-        <Link to="/" title="ASB Training Hub home" className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <Link
+          to="/"
+          title="ASB Training Hub home"
+          className="flex items-center gap-2 sm:gap-3 shrink-0"
+        >
+          <span className="sr-only">ASB Training Hub home</span>
           <div className="flex items-center justify-center rounded-lg bg-white px-1.5 py-1 sm:px-2 sm:py-1.5">
             <img
               src={logo}
-              alt="ASB Training Hub"
-              title="ASB Training Hub"
+              alt=""
+              aria-hidden
               width={140}
               height={40}
               className="h-6 w-auto max-w-[110px] sm:h-7 sm:max-w-[130px] lg:h-8 lg:max-w-[150px] block"
             />
           </div>
-          <div className="hidden md:block">
+          <div className="hidden md:block" aria-hidden>
             <span className="text-sm lg:text-base font-bold text-white font-heading leading-tight">ASB Training Hub</span>
             <span className="block text-[10px] text-orange-300 leading-none">Career-Focused Learning</span>
           </div>
@@ -93,7 +98,7 @@ const Navbar = () => {
             <Phone className="h-4 w-4" />
             <span>+91 8714773304</span>
           </a>
-          <Link to="/apply" title="Apply for admission at ASB Training Hub">
+          <Link to="/apply" title="Apply for admission at ASB Training Hub" className="inline-flex self-center">
             <Button className="gradient-primary border-0 text-white font-semibold hover:opacity-90">
               Apply Now
             </Button>
@@ -101,14 +106,21 @@ const Navbar = () => {
         </div>
 
         {/* Mobile toggle */}
-        <button onClick={() => setOpen(!open)} className="lg:hidden text-white p-2">
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="lg:hidden text-white p-2"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+        >
+          {open ? <X className="h-6 w-6" aria-hidden /> : <Menu className="h-6 w-6" aria-hidden />}
         </button>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden glass-dark border-t border-white/10 px-4 pb-4 animate-fade-in">
+        <div id="mobile-menu" className="lg:hidden glass-dark border-t border-white/10 px-4 pb-4 animate-fade-in">
           {navLinks.map((link) => (
             <div key={link.path}>
               {link.children ? (

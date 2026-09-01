@@ -1,17 +1,166 @@
+# robots.txt - ASB Training Hub
+# https://www.asbtraininghub.com
+#
+# HOW THIS FILE WORKS (the part that is easy to get wrong):
+# A crawler obeys exactly ONE group - the most specific one matching its name -
+# and ignores every other group, including "User-agent: *". So a named group
+# that only says "Allow: /" hands that crawler the admin area as well.
+# Every group below therefore repeats the same Disallow rules.
+#
+# Consecutive User-agent lines share the rule block that follows them, which is
+# why the crawlers are grouped by purpose rather than listed one by one.
+
+
+# ---------------------------------------------------------------------------
+# Default - applies to any crawler not named further down
+# ---------------------------------------------------------------------------
 User-agent: *
 Allow: /
 Allow: /assets/
+Allow: /fonts/
+Allow: /uploads/
+Allow: /blog/
 Allow: /favicon.ico
 Allow: /favicon-16x16.png
 Allow: /favicon-32x32.png
 Allow: /favicon-48x48.png
 Allow: /apple-touch-icon.png
+Allow: /android-chrome-192x192.png
 Allow: /site-logo.png
 Allow: /asb-logo.png
 Allow: /site.webmanifest
 Allow: /sitemap.xml
+Allow: /llms.txt
+Disallow: /admin
 Disallow: /admin/
-Disallow: /admin/blog
 Disallow: /gallery
+Disallow: /api/
 
+
+# ---------------------------------------------------------------------------
+# Search engines
+# Named explicitly so the intent is unambiguous. Functionally these match the
+# default group, but stating them prevents a future edit to "*" from quietly
+# changing how the main engines see the site.
+# ---------------------------------------------------------------------------
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Googlebot-Video
+User-agent: GoogleOther
+User-agent: AdsBot-Google
+User-agent: Bingbot
+User-agent: MSNBot
+User-agent: Slurp
+User-agent: DuckDuckBot
+User-agent: Applebot
+User-agent: Baiduspider
+User-agent: Yandex
+User-agent: YandexBot
+User-agent: PetalBot
+User-agent: Sogou
+User-agent: SeznamBot
+User-agent: Qwantify
+User-agent: Exabot
+Allow: /
+Allow: /uploads/
+Allow: /blog/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /gallery
+Disallow: /api/
+
+
+# ---------------------------------------------------------------------------
+# AI assistants and answer engines
+# These are welcome: the site publishes /llms.txt and full schema.org markup
+# specifically so assistants can quote course details, fees and location
+# accurately instead of guessing. Google-Extended controls Gemini/AI Overviews
+# grounding and only takes effect through its own group.
+# ---------------------------------------------------------------------------
+User-agent: Google-Extended
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: OAI-SearchBot
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: Claude-SearchBot
+User-agent: anthropic-ai
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Applebot-Extended
+User-agent: Meta-ExternalAgent
+User-agent: Meta-ExternalFetcher
+User-agent: Amazonbot
+User-agent: Bytespider
+User-agent: CCBot
+User-agent: AI2Bot
+User-agent: YouBot
+User-agent: Diffbot
+User-agent: cohere-ai
+User-agent: DeepSeekBot
+User-agent: MistralAI-User
+Allow: /
+Allow: /blog/
+Allow: /llms.txt
+Disallow: /admin
+Disallow: /admin/
+Disallow: /gallery
+Disallow: /api/
+
+
+# ---------------------------------------------------------------------------
+# Social and messaging link previews
+# Needed for the Open Graph / Twitter card tags to render when a course or blog
+# link is shared on WhatsApp, Facebook or LinkedIn.
+# ---------------------------------------------------------------------------
+User-agent: FacebookBot
+User-agent: facebookexternalhit
+User-agent: Twitterbot
+User-agent: LinkedInBot
+User-agent: WhatsApp
+User-agent: TelegramBot
+User-agent: Discordbot
+User-agent: Pinterestbot
+User-agent: SkypeUriPreview
+Allow: /
+Allow: /assets/
+Allow: /uploads/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+
+
+# ---------------------------------------------------------------------------
+# SEO and research tools
+# Allowed so the site's own audits (Screaming Frog, Ahrefs, Semrush) still work,
+# but rate-limited: these crawl far harder than search engines and bring no
+# ranking benefit. Google ignores Crawl-delay; Bing, Yandex and most of these
+# tools honour it.
+# ---------------------------------------------------------------------------
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: Screaming Frog SEO Spider
+User-agent: MJ12bot
+User-agent: DotBot
+User-agent: ImagesiftBot
+User-agent: SemanticScholarBot
+User-agent: TurnitinBot
+Crawl-delay: 10
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /gallery
+Disallow: /api/
+
+
+# ---------------------------------------------------------------------------
+# Sitemap
+# One sitemap, served dynamically by the backend so newly published blog posts
+# appear without a frontend rebuild. It lists every public page, course and
+# post. Use the canonical www host - the apex 301-redirects to it.
+# ---------------------------------------------------------------------------
 Sitemap: https://www.asbtraininghub.com/sitemap.xml
+
+# Machine-readable site summary for AI assistants:
+# https://www.asbtraininghub.com/llms.txt

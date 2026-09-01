@@ -5,6 +5,28 @@ export const DEFAULT_DESCRIPTION =
 export const DEFAULT_KEYWORDS =
   'ASB Training Hub, training institute Trivandrum, ERP courses Kerala, SAP training Trivandrum, AI training Kerala, programming courses Trivandrum, internship programs Kerala';
 
+/** Upper bound Google renders before truncating a SERP snippet. */
+export const SERP_DESCRIPTION_MAX = 160;
+
+/**
+ * Trims a description to the SERP budget without cutting mid-word.
+ *
+ * Page descriptions are assembled from course copy of varying length, so this
+ * keeps them inside the snippet budget rather than relying on every source
+ * string happening to be short enough.
+ */
+export const truncateForSerp = (value: string, max = SERP_DESCRIPTION_MAX) => {
+  const cleaned = value.replace(/\s+/g, ' ').trim();
+  if (cleaned.length <= max) return cleaned;
+
+  // Reserve one character for the ellipsis, then fall back to the last word
+  // boundary so the snippet never ends on a partial word.
+  const clipped = cleaned.slice(0, max - 1);
+  const lastBoundary = clipped.lastIndexOf(' ');
+  const body = lastBoundary > max * 0.6 ? clipped.slice(0, lastBoundary) : clipped;
+  return `${body.replace(/[\s,;:.!-]+$/, '')}…`;
+};
+
 export const absoluteUrl = (path = '/') => {
   if (/^https?:\/\//i.test(path)) return path;
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;

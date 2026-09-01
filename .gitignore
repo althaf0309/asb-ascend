@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Windows reserved device names. A file literally called `nul` can be created by
+# a shell redirect on Windows and then breaks `git add` with "mmap failed".
+nul
+NUL
+[Cc][Oo][Nn]
+[Pp][Rr][Nn]
+[Aa][Uu][Xx]

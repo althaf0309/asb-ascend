@@ -3,7 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { courses, courseCategories, getCoursesByCategory, type CourseCategory } from '@/data/courses';
+import { courseCategories, type CourseCategory } from '@/data/courseCategories';
+import { courseSummaries, getSummariesByCategory } from '@/data/courseSummaries';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { setPageSeo } from '@/lib/seo';
 
@@ -25,7 +26,7 @@ const Courses = () => {
   }, [category]);
 
   const filtered = useMemo(() => {
-    let list = activeTab === 'all' ? courses : getCoursesByCategory(activeTab as CourseCategory);
+    let list = activeTab === 'all' ? courseSummaries : getSummariesByCategory(activeTab as CourseCategory);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(c => c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q) || c.categoryLabel.toLowerCase().includes(q));
@@ -90,24 +91,43 @@ const Courses = () => {
           <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search courses..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
+              <label htmlFor="course-search" className="sr-only">Search courses</label>
+              <Input
+                id="course-search"
+                type="search"
+                placeholder="Search courses..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="pl-10"
+              />
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-8">
-            <Link to="/courses" title="View all ASB Training Hub courses">
+            <Link to="/courses" title="View all ASB Training Hub courses" className="inline-flex self-center">
               <Button variant={activeTab === 'all' ? 'default' : 'outline'} size="sm" className={activeTab === 'all' ? 'gradient-primary border-0 text-white' : ''}>
-                All ({courses.length})
+                All ({courseSummaries.length})
               </Button>
             </Link>
             {courseCategories.map(cat => (
-              <Link key={cat.id} to={`/courses/${cat.id}`} title={`${cat.label} | ASB Training Hub`}>
+              <Link key={cat.id} to={`/courses/${cat.id}`} title={`${cat.label} | ASB Training Hub`} className="inline-flex self-center">
                 <Button variant={activeTab === cat.id ? 'default' : 'outline'} size="sm" className={activeTab === cat.id ? 'gradient-primary border-0 text-white' : ''}>
                   {cat.label} ({cat.count})
                 </Button>
               </Link>
             ))}
           </div>
+
+          {/* The card titles are h3, so the results group needs a real h2 above
+              them - otherwise the outline jumps h1 -> h3 and the grouping is
+              invisible to screen readers and crawlers. */}
+          <h2 className="text-2xl font-bold font-heading mb-6">
+            {search.trim()
+              ? `${filtered.length} ${filtered.length === 1 ? 'course' : 'courses'} matching "${search.trim()}"`
+              : currentCategory
+                ? `${currentCategory.label} courses`
+                : 'All courses'}
+          </h2>
 
           {filtered.length === 0 ? (
             <div className="text-center py-16 text-muted-foreground">No courses found matching your search.</div>
@@ -121,12 +141,13 @@ const Courses = () => {
                         <SmartImage
                           src={getCourseImages(course.id, course.category).primary}
                           alt={course.title}
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                           wrapperClassName="absolute inset-0"
                           className="group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className={`absolute inset-0 bg-gradient-to-br ${courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary'} opacity-25 mix-blend-multiply pointer-events-none`} />
                         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-foreground/70 to-transparent pointer-events-none" />
-                        {course.internship && <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>}
+                        {course.internship && <span className="absolute top-3 right-3 bg-green-700 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>}
                       </div>
                       <div className="p-5 flex-1 flex flex-col">
                         <span className="text-xs font-medium text-primary">{course.categoryLabel}</span>
