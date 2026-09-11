@@ -23,6 +23,7 @@ import {
   type AdminSubmission,
   type BlogPost,
 } from '@/lib/api';
+import { Link } from 'react-router-dom';
 import { setPageSeo } from '@/lib/seo';
 import { sanitizeBlogHtml } from '@/lib/sanitize';
 
@@ -434,6 +435,9 @@ const AdminBlog = () => {
       <section className="py-10 px-4">
         <div className="container mx-auto max-w-6xl mb-6">
           <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row">
+            <Link to="/admin/courses" className="inline-flex self-center">
+              <Button type="button" variant="outline" className="bg-transparent">Courses</Button>
+            </Link>
             <Button type="button" variant={activeView === 'blogs' ? 'default' : 'outline'} className={activeView === 'blogs' ? 'gradient-primary border-0 text-white' : ''} onClick={() => setActiveView('blogs')}>
               <Edit className="h-4 w-4 mr-2" /> Blog Posts
             </Button>

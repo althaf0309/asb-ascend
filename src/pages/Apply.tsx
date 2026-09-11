@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { courses } from '@/data/courses';
+import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
 import { Send, MessageCircle, CheckCircle, Phone, Mail, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
@@ -21,6 +21,17 @@ const Apply = () => {
     name: '', email: '', phone: '', course: '', qualification: '', experience: '', message: '', preferredMode: '', callbackTime: '',
   });
   const [submitting, setSubmitting] = useState(false);
+
+  // The course dropdown follows whatever the admin has published.
+  const [courses, setCourses] = useState<CourseSummary[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchCourseSummaries()
+      .then((list) => { if (!cancelled) setCourses(list); })
+      .catch(() => undefined);
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     setPageSeo({

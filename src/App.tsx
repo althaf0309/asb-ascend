@@ -34,6 +34,10 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogDetail = lazy(() => import("./pages/BlogDetail"));
 const AdminBlog = lazy(() => import("./pages/AdminBlog"));
+const AdminCourses = lazy(() => import("./pages/AdminCourses"));
+const AdminTraining = lazy(() => import("./pages/AdminTraining"));
+const Training = lazy(() => import("./pages/Training"));
+const TrainingDetail = lazy(() => import("./pages/TrainingDetail"));
 const Apply = lazy(() => import("./pages/Apply"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -92,12 +96,17 @@ const App = () => (
           <Route path="/courses" element={<Courses />} />
           <Route path="/courses/:category" element={<Courses />} />
           <Route path="/course/:slug" element={<CourseDetail />} />
+          <Route path="/training" element={<Training />} />
+          <Route path="/training/category/:category" element={<Training />} />
+          <Route path="/training/:slug" element={<TrainingDetail />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/admin/blog" element={<AdminBlog />} />
+          <Route path="/admin/courses" element={<AdminCourses />} />
+          <Route path="/admin/training" element={<AdminTraining />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="*" element={<NotFound />} />

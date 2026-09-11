@@ -3,7 +3,7 @@ import { Suspense, lazy, useEffect, useState } from 'react';
 import { ArrowRight, BookOpen, Users, Award, Briefcase, Star, ChevronDown, Sparkles, Brain, Code2, GraduationCap, Database, CheckCircle, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { courseCategories } from '@/data/courseCategories';
-import { courseSummaries } from '@/data/courseSummaries';
+import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
 // The inquiry form sits well below the fold but drags Radix Select and
 // floating-ui (~150KB) into whatever chunk imports it. Loading it lazily keeps
 // that off the homepage's critical path.
@@ -189,7 +189,18 @@ function StatCounter({ stat }: { stat: typeof stats[0] }) {
 }
 
 export default function Index() {
-  const popularCourses = courseSummaries.slice(0, 6);
+  // Fetched rather than bundled: the homepage shows whatever six courses the
+  // admin currently has, and the 100KB catalogue no longer ships in the entry
+  // chunk.
+  const [popularCourses, setPopularCourses] = useState<CourseSummary[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchCourseSummaries()
+      .then((list) => { if (!cancelled) setPopularCourses(list.slice(0, 6)); })
+      .catch(() => undefined);
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     setPageSeo({

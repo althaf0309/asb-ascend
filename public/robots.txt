@@ -20,6 +20,7 @@ Allow: /assets/
 Allow: /fonts/
 Allow: /uploads/
 Allow: /blog/
+Allow: /training/
 Allow: /favicon.ico
 Allow: /favicon-16x16.png
 Allow: /favicon-32x32.png
@@ -65,6 +66,7 @@ User-agent: Exabot
 Allow: /
 Allow: /uploads/
 Allow: /blog/
+Allow: /training/
 Disallow: /admin
 Disallow: /admin/
 Disallow: /gallery
@@ -102,6 +104,7 @@ User-agent: DeepSeekBot
 User-agent: MistralAI-User
 Allow: /
 Allow: /blog/
+Allow: /training/
 Allow: /llms.txt
 Disallow: /admin
 Disallow: /admin/
@@ -157,8 +160,8 @@ Disallow: /api/
 # ---------------------------------------------------------------------------
 # Sitemap
 # One sitemap, served dynamically by the backend so newly published blog posts
-# appear without a frontend rebuild. It lists every public page, course and
-# post. Use the canonical www host - the apex 301-redirects to it.
+# appear without a frontend rebuild. It lists every public page, course,
+# training programme and post. Use the canonical www host - the apex 301-redirects to it.
 # ---------------------------------------------------------------------------
 Sitemap: https://www.asbtraininghub.com/sitemap.xml
 

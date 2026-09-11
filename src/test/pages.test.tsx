@@ -24,7 +24,21 @@ import NotFound from "@/pages/NotFound";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InquiryForm from "@/components/InquiryForm";
-import { courses } from "@/data/courses";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+
+/**
+ * Courses are admin-managed, so the pages fetch them. These render tests read
+ * the same store the API serves and stub fetch with it, keeping the assertions
+ * about real content rather than fixtures.
+ */
+const courseStore = ["../backend/data/courses.json", "../backend/data/courses.seed.json"]
+  .map((p) => path.resolve(__dirname, "../..", p))
+  .find((p) => existsSync(p));
+
+const courses: Array<Record<string, unknown> & { slug: string; category: string }> = courseStore
+  ? JSON.parse(readFileSync(courseStore, "utf8"))
+  : [];
 
 const SITE_URL = "https://www.asbtraininghub.com";
 
@@ -60,6 +74,28 @@ const publicPages: Array<[string, string, string, () => ReactElement]> = [
 beforeEach(() => {
   document.head.innerHTML = "";
   document.title = "";
+
+  vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+    const url = String(input);
+    const detail = url.match(/\/api\/courses\/([\w-]+)/);
+
+    let body: unknown = [];
+    if (detail) {
+      body = courses.find((c) => c.slug === detail[1]) ?? null;
+    } else if (url.includes("/api/course-categories")) {
+      body = [];
+    } else if (url.includes("/api/courses")) {
+      const category = new URL(url, "http://test").searchParams.get("category");
+      body = category ? courses.filter((c) => c.category === category) : courses;
+    }
+
+    return Promise.resolve(
+      new Response(JSON.stringify(body), {
+        status: body === null ? 404 : 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+  });
 });
 
 afterEach(() => {

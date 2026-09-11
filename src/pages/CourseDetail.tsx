@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
-import { useEffect } from 'react';
-import { getCourseBySlug, courses, courseCategories } from '@/data/courses';
+import { useEffect, useState } from 'react';
+import { courseCategories } from '@/data/courseCategories';
+import { fetchCourse, fetchCourseSummaries, type Course, type CourseSummary } from '@/lib/api';
 import {
   CheckCircle, Clock, MapPin, Award, Users, ArrowRight, BookOpen, Briefcase,
   MessageCircle, Sparkles, Target, Layers, GraduationCap, Rocket, ShieldCheck,
@@ -15,9 +16,36 @@ import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo, truncateForSerp } fro
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const course = getCourseBySlug(slug || '');
+
+  // Courses are admin-managed, so the record is fetched. `loading` is tracked
+  // separately from `course` so a slow request does not flash "not found".
+  const [course, setCourse] = useState<Course | null>(null);
+  const [related, setRelated] = useState<CourseSummary[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!slug) return;
+    let cancelled = false;
+    setLoading(true);
+    setCourse(null);
+
+    fetchCourse(slug)
+      .then((data) => {
+        if (cancelled) return;
+        setCourse(data);
+        // Siblings in the same category, for the "related" strip.
+        return fetchCourseSummaries(data.category).then((list) => {
+          if (!cancelled) setRelated(list.filter((c) => c.slug !== data.slug).slice(0, 3));
+        });
+      })
+      .catch(() => undefined)
+      .finally(() => { if (!cancelled) setLoading(false); });
+
+    return () => { cancelled = true; };
+  }, [slug]);
+
+  useEffect(() => {
+    if (loading) return;
     if (!course) {
       setPageSeo({
         title: 'Course Not Found | ASB Training Hub',
@@ -27,7 +55,7 @@ const CourseDetail = () => {
         noindex: true,
       });
     }
-  }, [course, slug]);
+  }, [course, slug, loading]);
 
   useEffect(() => {
     if (!course) return;
@@ -131,6 +159,14 @@ const CourseDetail = () => {
     };
   }, [course]);
 
+  if (loading) {
+    return (
+      <main className="min-h-screen pt-32 text-center text-muted-foreground" role="status">
+        Loading course...
+      </main>
+    );
+  }
+
   if (!course) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center pt-24 pb-12 px-4 text-center">
@@ -142,7 +178,6 @@ const CourseDetail = () => {
   }
 
   const catColor = courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary';
-  const related = courses.filter(c => c.category === course.category && c.id !== course.id).slice(0, 3);
   const { primary: heroImg, secondary: secondaryImg } = getCourseImages(course.id, course.category);
 
   return (

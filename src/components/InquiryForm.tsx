@@ -11,9 +11,15 @@ import { submitInquiry } from '@/lib/api';
 interface InquiryFormProps {
   variant?: 'light' | 'dark';
   preselectedCourse?: string;
+  /**
+   * Force one field per row. The responsive two-column layout keys off the
+   * viewport, not the container, so in a narrow sidebar it would still split
+   * into two cramped columns on a wide screen.
+   */
+  stacked?: boolean;
 }
 
-const InquiryForm = ({ variant = 'light', preselectedCourse }: InquiryFormProps) => {
+const InquiryForm = ({ variant = 'light', preselectedCourse, stacked = false }: InquiryFormProps) => {
   const { toast } = useToast();
   const [form, setForm] = useState({ name: '', email: '', phone: '', course: preselectedCourse || '', message: '' });
   const [submitting, setSubmitting] = useState(false);
@@ -43,6 +49,8 @@ const InquiryForm = ({ variant = 'light', preselectedCourse }: InquiryFormProps)
   };
 
   const inputClass = isDark ? 'bg-white/10 border-white/20 text-white placeholder:text-gray-400' : '';
+  const rowClass = stacked ? 'grid gap-4' : 'grid gap-4 sm:grid-cols-2';
+  const actionClass = stacked ? 'flex flex-col gap-3' : 'flex flex-col sm:flex-row gap-3';
 
   // Ids are instance-scoped because the form is mounted more than once per page
   // (hero and footer), and duplicate ids would break label association.
@@ -51,7 +59,7 @@ const InquiryForm = ({ variant = 'light', preselectedCourse }: InquiryFormProps)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className={rowClass}>
         <div>
           <label htmlFor={id('name')} className="sr-only">Full name (required)</label>
           <Input
@@ -79,7 +87,7 @@ const InquiryForm = ({ variant = 'light', preselectedCourse }: InquiryFormProps)
           />
         </div>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className={rowClass}>
         <div>
           <label htmlFor={id('phone')} className="sr-only">Phone number (required)</label>
           <Input
@@ -115,10 +123,10 @@ const InquiryForm = ({ variant = 'light', preselectedCourse }: InquiryFormProps)
           placeholder="Your Message (optional)"
           value={form.message}
           onChange={e => setForm({ ...form, message: e.target.value })}
-          className={`min-h-[80px] ${inputClass}`}
+          className={`${stacked ? 'min-h-[60px]' : 'min-h-[80px]'} ${inputClass}`}
         />
       </div>
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className={actionClass}>
         <Button type="submit" disabled={submitting} className="gradient-primary border-0 text-white font-semibold flex-1">
           <Send className="h-4 w-4 mr-2" /> {submitting ? 'Submitting...' : 'Submit Inquiry'}
         </Button>
@@ -126,7 +134,8 @@ const InquiryForm = ({ variant = 'light', preselectedCourse }: InquiryFormProps)
           href="https://wa.me/918714773304?text=Hi%20ASB%20Training%20Hub%2C%20I%20would%20like%20to%20know%20more%20about%20your%20courses."
           target="_blank"
           rel="noopener noreferrer"
-         className="inline-flex self-center">
+          className={stacked ? 'flex w-full' : 'inline-flex self-center'}
+        >
           <Button type="button" variant="outline" className={`w-full ${isDark ? 'border-green-500 text-green-400 hover:bg-green-500/10' : 'border-green-700 text-green-700 hover:bg-green-50'}`}>
             <MessageCircle className="h-4 w-4 mr-2" /> WhatsApp Us
           </Button>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, MessageCircle, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { fetchBlog, type BlogPost } from '@/lib/api';
 import InquiryForm from '@/components/InquiryForm';
@@ -117,34 +117,26 @@ const BlogDetail = () => {
       </section>
 
       <section className="section-padding bg-background">
-        <article className="container mx-auto max-w-3xl">
-          <p className="text-xl text-muted-foreground leading-relaxed mb-8">{post.excerpt}</p>
-          <div className="blog-content" dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(post.content) }} />
-        </article>
-      </section>
+        <div className="container mx-auto max-w-6xl">
+          {/* Article scrolls; the callback form rides alongside it and stays put.
+              `items-start` matters - a stretched grid item cannot be sticky. */}
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_380px] gap-10 xl:gap-14 items-start">
+            <article className="min-w-0">
+              <p className="text-xl text-muted-foreground leading-relaxed mb-8">{post.excerpt}</p>
+              <div className="blog-content" dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(post.content) }} />
+            </article>
 
-      <section className="section-padding bg-card/40 border-y border-border">
-        <div className="container mx-auto max-w-5xl">
-          <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-8 items-start">
-            <div>
-              <span className="text-sm font-semibold text-primary uppercase tracking-wider">Need guidance?</span>
-              <h2 className="text-3xl font-bold font-heading mt-2 mb-4">Talk to ASB Training Hub</h2>
-              <p className="text-muted-foreground leading-relaxed mb-5">
-                Ask about courses, internships, demo classes, fees, or placement support. Our admissions team will help you choose the right path.
-              </p>
-              <a
-                href="https://wa.me/918714773304?text=Hi%20ASB%20Training%20Hub%2C%20I%20read%20your%20blog%20and%20want%20course%20guidance."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary font-semibold hover:underline"
-              >
-                <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
-              </a>
-            </div>
-            <div className="rounded-2xl border border-border bg-background p-6 shadow-sm">
-              <h3 className="text-xl font-bold font-heading mb-4">Request a callback</h3>
-              <InquiryForm preselectedCourse={blogCategoryToCourseInterest(post.category)} />
-            </div>
+            <aside className="lg:sticky lg:top-24 lg:self-start">
+              {/* Capped so a short laptop screen scrolls the panel rather than
+                  hiding the submit button below the fold. */}
+              {/* Kept deliberately short. A sticky element can only travel
+                  (article height - its own height), so every row trimmed here
+                  is another row of article it stays pinned for. */}
+              <div className="rounded-2xl border border-border bg-card/40 p-5 shadow-sm lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
+                <h2 className="text-lg font-bold font-heading mb-4">Request a callback</h2>
+                <InquiryForm stacked preselectedCourse={blogCategoryToCourseInterest(post.category)} />
+              </div>
+            </aside>
           </div>
         </div>
       </section>

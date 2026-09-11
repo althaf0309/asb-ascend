@@ -10,30 +10,109 @@ ASB Training Hub is a career training institute in Trivandrum, Kerala offering j
 - Apply: https://www.asbtraininghub.com/apply
 - Email: info@asbtraininghub.com
 - Phone/WhatsApp: +91 87147 73304
+- Address: 105-2, The Atomic, Near Technopark Phase 1, Kazhakootam, Trivandrum, Kerala 695581
+- Hours: Monday to Saturday, 9:00 AM to 6:00 PM
 
 ## Main Public Pages
 
 - Home: https://www.asbtraininghub.com/
 - About: https://www.asbtraininghub.com/about
 - Courses: https://www.asbtraininghub.com/courses
-- ERP courses: https://www.asbtraininghub.com/courses/erp
-- Programming courses: https://www.asbtraininghub.com/courses/programming
-- AI courses: https://www.asbtraininghub.com/courses/ai
-- Management courses: https://www.asbtraininghub.com/courses/management
-- Internship programs: https://www.asbtraininghub.com/courses/internship
+- Training: https://www.asbtraininghub.com/training
+- ERP Modules: https://www.asbtraininghub.com/courses/erp
+- Programming: https://www.asbtraininghub.com/courses/programming
+- AI Training: https://www.asbtraininghub.com/courses/ai
+- Management: https://www.asbtraininghub.com/courses/management
+- Internship Programs: https://www.asbtraininghub.com/courses/internship
 - Reviews: https://www.asbtraininghub.com/reviews
 - FAQ: https://www.asbtraininghub.com/faq
 - Blog: https://www.asbtraininghub.com/blog
 - Terms and Conditions: https://www.asbtraininghub.com/terms-and-conditions
 
-## Course Areas
+## Courses (51)
 
-- ERP and SAP-style modules: finance and controlling, materials management, sales and distribution, production planning, plant maintenance, quality management, project systems, HCM, SCM, CRM, SRM, cloud HR, and ABAP.
-- Programming: Python full stack, Java, JavaScript, C, C++, HTML, CSS, PHP, Ruby, Kotlin, Swift, and Dart.
-- AI: artificial intelligence, machine learning, deep learning, generative AI, data science with AI, NLP, robotics AI, agentic AI, and full stack AI.
-- Management: logistics, supply chain, warehouse management, hospitality, finance, HR, and IT management.
-- Internships: ERP, accounting, HR, Python full stack, AI, ML, GenAI, data science AI, agentic AI, and full stack AI internship programs.
+### ERP Modules (13)
+
+- ERP Finance & Controlling — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-finance-controlling
+- ERP Materials Management — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-materials-management
+- ERP Sales & Distribution — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-sales-distribution
+- ERP Production Planning — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-production-planning
+- ERP Plant Maintenance — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-plant-maintenance
+- ERP Quality Management — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-quality-management
+- ERP Project System — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-project-system
+- ERP Human Capital Management — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-human-capital-management
+- ERP Supply Chain Management — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-supply-chain-management
+- ERP Supplier Relationship Management — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-supplier-relationship-management
+- ERP Customer Relationship Management — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-customer-relationship-management
+- Cloud HR Suite (SuccessFactors) — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-cloud-hr-suite
+- ERP Programming (ABAP) — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-programming-abap
+
+### Programming (12)
+
+- Python Full Stack — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/python-full-stack
+- Java with Spring Boot — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/java
+- Modern JavaScript — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/javascript
+- C Programming — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/c-programming
+- C++ Programming — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/cpp
+- HTML5 Mastery — 1-2 Months, Online & Offline: https://www.asbtraininghub.com/course/html
+- Advanced CSS & Tailwind — 1-2 Months, Online & Offline: https://www.asbtraininghub.com/course/css
+- PHP & Laravel — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/php
+- Ruby on Rails — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/ruby
+- Kotlin for Android — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/kotlin
+- iOS Development with Swift — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/swift
+- Flutter & Dart — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/dart
+
+### AI Training (9)
+
+- Artificial Intelligence Training — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/artificial-intelligence
+- Machine Learning Training — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/machine-learning
+- Deep Learning Training — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/deep-learning
+- Generative AI Training — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/generative-ai
+- Data Science + AI Training — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/data-science-ai
+- Natural Language Processing (NLP) — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/nlp
+- Robotics & AI Training — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/robotics-ai
+- Agentic AI Training — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/agentic-ai
+- Full Stack AI Training — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/full-stack-ai
+
+### Management (7)
+
+- Logistics Technology Management — 6-12 Months, Online & Offline: https://www.asbtraininghub.com/course/logistics-technology-management
+- Diploma in Logistics & Supply Chain Management — 6-12 Months, Online & Offline: https://www.asbtraininghub.com/course/logistics-supply-chain
+- Diploma in Warehouse Management — 6-12 Months, Online & Offline: https://www.asbtraininghub.com/course/warehouse-management
+- Diploma in Hospitality Management — 6-12 Months, Online & Offline: https://www.asbtraininghub.com/course/hospitality-management
+- Diploma in Finance & Controlling Management — 6-12 Months, Online & Offline: https://www.asbtraininghub.com/course/finance-controlling
+- Diploma in Human Resource Management — 6-12 Months, Online & Offline: https://www.asbtraininghub.com/course/human-resource-management
+- Diploma in IT Management — 6-12 Months, Online & Offline: https://www.asbtraininghub.com/course/it-management
+
+### Internship Programs (10)
+
+- ERP Training with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/erp-training-internship
+- Accounting Course with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/accounting-internship
+- HR Course with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/hr-internship
+- Python Full Stack with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/python-fullstack-internship
+- AI Training with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/ai-internship
+- ML Training with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/ml-internship
+- Gen AI Training with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/genai-internship
+- Data Science + AI with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/data-science-ai-internship
+- Agentic AI with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/agentic-ai-internship
+- Full Stack AI with Internship — 3-6 Months, Online & Offline: https://www.asbtraininghub.com/course/fullstack-ai-internship
+
+## Training Programmes (3)
+
+### Corporate Training (1)
+
+- Corporate AI Upskilling Programme — 4-8 weeks, On-site & Online: https://www.asbtraininghub.com/training/corporate-ai-upskilling
+
+### Workshops (1)
+
+- Weekend Agentic AI Workshop — 2 days, Offline & Online: https://www.asbtraininghub.com/training/weekend-agentic-ai-workshop
+
+### Certification Tracks (1)
+
+- SAP FICO Certification Track — 12 weeks, Online & Offline: https://www.asbtraininghub.com/training/sap-fico-certification-track
 
 ## Crawling Guidance
 
-Use the sitemap for the complete canonical URL list. Do not index admin pages under `/admin/`.
+Use the sitemap for the complete canonical URL list. Every course page carries
+schema.org Course markup with syllabus, duration, mode and FAQs. Do not index
+admin pages under `/admin/`.

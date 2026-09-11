@@ -240,3 +240,177 @@ export const updateAdminSubmission = async (
 
   return data.submission;
 };
+
+/* ------------------------------------------------------------------ *
+ * Courses
+ * ------------------------------------------------------------------ */
+
+export type CourseFaq = { q: string; a: string };
+
+/** Full course record, as stored and edited in the admin. */
+export type CatalogueEntry = {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  categoryLabel: string;
+  icon: string;
+  description: string;
+  overview: string;
+  duration: string;
+  mode: string;
+  internship: boolean;
+  syllabus: string[];
+  tools: string[];
+  careers: string[];
+  whoShouldJoin: string[];
+  learningOutcomes: string[];
+  prerequisites: string[];
+  projects: string[];
+  certificate: string;
+  faqs: CourseFaq[];
+  content: string;
+  imageUrl: string;
+  imageAlt: string;
+  secondaryImageUrl: string;
+  secondaryImageAlt: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/** The trimmed shape the listing pages fetch (`?summary=1`). */
+export type CatalogueSummary = Pick<
+  CatalogueEntry,
+  | 'id' | 'slug' | 'title' | 'category' | 'categoryLabel'
+  | 'description' | 'duration' | 'mode' | 'internship' | 'icon'
+  | 'imageUrl' | 'imageAlt'
+>;
+
+export type CourseCategoryInfo = { id: string; label: string; count: number };
+
+/** What the admin form sends. Images travel as base64 data URIs. */
+export type CataloguePayload = Partial<Omit<CatalogueEntry, 'createdAt' | 'updatedAt'>> & {
+  title: string;
+  description: string;
+  imageData?: string;
+  secondaryImageData?: string;
+  removeImage?: boolean;
+  removeSecondaryImage?: boolean;
+};
+
+export type Paginated<T> = {
+  items: T[];
+  page: number;
+  perPage: number;
+  total: number;
+  pages: number;
+};
+
+export const fetchCourseSummaries = async (category?: string): Promise<CatalogueSummary[]> => {
+  const query = new URLSearchParams({ summary: '1' });
+  if (category) query.set('category', category);
+  const response = await fetch(`/api/courses?${query}`);
+  if (!response.ok) throw new Error('Unable to load courses.');
+  return response.json();
+};
+
+export const fetchCourse = async (slug: string): Promise<CatalogueEntry> => {
+  const response = await fetch(`/api/courses/${slug}`);
+  if (!response.ok) throw new Error('Course not found.');
+  return response.json();
+};
+
+export const fetchCourseCategories = async (): Promise<CourseCategoryInfo[]> => {
+  const response = await fetch('/api/course-categories');
+  if (!response.ok) throw new Error('Unable to load course categories.');
+  return response.json();
+};
+
+/* --- generic catalogue admin (serves both courses and training) --- */
+
+export const fetchAdminEntries = async (
+  apiPath: string,
+  token: string,
+  { page = 1, perPage = 20, search = '', category = '' } = {},
+): Promise<Paginated<CatalogueEntry>> => {
+  const query = new URLSearchParams({ page: String(page), perPage: String(perPage) });
+  if (search) query.set('search', search);
+  if (category) query.set('category', category);
+
+  const response = await fetch(`/api/admin/${apiPath}?${query}`, {
+    headers: authHeader(token),
+    credentials: 'same-origin',
+  });
+  if (!response.ok) throw new Error('Unable to load entries.');
+  return response.json();
+};
+
+export const createEntry = async (
+  apiPath: string,
+  payload: CataloguePayload,
+  token: string,
+): Promise<CatalogueEntry> => {
+  const response = await fetch(`/api/admin/${apiPath}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeader(token) },
+    credentials: 'same-origin',
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Unable to save.');
+  return data.item;
+};
+
+export const updateEntry = async (
+  apiPath: string,
+  slug: string,
+  payload: CataloguePayload,
+  token: string,
+): Promise<CatalogueEntry> => {
+  const response = await fetch(`/api/admin/${apiPath}/${slug}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...authHeader(token) },
+    credentials: 'same-origin',
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Unable to update.');
+  return data.item;
+};
+
+export const deleteEntry = async (apiPath: string, slug: string, token: string) => {
+  const response = await fetch(`/api/admin/${apiPath}/${slug}`, {
+    method: 'DELETE',
+    headers: authHeader(token),
+    credentials: 'same-origin',
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Unable to delete.');
+  return data;
+};
+
+/* --- training: public reads --------------------------------------- */
+
+export const fetchTrainingSummaries = async (category?: string): Promise<CatalogueSummary[]> => {
+  const query = new URLSearchParams({ summary: '1' });
+  if (category) query.set('category', category);
+  const response = await fetch(`/api/training?${query}`);
+  if (!response.ok) throw new Error('Unable to load training programmes.');
+  return response.json();
+};
+
+export const fetchTrainingProgramme = async (slug: string): Promise<CatalogueEntry> => {
+  const response = await fetch(`/api/training/${slug}`);
+  if (!response.ok) throw new Error('Training programme not found.');
+  return response.json();
+};
+
+/* --- names kept for existing callers ------------------------------ */
+
+export type Course = CatalogueEntry;
+export type CourseSummary = CatalogueSummary;
+export type CoursePayload = CataloguePayload;

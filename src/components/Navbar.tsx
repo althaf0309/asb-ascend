@@ -16,6 +16,7 @@ const navLinks = [
   { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
   { label: 'Courses', path: '/courses', children: courseMenuItems },
+  { label: 'Training', path: '/training' },
   { label: 'Reviews', path: '/reviews' },
   { label: 'FAQ', path: '/faq' },
   { label: 'Blog', path: '/blog' },

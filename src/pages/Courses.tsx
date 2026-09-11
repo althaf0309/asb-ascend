@@ -3,8 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { courseCategories, type CourseCategory } from '@/data/courseCategories';
-import { courseSummaries, getSummariesByCategory } from '@/data/courseSummaries';
+import { courseCategories } from '@/data/courseCategories';
+import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { setPageSeo } from '@/lib/seo';
 
@@ -21,18 +21,37 @@ const Courses = () => {
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<string>(category || 'all');
 
+  // Courses are admin-managed now, so the catalogue is fetched rather than
+  // bundled. One request returns every card; filtering stays client-side so
+  // switching category or typing in search is instant.
+  const [allCourses, setAllCourses] = useState<CourseSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchCourseSummaries()
+      .then((list) => { if (!cancelled) setAllCourses(list); })
+      .catch((err) => { if (!cancelled) setLoadError(err instanceof Error ? err.message : 'Unable to load courses.'); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
+
   useEffect(() => {
     setActiveTab(category || 'all');
   }, [category]);
 
   const filtered = useMemo(() => {
-    let list = activeTab === 'all' ? courseSummaries : getSummariesByCategory(activeTab as CourseCategory);
+    let list = activeTab === 'all' ? allCourses : allCourses.filter(c => c.category === activeTab);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(c => c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q) || c.categoryLabel.toLowerCase().includes(q));
     }
     return list;
-  }, [activeTab, search]);
+  }, [activeTab, search, allCourses]);
+
+  /** Live counts, so a newly added course shows up in the tabs immediately. */
+  const countFor = (id: string) => allCourses.filter(c => c.category === id).length;
 
   const currentCategory = activeTab !== 'all' ? courseCategories.find(c => c.id === activeTab) : undefined;
   const title = currentCategory ? currentCategory.label : 'All Courses';
@@ -106,13 +125,13 @@ const Courses = () => {
           <div className="flex flex-wrap gap-2 mb-8">
             <Link to="/courses" title="View all ASB Training Hub courses" className="inline-flex self-center">
               <Button variant={activeTab === 'all' ? 'default' : 'outline'} size="sm" className={activeTab === 'all' ? 'gradient-primary border-0 text-white' : ''}>
-                All ({courseSummaries.length})
+                All ({allCourses.length})
               </Button>
             </Link>
             {courseCategories.map(cat => (
               <Link key={cat.id} to={`/courses/${cat.id}`} title={`${cat.label} | ASB Training Hub`} className="inline-flex self-center">
                 <Button variant={activeTab === cat.id ? 'default' : 'outline'} size="sm" className={activeTab === cat.id ? 'gradient-primary border-0 text-white' : ''}>
-                  {cat.label} ({cat.count})
+                  {cat.label} ({countFor(cat.id)})
                 </Button>
               </Link>
             ))}
@@ -129,7 +148,11 @@ const Courses = () => {
                 : 'All courses'}
           </h2>
 
-          {filtered.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-16 text-muted-foreground" role="status">Loading courses...</div>
+          ) : loadError ? (
+            <div className="text-center py-16 text-destructive" role="alert">{loadError}</div>
+          ) : filtered.length === 0 ? (
             <div className="text-center py-16 text-muted-foreground">No courses found matching your search.</div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

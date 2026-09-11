@@ -9,12 +9,32 @@
  * machine-readable ground truth? That needs llms.txt, consistent entity naming,
  * absolute URLs, and self-contained factual copy.
  */
-import { describe, expect, it, beforeEach } from "vitest";
-import { readFileSync } from "node:fs";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { render, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { courses, courseCategories } from "@/data/courses";
+import { courseCategories } from "@/data/courseCategories";
+
+/**
+ * The catalogue moved from a bundled TypeScript file into the backend store when
+ * courses became admin-managed. These content-quality checks read the store the
+ * site actually serves, falling back to the committed seed.
+ */
+const courseStorePath = ["../backend/data/courses.json", "../backend/data/courses.seed.json"]
+  .map((p) => path.resolve(__dirname, "../..", p))
+  .find((p) => existsSync(p));
+
+type StoredCourse = {
+  id: string; slug: string; title: string; category: string; categoryLabel: string;
+  description: string; overview: string; duration: string; mode: string;
+  certificate: string; syllabus: string[]; tools: string[]; careers: string[];
+  learningOutcomes: string[]; faqs: { q: string; a: string }[];
+};
+
+const courses: StoredCourse[] = courseStorePath
+  ? JSON.parse(readFileSync(courseStorePath, "utf8"))
+  : [];
 import FAQ from "@/pages/FAQ";
 import Index from "@/pages/Index";
 import CourseDetail from "@/pages/CourseDetail";
@@ -216,6 +236,30 @@ describe("AEO: organisation entity", () => {
 describe("AEO: course pages", () => {
   const sample = courses[0];
 
+  /**
+   * CourseDetail fetches its record now that courses are admin-managed, so the
+   * API is stubbed from the same store the real endpoint serves.
+   */
+  const serveCourses = () => {
+    vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
+      const url = String(input);
+      const match = url.match(/\/api\/courses\/([\w-]+)/);
+      const body = match
+        ? courses.find((c) => c.slug === match[1])
+        : courses.filter((c) => !url.includes("category=") || c.category === new URL(url, "http://x").searchParams.get("category"));
+
+      return Promise.resolve(
+        new Response(JSON.stringify(body ?? null), {
+          status: body ? 200 : 404,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
+    });
+  };
+
+  beforeEach(serveCourses);
+  afterEach(() => vi.restoreAllMocks());
+
   it("emits a Course entity with a provider", async () => {
     renderAt(`/course/${sample.slug}`, "/course/:slug", <CourseDetail />);
     await waitFor(() => expect(jsonLd("course")).not.toBeNull());
@@ -307,7 +351,8 @@ describe("GEO: course catalogue is citable", () => {
   });
 
   it("every course belongs to a declared category", () => {
-    const ids = new Set(courseCategories.map((c) => c.id));
+    // courseCategories.id is a literal union; the store carries plain strings.
+    const ids = new Set<string>(courseCategories.map((c) => c.id));
     for (const course of courses) {
       expect(ids.has(course.category), `${course.slug} has orphan category ${course.category}`).toBe(true);
     }

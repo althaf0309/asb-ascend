@@ -276,12 +276,23 @@ describe("SEO: sitemap.xml", () => {
     }
   });
 
-  it("lists every course slug from the course catalogue", () => {
-    const courses = readFileSync(path.join(root, "src/data/courses.ts"), "utf8");
-    const slugs = [...new Set([...courses.matchAll(/slug:\s*'([^']+)'/g)].map((m) => m[1]))];
-    expect(slugs.length).toBeGreaterThan(10);
-    for (const slug of slugs) {
-      expect(locs, `course ${slug} missing from sitemap`).toContain(`${SITE_URL}/course/${slug}`);
+  it("lists every course slug from the course store", () => {
+    // Courses are admin-managed now: the store is the source of truth, with the
+    // committed seed as the fallback a fresh checkout uses.
+    const store = ["../backend/data/courses.json", "../backend/data/courses.seed.json"]
+      .map((p) => path.resolve(root, p))
+      .find((p) => existsSync(p));
+    expect(store, "no course store found").toBeTruthy();
+
+    const courses = JSON.parse(readFileSync(store!, "utf8")).filter(
+      (c: { published?: boolean }) => c.published !== false,
+    );
+    expect(courses.length).toBeGreaterThan(10);
+
+    for (const course of courses) {
+      expect(locs, `course ${course.slug} missing from sitemap`).toContain(
+        `${SITE_URL}/course/${course.slug}`,
+      );
     }
   });
 
