@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import logo from '@/assets/logo.webp';
 import { useToast } from '@/hooks/use-toast';
 import { submitNewsletter } from '@/lib/api';
+import SubmissionProtection from '@/components/SubmissionProtection';
 
 const socialLinks = [
   {
@@ -73,6 +74,11 @@ const NewsletterForm = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [website, setWebsite] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [challengeKey, setChallengeKey] = useState(0);
+  const formStartedAt = useRef(Date.now());
+  const emailId = useId();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -84,9 +90,17 @@ const NewsletterForm = () => {
 
     setSubmitting(true);
     try {
-      await submitNewsletter({ email });
+      await submitNewsletter({
+        email,
+        website,
+        turnstileToken,
+        formStartedAt: formStartedAt.current,
+      });
       toast({ title: 'Subscribed!', description: 'Thank you for subscribing to ASB Training Hub updates.' });
       setEmail('');
+      setWebsite('');
+      formStartedAt.current = Date.now();
+      setChallengeKey((value) => value + 1);
     } catch (error) {
       toast({
         title: 'Subscription failed',
@@ -99,18 +113,30 @@ const NewsletterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
-      <Input
-        type="email"
-        placeholder="Your email"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 text-sm"
-        required
+    <form onSubmit={handleSubmit} className="relative space-y-2">
+      <div className="flex gap-2">
+        <label htmlFor={emailId} className="sr-only">Newsletter email address</label>
+        <Input
+          id={emailId}
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="Your email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 text-sm"
+          required
+        />
+        <Button type="submit" size="sm" disabled={submitting} className="gradient-primary border-0 text-white shrink-0">
+          {submitting ? 'Sending...' : 'Subscribe'}
+        </Button>
+      </div>
+      <SubmissionProtection
+        website={website}
+        onWebsiteChange={setWebsite}
+        onTokenChange={setTurnstileToken}
+        resetKey={challengeKey}
       />
-      <Button type="submit" size="sm" disabled={submitting} className="gradient-primary border-0 text-white shrink-0">
-        {submitting ? 'Sending...' : 'Subscribe'}
-      </Button>
     </form>
   );
 };

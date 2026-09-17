@@ -260,8 +260,11 @@ export default function Index() {
         })),
       },
       sameAs: [
-        'https://wa.me/918714773304',
-        'https://www.google.com/maps/search/?api=1&query=ASB+Training+Hub+Trivandrum',
+        'https://www.facebook.com/share/1CsFkSP9E2/',
+        'https://www.instagram.com/asbtraininghub',
+        'https://www.linkedin.com/company/asb-training-hub/',
+        'https://www.youtube.com/@ASBTrainingHub',
+        'https://x.com/Asbtraininghub',
       ],
     });
   }, []);

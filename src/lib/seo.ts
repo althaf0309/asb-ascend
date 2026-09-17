@@ -78,6 +78,8 @@ export const removeJsonLd = (id: string) => {
   document.querySelector<HTMLScriptElement>(`script[data-json-ld="${id}"]`)?.remove();
 };
 
+let activeSeoPath: string | null = null;
+
 export const setPageSeo = ({
   title,
   description,
@@ -95,6 +97,16 @@ export const setPageSeo = ({
   type?: 'website' | 'article';
   noindex?: boolean;
 }) => {
+  // The backend injects route-specific JSON-LD for the first request. Once the
+  // SPA changes routes that markup describes the old page, so remove it before
+  // React publishes the new route's schemas.
+  if (activeSeoPath !== path) {
+    document
+      .querySelectorAll('script[data-server-json-ld], script[data-json-ld]')
+      .forEach((script) => script.remove());
+    activeSeoPath = path;
+  }
+
   const finalDescription = description || DEFAULT_DESCRIPTION;
   const finalKeywords = keywords || DEFAULT_KEYWORDS;
   const canonical = absoluteUrl(path);

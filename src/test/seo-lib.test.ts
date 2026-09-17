@@ -153,6 +153,19 @@ describe("setPageSeo", () => {
     expect(canonical()).toBe(`${SITE_URL}/c`);
   });
 
+  it("removes server and client JSON-LD from the previous route", () => {
+    document.head.insertAdjacentHTML(
+      "beforeend",
+      '<script type="application/ld+json" data-server-json-ld="true">{"@type":"BlogPosting"}</script>',
+    );
+    setJsonLd("old-page", { "@type": "FAQPage" });
+
+    setPageSeo({ title: "New route", path: "/schema-cleanup-target" });
+
+    expect(document.querySelector('[data-server-json-ld]')).toBeNull();
+    expect(document.querySelector('[data-json-ld="old-page"]')).toBeNull();
+  });
+
   it("escapes rather than injects a hostile title", () => {
     const hostile = "</title><script>alert(1)</script>";
     setPageSeo({ title: hostile, path: "/x" });

@@ -13,6 +13,7 @@ import InquiryForm from '@/components/InquiryForm';
 import { getCourseImages } from '@/data/courseImages';
 import SmartImage from '@/components/SmartImage';
 import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo, truncateForSerp } from '@/lib/seo';
+import { sanitizeBlogHtml } from '@/lib/sanitize';
 
 const CourseDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -59,12 +60,13 @@ const CourseDetail = () => {
 
   useEffect(() => {
     if (!course) return;
-    const { primary: heroImg } = getCourseImages(course.id, course.category);
+    const { primary: fallbackHero } = getCourseImages(course.id, course.category);
+    const heroImg = course.imageUrl || fallbackHero;
     setPageSeo({
-      title: `${course.title} Course in Trivandrum | ASB Training Hub`,
+      title: course.metaTitle || `${course.title} Course in Trivandrum | ASB Training Hub`,
       // Kept under the ~160-character SERP budget: the course description is
       // already a full sentence, so only a short qualifier is appended.
-      description: truncateForSerp(
+      description: course.metaDescription || truncateForSerp(
         `${course.description} ${course.duration}, ${course.mode.toLowerCase()}${
           course.internship ? ', with internship support' : ''
         }.`,
@@ -86,7 +88,6 @@ const CourseDetail = () => {
       },
       educationalCredentialAwarded: course.certificate,
       courseMode: course.mode,
-      timeRequired: course.duration,
       inLanguage: 'en',
       teaches: course.learningOutcomes,
       coursePrerequisites: course.prerequisites,
@@ -178,14 +179,16 @@ const CourseDetail = () => {
   }
 
   const catColor = courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary';
-  const { primary: heroImg, secondary: secondaryImg } = getCourseImages(course.id, course.category);
+  const { primary: fallbackHero, secondary: fallbackSecondary } = getCourseImages(course.id, course.category);
+  const heroImg = course.imageUrl || fallbackHero;
+  const secondaryImg = course.secondaryImageUrl || fallbackSecondary;
 
   return (
     <main className="bg-background">
       {/* Hero */}
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0">
-          <SmartImage src={heroImg} alt={`${course.title} course training at ASB Training Hub`} wrapperClassName="absolute inset-0" eager />
+          <SmartImage src={heroImg} alt={course.imageAlt || `${course.title} course training at ASB Training Hub`} wrapperClassName="absolute inset-0" eager />
           {/* Strong universal scrim — keeps text readable on any image (incl. very light ones) */}
           <div className="absolute inset-0 bg-black/70" />
           {/* Bottom-up depth gradient that blends into the stats strip */}
@@ -258,11 +261,17 @@ const CourseDetail = () => {
                   <p className="md:col-span-3 text-muted-foreground leading-relaxed text-base">{course.overview}</p>
                   <SmartImage
                     src={secondaryImg}
-                    alt={`${course.title} learning environment`}
+                    alt={course.secondaryImageAlt || `${course.title} learning environment`}
                     sizes="(min-width: 768px) 40vw, 100vw"
                     wrapperClassName="md:col-span-2 rounded-2xl overflow-hidden aspect-[4/3] border border-border"
                   />
                 </div>
+                {course.content && (
+                  <div
+                    className="blog-content mt-8"
+                    dangerouslySetInnerHTML={{ __html: sanitizeBlogHtml(course.content) }}
+                  />
+                )}
               </div>
 
               {/* Learning Outcomes */}

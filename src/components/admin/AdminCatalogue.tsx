@@ -140,7 +140,7 @@ const AdminCatalogue = ({ config }: { config: AdminCatalogueConfig }) => {
     } finally {
       setLoading(false);
     }
-  }, [apiPath, signedIn, token, page, search, category, toast]);
+  }, [apiPath, signedIn, token, page, search, category, toast, pageTitle]);
 
   useEffect(() => {
     void load();

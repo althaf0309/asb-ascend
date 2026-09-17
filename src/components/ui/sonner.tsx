@@ -24,4 +24,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
   );
 };
 
+// Re-exporting Sonner's imperative helper keeps toast calls consistent.
+// eslint-disable-next-line react-refresh/only-export-components
 export { Toaster, toast };

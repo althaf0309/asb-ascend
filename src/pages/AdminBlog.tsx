@@ -26,6 +26,7 @@ import {
 import { Link } from 'react-router-dom';
 import { setPageSeo } from '@/lib/seo';
 import { sanitizeBlogHtml } from '@/lib/sanitize';
+import { escapeCsvCell } from '@/lib/csv';
 
 // The session itself is an HttpOnly cookie the browser sends automatically.
 // Only this non-sensitive "am I signed in" flag is persisted, so a page reload
@@ -387,8 +388,7 @@ const AdminBlog = () => {
       formatDateTime(submission.createdAt),
     ]);
 
-    const escapeCsv = (value: string) => `"${String(value).replace(/"/g, '""')}"`;
-    const csv = [headers, ...rows].map((row) => row.map(escapeCsv).join(',')).join('\n');
+    const csv = [headers, ...rows].map((row) => row.map(escapeCsvCell).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -503,7 +503,18 @@ const AdminBlog = () => {
                                 {submission.message && <div className="line-clamp-3"><span className="font-medium text-foreground">Message:</span> {submission.message}</div>}
                               </div>
                             </td>
-                            <td className="py-3 pr-3 text-xs text-muted-foreground">{formatDateTime(submission.createdAt)}</td>
+                            <td className="py-3 pr-3 text-xs text-muted-foreground">
+                              <div>{formatDateTime(submission.createdAt)}</div>
+                              <span
+                                className={`mt-1 inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                                  submission.verification === 'turnstile'
+                                    ? 'bg-green-500/10 text-green-700'
+                                    : 'bg-amber-500/10 text-amber-700'
+                                }`}
+                              >
+                                {submission.verification === 'turnstile' ? 'Challenge passed' : 'Spam screened'}
+                              </span>
+                            </td>
                             <td className="py-3 pr-3">
                               <div className="space-y-2">
                                 <select

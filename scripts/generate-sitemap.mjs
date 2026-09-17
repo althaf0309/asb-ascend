@@ -15,7 +15,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 const backendData = path.resolve(rootDir, '../backend/data');
 const siteUrl = 'https://www.asbtraininghub.com';
-const today = new Date().toISOString().slice(0, 10);
 
 /** Reads a backend store, falling back to its committed seed, then to []. */
 const readStore = async (...candidates) => {
@@ -60,21 +59,23 @@ const training = (await readStore('training.json', 'training.seed.json')).filter
 );
 const trainingRoutes = [
   { loc: '/training', priority: '0.9', changefreq: 'weekly' },
-  ...TRAINING_CATEGORY_IDS.map((id) => ({
+  ...[...new Set(training.map((item) => item.category))]
+    .filter((id) => TRAINING_CATEGORY_IDS.includes(id))
+    .map((id) => ({
     loc: `/training/category/${id}`, priority: '0.8', changefreq: 'weekly',
   })),
   ...training.map((t) => ({
     loc: `/training/${t.slug}`,
     priority: '0.8',
     changefreq: 'monthly',
-    lastmod: t.updatedAt ? t.updatedAt.slice(0, 10) : today,
+    lastmod: t.updatedAt ? t.updatedAt.slice(0, 10) : undefined,
   })),
 ];
 const courseRoutes = courses.map((c) => ({
   loc: `/course/${c.slug}`,
   priority: '0.85',
   changefreq: 'monthly',
-  lastmod: c.updatedAt ? c.updatedAt.slice(0, 10) : today,
+  lastmod: c.updatedAt ? c.updatedAt.slice(0, 10) : undefined,
 }));
 
 const blogs = (await readStore('blogs.json')).filter((b) => b && b.slug && b.published !== false);
@@ -82,7 +83,7 @@ const blogRoutes = blogs.map((b) => ({
   loc: `/blog/${b.slug}`,
   priority: '0.65',
   changefreq: 'monthly',
-  lastmod: b.updatedAt ? b.updatedAt.slice(0, 10) : today,
+  lastmod: b.updatedAt ? b.updatedAt.slice(0, 10) : undefined,
 }));
 
 const urls = [...staticRoutes, ...categoryRoutes, ...courseRoutes, ...trainingRoutes, ...blogRoutes];
@@ -91,9 +92,9 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls
   .map(
-    ({ loc, priority, changefreq, lastmod = today }) => `  <url>
-    <loc>${siteUrl}${loc}</loc>
-    <lastmod>${lastmod}</lastmod>
+    ({ loc, priority, changefreq, lastmod }) => `  <url>
+    <loc>${siteUrl}${loc}</loc>${lastmod ? `
+    <lastmod>${lastmod}</lastmod>` : ''}
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`,

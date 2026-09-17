@@ -23,7 +23,17 @@ import { dirname, resolve } from 'path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
 const imagesSrc = readFileSync(resolve(root, 'src/data/courseImages.ts'), 'utf8');
-const coursesSrc = readFileSync(resolve(root, 'src/data/courses.ts'), 'utf8');
+const backendData = resolve(root, '../backend/data');
+const readCourses = () => {
+  for (const filename of ['courses.json', 'courses.seed.json']) {
+    try {
+      return JSON.parse(readFileSync(resolve(backendData, filename), 'utf8'));
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+  return [];
+};
 
 // ---------- Parse courseImages.ts ----------
 const imageEntries = [];
@@ -33,25 +43,12 @@ let m;
 while ((m = quoted.exec(imagesSrc))) imageEntries.push({ key: m[1], primary: m[2], secondary: m[3] });
 while ((m = bare.exec(imagesSrc))) imageEntries.push({ key: m[1], primary: m[2], secondary: m[3] });
 
-// ---------- Parse courses.ts to map id -> { slug, title, category } ----------
-const courseLineRe = /\.\.\.(\w+)Defaults,\s*id:\s*'([^']+)',\s*title:\s*'([^']+)',\s*slug:\s*'([^']+)'/g;
-const defaultsToCategory = {
-  erp: 'erp',
-  prog: 'programming',
-  ai: 'ai',
-  mgmt: 'management',
-  intern: 'internship',
-};
-const courseById = {};
-while ((m = courseLineRe.exec(coursesSrc))) {
-  const [, defaultsName, id, title, slug] = m;
-  courseById[id] = {
-    id,
-    title,
-    slug,
-    category: defaultsToCategory[defaultsName] || 'unknown',
-  };
-}
+// ---------- Map the live admin-managed catalogue by id ----------
+const courseById = Object.fromEntries(
+  readCourses()
+    .filter((course) => course?.id && course?.slug)
+    .map((course) => [course.id, course]),
+);
 
 const categoryKeys = new Set(['erp', 'programming', 'ai', 'management', 'internship']);
 
@@ -138,7 +135,7 @@ for (const e of imageEntries) {
 }
 
 // ---------- Write reports ----------
-const outDir = '/mnt/documents';
+const outDir = resolve(root, 'reports');
 mkdirSync(outDir, { recursive: true });
 
 // CSV

@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -7,6 +7,7 @@ import { courseCategories } from '@/data/courseCategories';
 import { Send, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { submitInquiry } from '@/lib/api';
+import SubmissionProtection from '@/components/SubmissionProtection';
 
 interface InquiryFormProps {
   variant?: 'light' | 'dark';
@@ -23,6 +24,10 @@ const InquiryForm = ({ variant = 'light', preselectedCourse, stacked = false }: 
   const { toast } = useToast();
   const [form, setForm] = useState({ name: '', email: '', phone: '', course: preselectedCourse || '', message: '' });
   const [submitting, setSubmitting] = useState(false);
+  const [website, setWebsite] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [challengeKey, setChallengeKey] = useState(0);
+  const formStartedAt = useRef(Date.now());
   const isDark = variant === 'dark';
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,9 +39,12 @@ const InquiryForm = ({ variant = 'light', preselectedCourse, stacked = false }: 
 
     setSubmitting(true);
     try {
-      await submitInquiry(form);
+      await submitInquiry({ ...form, website, turnstileToken, formStartedAt: formStartedAt.current });
       toast({ title: 'Inquiry Submitted!', description: 'Our team will contact you shortly.' });
       setForm({ name: '', email: '', phone: '', course: preselectedCourse || '', message: '' });
+      setWebsite('');
+      formStartedAt.current = Date.now();
+      setChallengeKey((value) => value + 1);
     } catch (error) {
       toast({
         title: 'Submission failed',
@@ -126,6 +134,12 @@ const InquiryForm = ({ variant = 'light', preselectedCourse, stacked = false }: 
           className={`${stacked ? 'min-h-[60px]' : 'min-h-[80px]'} ${inputClass}`}
         />
       </div>
+      <SubmissionProtection
+        website={website}
+        onWebsiteChange={setWebsite}
+        onTokenChange={setTurnstileToken}
+        resetKey={challengeKey}
+      />
       <div className={actionClass}>
         <Button type="submit" disabled={submitting} className="gradient-primary border-0 text-white font-semibold flex-1">
           <Send className="h-4 w-4 mr-2" /> {submitting ? 'Submitting...' : 'Submit Inquiry'}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { submitApplication } from '@/lib/api';
 import { setPageSeo } from '@/lib/seo';
+import SubmissionProtection from '@/components/SubmissionProtection';
 
 const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const { ref, isVisible } = useScrollReveal();
@@ -21,6 +22,10 @@ const Apply = () => {
     name: '', email: '', phone: '', course: '', qualification: '', experience: '', message: '', preferredMode: '', callbackTime: '',
   });
   const [submitting, setSubmitting] = useState(false);
+  const [website, setWebsite] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [challengeKey, setChallengeKey] = useState(0);
+  const formStartedAt = useRef(Date.now());
 
   // The course dropdown follows whatever the admin has published.
   const [courses, setCourses] = useState<CourseSummary[]>([]);
@@ -51,9 +56,17 @@ const Apply = () => {
 
     setSubmitting(true);
     try {
-      await submitApplication(form);
+      await submitApplication({
+        ...form,
+        website,
+        turnstileToken,
+        formStartedAt: formStartedAt.current,
+      });
       toast({ title: 'Application Submitted!', description: 'Our admissions team will contact you within 24 hours.' });
       setForm({ name: '', email: '', phone: '', course: '', qualification: '', experience: '', message: '', preferredMode: '', callbackTime: '' });
+      setWebsite('');
+      formStartedAt.current = Date.now();
+      setChallengeKey((value) => value + 1);
     } catch (error) {
       toast({
         title: 'Submission failed',
@@ -112,6 +125,12 @@ const Apply = () => {
                       <Input placeholder="Preferred Callback Time" value={form.callbackTime} onChange={e => setForm({ ...form, callbackTime: e.target.value })} />
                     </div>
                     <Textarea placeholder="Any message or questions?" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} className="min-h-[80px]" />
+                    <SubmissionProtection
+                      website={website}
+                      onWebsiteChange={setWebsite}
+                      onTokenChange={setTurnstileToken}
+                      resetKey={challengeKey}
+                    />
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button type="submit" size="lg" disabled={submitting} className="gradient-primary border-0 text-white font-semibold flex-1">
                         <Send className="h-4 w-4 mr-2" /> {submitting ? 'Submitting...' : 'Submit Application'}

@@ -77,8 +77,8 @@ Disallow: /api/
 # AI assistants and answer engines
 # These are welcome: the site publishes /llms.txt and full schema.org markup
 # specifically so assistants can quote course details, fees and location
-# accurately instead of guessing. Google-Extended controls Gemini/AI Overviews
-# grounding and only takes effect through its own group.
+# accurately instead of guessing. Google-Extended controls use of site content
+# for some Gemini training/grounding; Google Search features use Googlebot.
 # ---------------------------------------------------------------------------
 User-agent: Google-Extended
 User-agent: GPTBot

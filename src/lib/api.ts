@@ -4,6 +4,9 @@ type InquiryPayload = {
   phone: string;
   course?: string;
   message?: string;
+  website?: string;
+  formStartedAt?: number;
+  turnstileToken?: string;
 };
 
 type ApplicationPayload = {
@@ -16,10 +19,16 @@ type ApplicationPayload = {
   preferredMode?: string;
   callbackTime?: string;
   message?: string;
+  website?: string;
+  formStartedAt?: number;
+  turnstileToken?: string;
 };
 
 type NewsletterPayload = {
   email: string;
+  website?: string;
+  formStartedAt?: number;
+  turnstileToken?: string;
 };
 
 export type AdminSubmission = {
@@ -40,6 +49,7 @@ export type AdminSubmission = {
   message?: string;
   ip?: string;
   userAgent?: string;
+  verification?: 'screened' | 'turnstile';
 };
 
 export type BlogPost = {
