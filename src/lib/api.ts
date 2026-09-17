@@ -93,7 +93,7 @@ const authHeader = (token?: string): Record<string, string> =>
 
 /**
  * All admin auth rides on an HttpOnly session cookie, so every request must
- * send credentials. Form notification emails are dispatched server-side.
+ * send credentials.
  */
 const submitJson = async (path: string, payload: unknown) => {
   const response = await fetch(path, {
@@ -112,13 +112,34 @@ const submitJson = async (path: string, payload: unknown) => {
   return data;
 };
 
-export const submitInquiry = (payload: InquiryPayload) => submitJson('/api/inquiries', payload);
+type InboxNotification = {
+  endpoint: string;
+  payload: Record<string, unknown>;
+};
+
+const submitPublicForm = async (path: string, payload: unknown) => {
+  const data = await submitJson(path, payload) as { notification?: InboxNotification };
+  if (data.notification) {
+    const response = await fetch(data.notification.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(data.notification.payload),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result.success === false) {
+      throw new Error(result.message || 'Your form was saved, but the email notification could not be sent.');
+    }
+  }
+  return data;
+};
+
+export const submitInquiry = (payload: InquiryPayload) => submitPublicForm('/api/inquiries', payload);
 
 export const submitApplication = (payload: ApplicationPayload) =>
-  submitJson('/api/applications', payload);
+  submitPublicForm('/api/applications', payload);
 
 export const submitNewsletter = (payload: NewsletterPayload) =>
-  submitJson('/api/newsletters', payload);
+  submitPublicForm('/api/newsletters', payload);
 
 export const fetchBlogs = async (): Promise<BlogPost[]> => {
   const response = await fetch('/api/blogs');

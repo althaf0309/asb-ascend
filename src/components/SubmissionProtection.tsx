@@ -38,6 +38,7 @@ const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKe
       widgetId = window.turnstile.render(containerRef.current, {
         sitekey: SITE_KEY,
         theme: 'auto',
+        size: 'flexible',
         callback: (token: string) => onTokenChange(token),
         'expired-callback': () => onTokenChange(''),
         'error-callback': () => onTokenChange(''),
@@ -78,7 +79,13 @@ const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKe
           onChange={(event) => onWebsiteChange(event.target.value)}
         />
       </div>
-      {SITE_KEY && <div ref={containerRef} className="min-h-[65px]" aria-label="Spam protection" />}
+      {SITE_KEY && (
+        <div
+          ref={containerRef}
+          className="min-h-[65px] w-full max-w-full overflow-hidden"
+          aria-label="Spam protection"
+        />
+      )}
     </>
   );
 };

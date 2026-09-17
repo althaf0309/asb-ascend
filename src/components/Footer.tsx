@@ -113,8 +113,8 @@ const NewsletterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative space-y-2">
-      <div className="flex gap-2">
+    <form onSubmit={handleSubmit} className="relative min-w-0 max-w-full space-y-2">
+      <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
         <label htmlFor={emailId} className="sr-only">Newsletter email address</label>
         <Input
           id={emailId}
@@ -124,7 +124,7 @@ const NewsletterForm = () => {
           placeholder="Your email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 text-sm"
+          className="min-w-0 bg-white/10 border-white/20 text-white placeholder:text-gray-400 text-sm"
           required
         />
         <Button type="submit" size="sm" disabled={submitting} className="gradient-primary border-0 text-white shrink-0">
@@ -143,10 +143,10 @@ const NewsletterForm = () => {
 
 const Footer = () => (
   <footer className="gradient-bg text-gray-300">
-    <div className="container mx-auto px-4 py-16">
-      <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+    <div className="container mx-auto max-w-full px-4 py-16">
+      <div className="grid min-w-0 gap-10 md:grid-cols-2 lg:grid-cols-4">
         {/* Brand */}
-        <div>
+        <div className="min-w-0">
           <Link
             to="/"
             title="ASB Training Hub home"
@@ -178,7 +178,7 @@ const Footer = () => (
         </div>
 
         {/* Quick Links */}
-        <div>
+        <div className="min-w-0">
           <h3 className="text-white font-heading font-semibold mb-4">Quick Links</h3>
           <ul className="space-y-2 text-sm">
             {[['About Us', '/about'], ['All Courses', '/courses'], ['Training', '/training'], ['Reviews', '/reviews'], ['Blog', '/blog'], ['FAQ', '/faq'], ['Contact', '/contact'], ['Apply Now', '/apply'], ['Terms & Conditions', '/terms-and-conditions']].map(([label, path]) => (
@@ -188,7 +188,7 @@ const Footer = () => (
         </div>
 
         {/* Course Categories */}
-        <div>
+        <div className="min-w-0">
           <h3 className="text-white font-heading font-semibold mb-4">Course Categories</h3>
           <ul className="space-y-2 text-sm">
             {[['ERP / SAP Courses', '/courses/erp'], ['Programming Languages', '/courses/programming'], ['AI Trainings', '/courses/ai'], ['Management Courses', '/courses/management'], ['Internship Programs', '/courses/internship']].map(([label, path]) => (
@@ -198,12 +198,12 @@ const Footer = () => (
         </div>
 
         {/* Contact & Newsletter */}
-        <div>
+        <div className="min-w-0">
           <h3 className="text-white font-heading font-semibold mb-4">Contact Us</h3>
           <div className="space-y-3 text-sm mb-6">
             <div className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 mt-0.5" /><span>105-2, The Atomic, Near Technopark Phase 1, Kazhakootam, Trivandrum, Kerala, 695581</span></div>
             <a href="tel:+918714773304" title="Call ASB Training Hub" className="flex gap-2 hover:text-white"><Phone className="h-4 w-4" />+91 8714773304</a>
-            <a href="mailto:info@asbtraininghub.com" title="Email ASB Training Hub" className="flex gap-2 hover:text-white"><Mail className="h-4 w-4" />info@asbtraininghub.com</a>
+            <a href="mailto:info@asbtraininghub.com" title="Email ASB Training Hub" className="flex min-w-0 gap-2 hover:text-white"><Mail className="h-4 w-4 shrink-0" /><span className="break-all">info@asbtraininghub.com</span></a>
           </div>
           <h4 className="text-white text-sm font-semibold mb-2">Newsletter</h4>
           <NewsletterForm />
