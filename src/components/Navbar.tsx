@@ -17,6 +17,7 @@ const navLinks = [
   { label: 'About', path: '/about' },
   { label: 'Courses', path: '/courses', children: courseMenuItems },
   { label: 'Training', path: '/training' },
+  { label: 'Locations', path: '/locations/kerala' },
   { label: 'Reviews', path: '/reviews' },
   { label: 'FAQ', path: '/faq' },
   { label: 'Blog', path: '/blog' },

@@ -181,7 +181,7 @@ const Footer = () => (
         <div className="min-w-0">
           <h3 className="text-white font-heading font-semibold mb-4">Quick Links</h3>
           <ul className="space-y-2 text-sm">
-            {[['About Us', '/about'], ['All Courses', '/courses'], ['Training', '/training'], ['Reviews', '/reviews'], ['Blog', '/blog'], ['FAQ', '/faq'], ['Contact', '/contact'], ['Apply Now', '/apply'], ['Terms & Conditions', '/terms-and-conditions']].map(([label, path]) => (
+            {[['About Us', '/about'], ['All Courses', '/courses'], ['Training', '/training'], ['Kerala Locations', '/locations/kerala'], ['Reviews', '/reviews'], ['Blog', '/blog'], ['FAQ', '/faq'], ['Contact', '/contact'], ['Apply Now', '/apply'], ['Terms & Conditions', '/terms-and-conditions']].map(([label, path]) => (
               <li key={path}><Link to={path} title={`${label} | ASB Training Hub`} className="hover:text-white transition-colors flex items-center gap-1"><ArrowRight className="h-3 w-3" />{label}</Link></li>
             ))}
           </ul>

@@ -38,6 +38,9 @@ const AdminCourses = lazy(() => import("./pages/AdminCourses"));
 const AdminTraining = lazy(() => import("./pages/AdminTraining"));
 const Training = lazy(() => import("./pages/Training"));
 const TrainingDetail = lazy(() => import("./pages/TrainingDetail"));
+const Locations = lazy(() => import("./pages/Locations"));
+const LocationDetail = lazy(() => import("./pages/LocationDetail"));
+const LocationCourse = lazy(() => import("./pages/LocationCourse"));
 const Apply = lazy(() => import("./pages/Apply"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -99,6 +102,9 @@ const App = () => (
           <Route path="/training" element={<Training />} />
           <Route path="/training/category/:category" element={<Training />} />
           <Route path="/training/:slug" element={<TrainingDetail />} />
+          <Route path="/locations/kerala" element={<Locations />} />
+          <Route path="/locations/kerala/:district" element={<LocationDetail />} />
+          <Route path="/locations/kerala/:district/:topic" element={<LocationCourse />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/faq" element={<FAQ />} />

@@ -34,6 +34,7 @@ const staticRoutes = [
   { loc: '/', priority: '1.0', changefreq: 'weekly' },
   { loc: '/about', priority: '0.8', changefreq: 'monthly' },
   { loc: '/courses', priority: '0.95', changefreq: 'weekly' },
+  { loc: '/locations/kerala', priority: '0.9', changefreq: 'monthly' },
   { loc: '/reviews', priority: '0.7', changefreq: 'monthly' },
   { loc: '/faq', priority: '0.8', changefreq: 'monthly' },
   { loc: '/blog', priority: '0.8', changefreq: 'weekly' },
@@ -41,6 +42,22 @@ const staticRoutes = [
   { loc: '/apply', priority: '0.9', changefreq: 'monthly' },
   { loc: '/terms-and-conditions', priority: '0.5', changefreq: 'yearly' },
 ];
+
+const LOCATION_SLUGS = [
+  'trivandrum', 'kazhakootam-technopark', 'kochi-ernakulam',
+  'kozhikode-calicut', 'thrissur', 'kollam', 'kottayam', 'kannur',
+  'alappuzha', 'palakkad', 'malappuram',
+];
+const LOCATION_TOPIC_SLUGS = [
+  'generative-ai-course', 'agentic-ai-course', 'ai-course', 'erp-sap-courses',
+  'programming-courses', 'management-courses', 'internship-programs',
+];
+const locationRoutes = LOCATION_SLUGS.flatMap((district) => [
+  { loc: `/locations/kerala/${district}`, priority: '0.85', changefreq: 'monthly' },
+  ...LOCATION_TOPIC_SLUGS.map((topic) => ({
+    loc: `/locations/kerala/${district}/${topic}`, priority: '0.8', changefreq: 'monthly',
+  })),
+]);
 
 const CATEGORY_IDS = ['erp', 'programming', 'ai', 'management', 'internship'];
 const categoryRoutes = CATEGORY_IDS.map((category) => ({
@@ -86,7 +103,7 @@ const blogRoutes = blogs.map((b) => ({
   lastmod: b.updatedAt ? b.updatedAt.slice(0, 10) : undefined,
 }));
 
-const urls = [...staticRoutes, ...categoryRoutes, ...courseRoutes, ...trainingRoutes, ...blogRoutes];
+const urls = [...staticRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...trainingRoutes, ...blogRoutes];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -133,6 +150,7 @@ ASB Training Hub is a career training institute in Trivandrum, Kerala offering j
 - About: ${siteUrl}/about
 - Courses: ${siteUrl}/courses
 - Training: ${siteUrl}/training
+- Kerala course locations: ${siteUrl}/locations/kerala
 ${CATEGORY_IDS.map((id) => `- ${categoryLabel(id)}: ${siteUrl}/courses/${id}`).join('\n')}
 - Reviews: ${siteUrl}/reviews
 - FAQ: ${siteUrl}/faq
