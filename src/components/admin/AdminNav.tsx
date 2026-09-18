@@ -31,7 +31,7 @@ const AdminNav = ({ onLogout, children }: { onLogout: () => void; children?: Rea
 
     <Button
       variant="outline"
-      className="bg-transparent border-white/20 text-white hover:bg-white/10 ml-auto"
+      className="bg-transparent ml-auto"
       onClick={onLogout}
     >
       <LogOut className="h-4 w-4 mr-2" aria-hidden /> Sign out
