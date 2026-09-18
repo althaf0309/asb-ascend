@@ -5,7 +5,7 @@ import {
   AlignCenter, AlignLeft, AlignRight, Bold, Code, Eye, Heading1, Image, Italic,
   Inbox,
   Link as LinkIcon, List, ListOrdered, LogOut, Quote, Redo, Save, Strikethrough,
-  Table, Trash2, Underline, Undo, Upload, X,
+  Table, Trash2, Underline, Undo, Upload, X, GraduationCap, BarChart3,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -437,6 +437,12 @@ const AdminBlog = () => {
           <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-3 sm:flex-row">
             <Link to="/admin/courses" className="inline-flex self-center">
               <Button type="button" variant="outline" className="bg-transparent">Courses</Button>
+            </Link>
+            <Link to="/admin/training" className="inline-flex self-center">
+              <Button type="button" variant="outline" className="bg-transparent"><GraduationCap className="h-4 w-4 mr-2" />Training</Button>
+            </Link>
+            <Link to="/admin/analytics" className="inline-flex self-center">
+              <Button type="button" variant="outline" className="bg-transparent"><BarChart3 className="h-4 w-4 mr-2" />Analytics</Button>
             </Link>
             <Button type="button" variant={activeView === 'blogs' ? 'default' : 'outline'} className={activeView === 'blogs' ? 'gradient-primary border-0 text-white' : ''} onClick={() => setActiveView('blogs')}>
               <Edit className="h-4 w-4 mr-2" /> Blog Posts
