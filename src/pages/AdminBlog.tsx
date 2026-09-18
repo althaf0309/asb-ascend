@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import {
   adminLogin,
+  checkSession,
   logoutRequest,
   createBlog,
   deleteBlog,
@@ -79,9 +80,7 @@ const toolbarGroups = [
 const AdminBlog = () => {
   const { toast } = useToast();
   const editorRef = useRef<HTMLDivElement>(null);
-  const [token, setToken] = useState(() =>
-    sessionStorage.getItem(signedInKey) ? 'cookie-session' : '',
-  );
+  const [token, setToken] = useState('');
   const [login, setLogin] = useState({ username: '', password: '' });
   const [form, setForm] = useState(emptyForm);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -107,6 +106,24 @@ const AdminBlog = () => {
       path: '/admin/blog',
       noindex: true,
     });
+  }, []);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem(signedInKey)) return;
+
+    let active = true;
+    void checkSession().then((valid) => {
+      if (!active) return;
+      if (valid) {
+        setToken('cookie-session');
+      } else {
+        sessionStorage.removeItem(signedInKey);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const loadBlogs = useCallback(async (authToken = token) => {

@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { adminLogin, logoutRequest } from '@/lib/api';
+import { useCallback, useEffect, useState } from 'react';
+import { adminLogin, checkSession, logoutRequest } from '@/lib/api';
 
 /**
  * Shared admin session state.
@@ -20,8 +20,30 @@ const readFlag = () => {
 };
 
 export const useAdminAuth = () => {
-  const [token, setToken] = useState(readFlag);
+  const [token, setToken] = useState('');
   const [loggingIn, setLoggingIn] = useState(false);
+
+  useEffect(() => {
+    if (!readFlag()) return;
+
+    let active = true;
+    void checkSession().then((valid) => {
+      if (!active) return;
+      if (valid) {
+        setToken('cookie-session');
+        return;
+      }
+      try {
+        sessionStorage.removeItem(SIGNED_IN_KEY);
+      } catch {
+        /* nothing to clear */
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const login = useCallback(async (username: string, password: string) => {
     setLoggingIn(true);
