@@ -20,6 +20,7 @@ ASB Training Hub is a career training institute in Trivandrum, Kerala offering j
 - Courses: https://www.asbtraininghub.com/courses
 - Training: https://www.asbtraininghub.com/training
 - Kerala course locations: https://www.asbtraininghub.com/locations/kerala
+- Local course pages: every published course is available beneath each Kerala location at https://www.asbtraininghub.com/locations/kerala/{location}/course/{course-slug}
 - ERP Modules: https://www.asbtraininghub.com/courses/erp
 - Programming: https://www.asbtraininghub.com/courses/programming
 - AI Training: https://www.asbtraininghub.com/courses/ai

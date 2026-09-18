@@ -135,6 +135,8 @@ export const locationBySlug = (slug?: string) => locations.find((item) => item.s
 export const locationTopicBySlug = (slug?: string) => locationTopics.find((item) => item.slug === slug);
 export const districtPath = (location: LocationPage) => `/locations/kerala/${location.slug}`;
 export const topicPath = (location: LocationPage, topic: LocationTopic) => `${districtPath(location)}/${topic.slug}`;
+export const localizedCoursePath = (location: LocationPage, courseSlug: string) => `${districtPath(location)}/course/${courseSlug}`;
+export const topicForCategory = (category: string) => locationTopics.find((topic) => topic.category === category);
 
 export const topicKeywordsForLocation = (location: LocationPage, topic: LocationTopic) => {
   const local = location.keywords.filter((keyword) => {

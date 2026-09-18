@@ -1,12 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowRight, CheckCircle, MapPin, Monitor, Route } from 'lucide-react';
 import InquiryForm from '@/components/InquiryForm';
-import { districtPath, locationBySlug, locations, locationTopics, topicPath } from '@/data/locations';
+import { districtPath, localizedCoursePath, locationBySlug, locations, locationTopics, topicPath } from '@/data/locations';
 import { setPageSeo, setJsonLd, removeJsonLd, absoluteUrl } from '@/lib/seo';
-import hero640 from '@/assets/locations/kerala-ai-training-640w.webp';
-import hero1200 from '@/assets/locations/kerala-ai-training-1200w.webp';
-import hero1536 from '@/assets/locations/kerala-ai-training-1536w.webp';
+import { locationImage } from '@/data/locationImages';
+import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
 
 const courseLinks = [
   { label: 'AI & Generative AI Courses', href: '/courses/ai' },
@@ -18,6 +17,9 @@ const courseLinks = [
 const LocationDetail = () => {
   const { district } = useParams<{ district: string }>();
   const location = locationBySlug(district);
+  const [courses, setCourses] = useState<CourseSummary[]>([]);
+
+  useEffect(() => { fetchCourseSummaries().then(setCourses).catch(() => setCourses([])); }, []);
 
   useEffect(() => {
     if (!location) {
@@ -25,7 +27,7 @@ const LocationDetail = () => {
       return;
     }
     const path = districtPath(location);
-    setPageSeo({ title: `${location.title} | ASB Training Hub`, description: location.description, keywords: location.keywords.join(', '), path, image: hero1536 });
+    setPageSeo({ title: `${location.title} | ASB Training Hub`, description: location.description, keywords: location.keywords.join(', '), path, image: locationImage(location.slug).large });
     setJsonLd('location-page-schema', {
       '@context': 'https://schema.org', '@type': 'CollectionPage', name: location.title,
       description: location.description, url: absoluteUrl(path),
@@ -39,13 +41,13 @@ const LocationDetail = () => {
 
   const nearby = locations.filter((item) => item.slug !== location.slug).slice(0, 4);
   const isLocal = location.region === 'Trivandrum area';
+  const hero = locationImage(location.slug);
 
   return <main>
     <section className="relative min-h-[600px] pt-28 flex items-center overflow-hidden bg-foreground">
       <picture className="absolute inset-0">
-        <source media="(max-width: 640px)" srcSet={hero640} />
-        <source media="(max-width: 1200px)" srcSet={hero1200} />
-        <img src={hero1536} alt={`Students attending AI training for ${location.name}`} className="h-full w-full object-cover" fetchPriority="high" />
+        <source media="(max-width: 640px)" srcSet={hero.small} />
+        <img src={hero.large} alt={`Students attending career training for ${location.name}`} className="h-full w-full object-cover" fetchPriority="high" />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/20" />
       <div className="container mx-auto px-4 relative z-10 grid lg:grid-cols-[1.15fr_.85fr] gap-10 items-center py-12">
@@ -68,6 +70,8 @@ const LocationDetail = () => {
         'Complete practical assignments and guided projects', 'Learn with trainer feedback and doubt-clearing support', 'Get course and career guidance from the admissions team',
       ].map((item) => <li key={item} className="flex gap-3"><CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" /><span>{item}</span></li>)}</ul></div>
     </div></section>
+
+    <section className="section-padding bg-muted/30"><div className="container mx-auto px-4"><span className="text-primary font-semibold">Complete catalogue</span><h2 className="text-3xl font-bold font-heading mt-2 mb-3">All {courses.length || 51} courses available in {location.name}</h2><p className="text-muted-foreground max-w-3xl mb-7">Open any course to see its location-specific learning option, syllabus, projects, tools and admission form.</p><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">{courses.map((course) => <Link key={course.slug} to={localizedCoursePath(location, course.slug)} className="group rounded-2xl border border-border bg-background p-5 hover-lift"><span className="text-xs font-semibold text-primary">{course.categoryLabel}</span><h3 className="text-lg font-bold mt-2 group-hover:text-primary">{course.title}</h3><p className="text-sm text-muted-foreground mt-2 line-clamp-2">{course.description}</p><div className="flex justify-between items-center mt-4 pt-4 border-t border-border text-xs text-muted-foreground"><span>{course.duration}</span><ArrowRight className="h-4 w-4" /></div></Link>)}</div></div></section>
 
     <section className="section-padding bg-muted/30"><div className="container mx-auto px-4"><h2 className="text-3xl font-bold font-heading mb-6">Popular searches in {location.name}</h2><div className="flex flex-wrap gap-3">{location.keywords.map((keyword) => <span key={keyword} className="rounded-full bg-background border border-border px-4 py-2 text-sm">{keyword}</span>)}</div></div></section>
 

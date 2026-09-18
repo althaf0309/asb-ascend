@@ -94,6 +94,12 @@ const courseRoutes = courses.map((c) => ({
   changefreq: 'monthly',
   lastmod: c.updatedAt ? c.updatedAt.slice(0, 10) : undefined,
 }));
+const localizedCourseRoutes = LOCATION_SLUGS.flatMap((district) => courses.map((c) => ({
+  loc: `/locations/kerala/${district}/course/${c.slug}`,
+  priority: '0.75',
+  changefreq: 'monthly',
+  lastmod: c.updatedAt ? c.updatedAt.slice(0, 10) : undefined,
+})));
 
 const blogs = (await readStore('blogs.json')).filter((b) => b && b.slug && b.published !== false);
 const blogRoutes = blogs.map((b) => ({
@@ -103,7 +109,7 @@ const blogRoutes = blogs.map((b) => ({
   lastmod: b.updatedAt ? b.updatedAt.slice(0, 10) : undefined,
 }));
 
-const urls = [...staticRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...trainingRoutes, ...blogRoutes];
+const urls = [...staticRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -151,6 +157,7 @@ ASB Training Hub is a career training institute in Trivandrum, Kerala offering j
 - Courses: ${siteUrl}/courses
 - Training: ${siteUrl}/training
 - Kerala course locations: ${siteUrl}/locations/kerala
+- Local course pages: every published course is available beneath each Kerala location at ${siteUrl}/locations/kerala/{location}/course/{course-slug}
 ${CATEGORY_IDS.map((id) => `- ${categoryLabel(id)}: ${siteUrl}/courses/${id}`).join('\n')}
 - Reviews: ${siteUrl}/reviews
 - FAQ: ${siteUrl}/faq
