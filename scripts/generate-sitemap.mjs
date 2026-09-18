@@ -73,6 +73,7 @@ const courses = (await readStore('courses.json', 'courses.seed.json')).filter(
 );
 const aiGuides = JSON.parse(await readFile(path.join(rootDir, 'src/data/aiGuidePages.json'), 'utf8'));
 const aiGuideRoutes = [{ loc: '/ai-guides', priority: '0.8', changefreq: 'monthly' }, ...aiGuides.map((guide) => ({ loc: `/ai-guides/${guide.slug}`, priority: '0.65', changefreq: 'monthly' }))];
+const keywordCourseRoutes = [{ loc: '/keyword-courses', priority: '0.85', changefreq: 'monthly' }, ...aiGuides.filter((guide) => guide.kind === 'keyword').map((guide) => ({ loc: `/keyword-courses/${guide.slug}`, priority: '0.7', changefreq: 'monthly' }))];
 
 const TRAINING_CATEGORY_IDS = ['corporate', 'workshop', 'certification', 'bootcamp', 'online'];
 const training = (await readStore('training.json', 'training.seed.json')).filter(
@@ -113,7 +114,7 @@ const blogRoutes = blogs.map((b) => ({
   lastmod: b.updatedAt ? b.updatedAt.slice(0, 10) : undefined,
 }));
 
-const urls = [...staticRoutes, ...aiLandingRoutes, ...aiGuideRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
+const urls = [...staticRoutes, ...aiLandingRoutes, ...aiGuideRoutes, ...keywordCourseRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

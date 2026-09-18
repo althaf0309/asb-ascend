@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react';
+﻿import { useId, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
@@ -191,7 +191,7 @@ const Footer = () => (
         <div className="min-w-0">
           <h3 className="text-white font-heading font-semibold mb-4">Course Categories</h3>
           <ul className="space-y-2 text-sm">
-            {[['ERP / SAP Courses', '/courses/erp'], ['Programming Languages', '/courses/programming'], ['AI Trainings', '/courses/ai'], ['AI Learning Guides', '/ai-courses'], ['AI Keywords & FAQs', '/ai-guides'], ['Management Courses', '/courses/management'], ['Internship Programs', '/courses/internship']].map(([label, path]) => (
+            {[['ERP / SAP Courses', '/courses/erp'], ['Programming Languages', '/courses/programming'], ['AI Trainings', '/courses/ai'], ['AI Learning Guides', '/ai-courses'], ['AI Keywords & FAQs', '/ai-guides'], ['Keyword Course Pages', '/keyword-courses'], ['Management Courses', '/courses/management'], ['Internship Programs', '/courses/internship']].map(([label, path]) => (
               <li key={path}><Link to={path} title={`${label} | ASB Training Hub`} className="hover:text-white transition-colors flex items-center gap-1"><ArrowRight className="h-3 w-3" />{label}</Link></li>
             ))}
           </ul>
@@ -211,9 +211,10 @@ const Footer = () => (
       </div>
     </div>
     <div className="border-t border-white/10 py-4 text-center text-xs text-gray-500">
-      © {new Date().getFullYear()} ASB Training Hub. All rights reserved. | Best Training Institute in Trivandrum, Kerala
+      Â© {new Date().getFullYear()} ASB Training Hub. All rights reserved. | Best Training Institute in Trivandrum, Kerala
     </div>
   </footer>
 );
 
 export default Footer;
+
