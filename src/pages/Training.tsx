@@ -34,7 +34,7 @@ const SEO_BY_CATEGORY: Record<string, { title: string; description: string; keyw
     title: 'Certification Tracks | ASB Training Hub',
     description:
       'Structured certification preparation for working professionals, with sandbox access, mock exams and evening or weekend batches.',
-    keywords: 'certification training Kerala, SAP certification, evening batches Trivandrum',
+    keywords: 'certification training Kerala, ERP certification, evening batches Trivandrum',
   },
   bootcamp: {
     title: 'Intensive Bootcamps in Kerala | ASB Training Hub',

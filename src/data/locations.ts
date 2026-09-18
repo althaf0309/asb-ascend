@@ -39,10 +39,10 @@ export const locationTopics: LocationTopic[] = [
     statewideKeywords: ['AI Course in Kerala', 'Artificial Intelligence Course in Kerala', 'AI Training in Kerala', 'AI Classes in Kerala', 'AI Certification Course in Kerala', 'Best AI Course in Kerala', 'Best AI Institute in Kerala', 'Best AI Training Institute in Kerala', 'AI Institute in Kerala', 'AI Developer Course Kerala', 'Affordable AI Course in Kerala', 'AI Certification for Beginners in Kerala', 'Learn AI Tools in Kerala', 'AI Automation Training Kerala'],
   },
   {
-    slug: 'erp-sap-courses', name: 'ERP and SAP Courses', shortName: 'ERP and SAP', category: 'erp',
+    slug: 'erp-sap-courses', name: 'ERP Courses', shortName: 'ERP', category: 'erp',
     summary: 'Build practical ERP skills across finance, materials, sales, production, HR, quality and technical modules through process-based training.',
     outcomes: ['Business process and ERP foundations', 'Module-focused practical exercises', 'Configuration and implementation concepts', 'ERP career preparation'],
-    statewideKeywords: ['ERP Courses in Kerala', 'SAP Training in Kerala', 'ERP Certification Kerala', 'Job-Oriented SAP Courses Kerala'],
+    statewideKeywords: ['ERP Courses in Kerala', 'ERP Training in Kerala', 'ERP Certification Kerala', 'Job-Oriented ERP Courses Kerala'],
   },
   {
     slug: 'programming-courses', name: 'Programming Courses', shortName: 'Programming', category: 'programming',

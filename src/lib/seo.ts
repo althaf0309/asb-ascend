@@ -1,9 +1,9 @@
 export const SITE_URL = 'https://www.asbtraininghub.com';
 export const SITE_NAME = 'ASB Training Hub';
 export const DEFAULT_DESCRIPTION =
-  'ASB Training Hub in Trivandrum offers job-oriented ERP/SAP, programming, AI, management, and internship courses with practical training and placement support.';
+  'ASB Training Hub in Trivandrum offers job-oriented ERP, programming, AI, management, and internship courses with practical training and placement support.';
 export const DEFAULT_KEYWORDS =
-  'ASB Training Hub, training institute Trivandrum, ERP courses Kerala, SAP training Trivandrum, AI training Kerala, programming courses Trivandrum, internship programs Kerala';
+  'ASB Training Hub, training institute Trivandrum, ERP courses Kerala, ERP training Trivandrum, AI training Kerala, programming courses Trivandrum, internship programs Kerala';
 
 /** Upper bound Google renders before truncating a SERP snippet. */
 export const SERP_DESCRIPTION_MAX = 160;

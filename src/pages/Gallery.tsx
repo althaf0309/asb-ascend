@@ -25,7 +25,7 @@ const images = [
   { src: events1, alt: 'Annual hackathon and tech event', category: 'Events' },
   { src: cert1, alt: 'Certificate distribution ceremony', category: 'Certifications' },
   { src: classroom2, alt: 'Collaborative coding session with laptops', category: 'Classroom' },
-  { src: classroom3, alt: 'Hands-on SAP training workshop', category: 'Classroom' },
+  { src: classroom3, alt: 'Hands-on ERP training workshop', category: 'Classroom' },
   { src: events2, alt: 'AI workshop with industry expert', category: 'Events' },
   { src: campus2, alt: 'Modern reception and lobby area', category: 'Campus' },
   { src: events3, alt: 'Industry expert guest lecture session', category: 'Events' },

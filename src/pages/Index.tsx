@@ -55,7 +55,7 @@ const whyChoose = [
 ];
 
 const testimonials = [
-  { name: 'Arun Kumar', role: 'SAP FICO Consultant at TCS', rating: 5, text: 'ASB Training Hub transformed my career. The SAP FICO training was practical, and I got placed within 2 months of completing the course.' },
+  { name: 'Arun Kumar', role: 'ERP FICO Consultant at TCS', rating: 5, text: 'ASB Training Hub transformed my career. The ERP FICO training was practical, and I got placed within 2 months of completing the course.' },
   { name: 'Priya Nair', role: 'Python Developer at Infosys', rating: 5, text: 'The Python Full Stack course was comprehensive. The internship experience gave me the confidence to crack interviews at top MNCs.' },
   { name: 'Rahul Menon', role: 'AI Engineer at Wipro', rating: 5, text: 'Best AI training institute in Trivandrum! The hands-on projects and mentor support were exceptional.' },
   { name: 'Sneha Das', role: 'HR Manager at UST', rating: 5, text: 'The HR Management diploma helped me transition from a fresher to an HR professional in just 6 months.' },
@@ -204,9 +204,9 @@ export default function Index() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'ASB Training Hub | ERP, SAP, AI & Programming Courses in Trivandrum',
-      description: 'Job-oriented ERP/SAP, AI, programming, management and internship courses near Technopark, Trivandrum, with practical training and placement support.',
-      keywords: 'ASB Training Hub, best training institute Trivandrum, SAP training Trivandrum, ERP courses Kerala, AI training Trivandrum, programming courses Kerala, internship programs Trivandrum',
+      title: 'ASB Training Hub | ERP, ERP, AI & Programming Courses in Trivandrum',
+      description: 'Job-oriented ERP, AI, programming, management and internship courses near Technopark, Trivandrum, with practical training and placement support.',
+      keywords: 'ASB Training Hub, best training institute Trivandrum, ERP training Trivandrum, ERP courses Kerala, AI training Trivandrum, programming courses Kerala, internship programs Trivandrum',
       path: '/',
     });
     setJsonLd('organization', {
@@ -217,7 +217,7 @@ export default function Index() {
       alternateName: 'ASB Training Hub Trivandrum',
       url: 'https://www.asbtraininghub.com/',
       description:
-        'Career training institute in Trivandrum offering job-oriented ERP/SAP, AI, programming, management, and internship courses with placement support.',
+        'Career training institute in Trivandrum offering job-oriented ERP, AI, programming, management, and internship courses with placement support.',
       logo: {
         '@type': 'ImageObject',
         url: 'https://www.asbtraininghub.com/site-logo.png',
@@ -291,7 +291,7 @@ export default function Index() {
               <span className="gradient-text">Industry-Focused Training</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              Master ERP/SAP, AI, Programming, Management & more with expert-led practical training, internship support, and career-oriented learning at ASB Training Hub.
+              Master ERP, AI, Programming, Management & more with expert-led practical training, internship support, and career-oriented learning at ASB Training Hub.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
               <Link to="/courses" title="Explore ASB Training Hub courses" className="inline-flex self-center">

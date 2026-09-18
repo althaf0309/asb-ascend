@@ -11,11 +11,11 @@ const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React
 };
 
 const reviews = [
-  { name: 'Arun Kumar', role: 'SAP FICO Consultant at TCS', rating: 5, text: 'ASB Training Hub transformed my career completely. The SAP FICO training was deeply practical with real-time projects. I secured a position at TCS within 2 months of completing the course. The trainers are incredibly experienced and supportive.' },
+  { name: 'Arun Kumar', role: 'ERP FICO Consultant at TCS', rating: 5, text: 'ASB Training Hub transformed my career completely. The ERP FICO training was deeply practical with real-time projects. I secured a position at TCS within 2 months of completing the course. The trainers are incredibly experienced and supportive.' },
   { name: 'Priya Nair', role: 'Python Developer at Infosys', rating: 5, text: 'The Python Full Stack course was the best investment I made. From basics to deployment, everything was covered. The internship experience gave me the portfolio and confidence needed to crack interviews at Infosys.' },
   { name: 'Rahul Menon', role: 'AI Engineer at Wipro', rating: 5, text: 'Best AI training institute in Trivandrum! The hands-on projects with real datasets, mentor support, and career guidance were exceptional. The GenAI module was cutting-edge and helped me land my dream role.' },
   { name: 'Sneha Das', role: 'HR Manager at UST', rating: 5, text: 'The HR Management diploma transformed me from a fresher to a confident HR professional in just 6 months. The curriculum covers everything from recruitment to compliance. Placement support was outstanding.' },
-  { name: 'Vishnu Prasad', role: 'SAP MM Consultant', rating: 5, text: 'Excellent SAP training with real ERP system access. The practical approach at ASB made all the difference. Highly recommend for anyone looking to build a career in SAP.' },
+  { name: 'Vishnu Prasad', role: 'ERP MM Consultant', rating: 5, text: 'Excellent ERP training with real ERP system access. The practical approach at ASB made all the difference. Highly recommend for anyone looking to build a career in ERP.' },
   { name: 'Anjali Krishnan', role: 'Data Scientist at Tata Elxsi', rating: 5, text: 'The Data Science + AI program was comprehensive. I learned everything from statistics to deep learning with real projects. The placement cell connected me with top companies in Technopark.' },
   { name: 'Mohammed Faisal', role: 'Full Stack Developer at QBurst', rating: 5, text: 'ASB Training Hub\'s coding bootcamp is world-class. The project-based learning approach, code reviews, and interview prep were instrumental in my career transition to tech.' },
   { name: 'Lakshmi Devi', role: 'Logistics Manager at DHL', rating: 5, text: 'The Logistics Management diploma gave me the skills and confidence to advance in my career. The trainers brought real industry experience and the curriculum was up-to-date.' },
@@ -25,8 +25,8 @@ const Reviews = () => {
   useEffect(() => {
     setPageSeo({
       title: 'Student Reviews | ASB Training Hub Success Stories',
-      description: 'Read ASB Training Hub student reviews and success stories from ERP/SAP, Python, AI, data science, HR, logistics, and management course learners.',
-      keywords: 'ASB Training Hub reviews, student testimonials Trivandrum, SAP course reviews Kerala, AI training reviews, placement success stories',
+      description: 'Read ASB Training Hub student reviews and success stories from ERP, Python, AI, data science, HR, logistics, and management course learners.',
+      keywords: 'ASB Training Hub reviews, student testimonials Trivandrum, ERP course reviews Kerala, AI training reviews, placement success stories',
       path: '/reviews',
     });
   }, []);

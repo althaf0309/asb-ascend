@@ -59,9 +59,9 @@ const Courses = () => {
   useEffect(() => {
     const seoByCategory: Record<string, { title: string; description: string; keywords: string }> = {
       erp: {
-        title: 'ERP & SAP Courses in Trivandrum | ASB Training Hub',
-        description: 'Explore practical ERP and SAP-style courses in finance, materials, sales, production, HR, quality, supply chain, ABAP, and more at ASB Training Hub, Trivandrum.',
-        keywords: 'ERP courses Trivandrum, SAP training Kerala, SAP FICO course, SAP MM course, SAP SD training, ABAP training, ERP modules Kerala',
+        title: 'ERP Courses in Trivandrum | ASB Training Hub',
+        description: 'Explore practical ERP-style courses in finance, materials, sales, production, HR, quality, supply chain, ABAP, and more at ASB Training Hub, Trivandrum.',
+        keywords: 'ERP courses Trivandrum, ERP training Kerala, ERP FICO course, ERP MM course, ERP SD training, ABAP training, ERP modules Kerala',
       },
       programming: {
         title: 'Programming Courses in Trivandrum | Python, Java, Web Development',
@@ -86,8 +86,8 @@ const Courses = () => {
     };
     const seo = currentCategory ? seoByCategory[currentCategory.id] : {
       title: 'Courses | ASB Training Hub ERP, AI, Programming & Management',
-      description: 'Browse 50+ job-oriented courses at ASB Training Hub including ERP/SAP, programming, AI, management, and internship programs in Trivandrum.',
-      keywords: 'ASB Training Hub courses, courses in Trivandrum, ERP courses, SAP training, AI courses, programming courses, management courses, internship programs',
+      description: 'Browse 50+ job-oriented courses at ASB Training Hub including ERP, programming, AI, management, and internship programs in Trivandrum.',
+      keywords: 'ASB Training Hub courses, courses in Trivandrum, ERP courses, ERP training, AI courses, programming courses, management courses, internship programs',
     };
     setPageSeo({
       ...seo,

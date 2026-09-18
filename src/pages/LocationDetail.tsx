@@ -10,7 +10,7 @@ import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
 const courseLinks = [
   { label: 'AI & Generative AI Courses', href: '/courses/ai' },
   { label: 'Programming Courses', href: '/courses/programming' },
-  { label: 'ERP & SAP Courses', href: '/courses/erp' },
+  { label: 'ERP Courses', href: '/courses/erp' },
   { label: 'Internship Programs', href: '/courses/internship' },
 ];
 

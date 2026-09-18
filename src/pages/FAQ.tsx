@@ -12,7 +12,7 @@ const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React
 
 const faqSections = [
   { title: 'General', faqs: [
-    { q: 'What is ASB Training Hub?', a: 'ASB Training Hub is a premier professional training institute located near Technopark, Trivandrum, offering industry-focused courses in ERP/SAP, Programming, AI, Management, and more.' },
+    { q: 'What is ASB Training Hub?', a: 'ASB Training Hub is a premier professional training institute located near Technopark, Trivandrum, offering industry-focused courses in ERP, Programming, AI, Management, and more.' },
     { q: 'Where is ASB Training Hub located?', a: '105-2, The Atomic, Near Technopark Phase 1, Kazhakootam, Trivandrum, Kerala, 695581.' },
     { q: 'What are the office hours?', a: 'Monday to Saturday, 9:00 AM to 6:00 PM.' },
     { q: 'Do you offer online classes?', a: 'Yes! We offer both online and offline modes. Online classes are live and interactive.' },

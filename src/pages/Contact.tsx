@@ -41,7 +41,7 @@ const Contact = () => {
   useEffect(() => {
     setPageSeo({
       title: 'Contact ASB Training Hub | Training Institute Near Technopark',
-      description: 'Contact ASB Training Hub in Kazhakootam, Trivandrum for ERP/SAP, AI, programming, management, and internship course admissions, counseling, and demo classes.',
+      description: 'Contact ASB Training Hub in Kazhakootam, Trivandrum for ERP, AI, programming, management, and internship course admissions, counseling, and demo classes.',
       keywords: 'contact ASB Training Hub, training institute Kazhakootam, training institute near Technopark, course admission Trivandrum, ASB Training Hub phone number',
       path: '/contact',
     });

@@ -41,8 +41,8 @@ const Apply = () => {
   useEffect(() => {
     setPageSeo({
       title: 'Apply Now | ASB Training Hub Course Admission',
-      description: 'Apply for ASB Training Hub courses in ERP/SAP, AI, programming, management, and internships. Submit your admission form and get counseling within 24 hours.',
-      keywords: 'apply ASB Training Hub, course admission Trivandrum, SAP course admission Kerala, AI course admission, programming course application, internship admission',
+      description: 'Apply for ASB Training Hub courses in ERP, AI, programming, management, and internships. Submit your admission form and get counseling within 24 hours.',
+      keywords: 'apply ASB Training Hub, course admission Trivandrum, ERP course admission Kerala, AI course admission, programming course application, internship admission',
       path: '/apply',
     });
   }, []);

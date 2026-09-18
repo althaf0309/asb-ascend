@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import logo from '@/assets/logo.webp';
 
 const courseMenuItems = [
-  { label: 'ERP / SAP Courses', path: '/courses/erp' },
+  { label: 'ERP / ERP Courses', path: '/courses/erp' },
   { label: 'Programming Courses', path: '/courses/programming' },
   { label: 'AI Trainings', path: '/courses/ai' },
   { label: 'AI Learning Guides', path: '/ai-courses' },

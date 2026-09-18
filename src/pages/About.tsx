@@ -13,7 +13,7 @@ const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React
 
 const timeline = [
   { year: '2018', title: 'Founded', desc: 'ASB Training Hub established in Trivandrum with a vision for career-focused education.' },
-  { year: '2019', title: 'SAP Programs Launched', desc: 'Introduced comprehensive SAP/ERP training programs with industry-certified trainers.' },
+  { year: '2019', title: 'ERP Programs Launched', desc: 'Introduced comprehensive ERP training programs with industry-certified trainers.' },
   { year: '2020', title: 'Online Platform', desc: 'Expanded to online learning, reaching students across Kerala and beyond.' },
   { year: '2021', title: 'AI & Programming', desc: 'Added cutting-edge AI, Machine Learning, and full-stack programming courses.' },
   { year: '2022', title: 'Internship Programs', desc: 'Launched internship partnerships with 100+ companies for hands-on experience.' },
@@ -51,7 +51,7 @@ const About = () => {
               <span className="text-sm font-semibold text-primary uppercase tracking-wider">Our Story</span>
               <h2 className="text-3xl font-bold font-heading mt-2 mb-4">From a Vision to Kerala's Leading Training Hub</h2>
               <p className="text-muted-foreground mb-4">ASB Training Hub was founded with a simple belief — quality education should be practical, industry-relevant, and career-focused. Located near Technopark in Kazhakootam, we bring together top industry professionals as trainers, cutting-edge curriculum, and a supportive learning environment.</p>
-              <p className="text-muted-foreground mb-6">Our programs span ERP/SAP, Programming, AI, Management, and Internship tracks — all designed with one goal: making our students job-ready from day one.</p>
+              <p className="text-muted-foreground mb-6">Our programs span ERP, Programming, AI, Management, and Internship tracks — all designed with one goal: making our students job-ready from day one.</p>
               <Link to="/courses" title="Explore ASB Training Hub courses" className="inline-flex self-center"><Button className="gradient-primary border-0 text-white">Explore Our Courses <ArrowRight className="ml-2 h-4 w-4" /></Button></Link>
             </div>
           </ScrollReveal>
