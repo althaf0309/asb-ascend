@@ -44,6 +44,7 @@ const LocationCourse = lazy(() => import("./pages/LocationCourse"));
 const LocationCourseDetail = lazy(() => import("./pages/LocationCourseDetail"));
 const AiCoursesHub = lazy(() => import("./pages/AiCoursesHub"));
 const AiKeywordLanding = lazy(() => import("./pages/AiKeywordLanding"));
+const AiGuides = lazy(() => import("./pages/AiGuides"));
 const Apply = lazy(() => import("./pages/Apply"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -108,6 +109,8 @@ const App = () => (
           <Route path="/locations/kerala" element={<Locations />} />
           <Route path="/ai-courses" element={<AiCoursesHub />} />
           <Route path="/ai-courses/:slug" element={<AiKeywordLanding />} />
+          <Route path="/ai-guides" element={<AiGuides />} />
+          <Route path="/ai-guides/:slug" element={<AiGuides />} />
           <Route path="/locations/kerala/:district" element={<LocationDetail />} />
           <Route path="/locations/kerala/:district/course/:slug" element={<LocationCourseDetail />} />
           <Route path="/locations/kerala/:district/:topic" element={<LocationCourse />} />

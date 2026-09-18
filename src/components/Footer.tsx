@@ -191,7 +191,7 @@ const Footer = () => (
         <div className="min-w-0">
           <h3 className="text-white font-heading font-semibold mb-4">Course Categories</h3>
           <ul className="space-y-2 text-sm">
-            {[['ERP / SAP Courses', '/courses/erp'], ['Programming Languages', '/courses/programming'], ['AI Trainings', '/courses/ai'], ['AI Learning Guides', '/ai-courses'], ['Management Courses', '/courses/management'], ['Internship Programs', '/courses/internship']].map(([label, path]) => (
+            {[['ERP / SAP Courses', '/courses/erp'], ['Programming Languages', '/courses/programming'], ['AI Trainings', '/courses/ai'], ['AI Learning Guides', '/ai-courses'], ['AI Keywords & FAQs', '/ai-guides'], ['Management Courses', '/courses/management'], ['Internship Programs', '/courses/internship']].map(([label, path]) => (
               <li key={path}><Link to={path} title={`${label} | ASB Training Hub`} className="hover:text-white transition-colors flex items-center gap-1"><ArrowRight className="h-3 w-3" />{label}</Link></li>
             ))}
           </ul>
