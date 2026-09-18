@@ -8,6 +8,7 @@ const courseMenuItems = [
   { label: 'ERP / SAP Courses', path: '/courses/erp' },
   { label: 'Programming Courses', path: '/courses/programming' },
   { label: 'AI Trainings', path: '/courses/ai' },
+  { label: 'AI Learning Guides', path: '/ai-courses' },
   { label: 'Management Courses', path: '/courses/management' },
   { label: 'Internship Programs', path: '/courses/internship' },
 ];

@@ -52,6 +52,8 @@ const LOCATION_TOPIC_SLUGS = [
   'generative-ai-course', 'agentic-ai-course', 'ai-course', 'erp-sap-courses',
   'programming-courses', 'management-courses', 'internship-programs',
 ];
+const AI_LANDING_SLUGS = ['generative-ai-course-kerala','agentic-ai-course-kerala','prompt-engineering-course-kerala','chatgpt-course-kerala','llm-course-kerala','rag-course-kerala','mcp-course-kerala','ai-agent-development-course-kerala','ai-automation-course-kerala','ai-course-for-beginners-kerala','ai-course-working-professionals-kerala','online-ai-course-kerala','offline-ai-course-trivandrum','ai-course-placement-support-kerala','ai-career-guide-kerala','ai-tools-training-kerala'];
+const aiLandingRoutes = [{ loc:'/ai-courses',priority:'0.9',changefreq:'monthly' },...AI_LANDING_SLUGS.map(slug=>({loc:`/ai-courses/${slug}`,priority:'0.8',changefreq:'monthly'}))];
 const locationRoutes = LOCATION_SLUGS.flatMap((district) => [
   { loc: `/locations/kerala/${district}`, priority: '0.85', changefreq: 'monthly' },
   ...LOCATION_TOPIC_SLUGS.map((topic) => ({
@@ -109,7 +111,7 @@ const blogRoutes = blogs.map((b) => ({
   lastmod: b.updatedAt ? b.updatedAt.slice(0, 10) : undefined,
 }));
 
-const urls = [...staticRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
+const urls = [...staticRoutes, ...aiLandingRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
