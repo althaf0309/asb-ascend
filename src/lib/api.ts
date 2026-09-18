@@ -135,7 +135,7 @@ const submitPublicForm = async (path: string, payload: unknown) => {
   return data;
 };
 
-export type AnalyticsReport = { summary:{pageViews:number;sessions:number;formSubmissions:number;averageScrollDepth:number;averageDurationSeconds:number}; topPages:[string,number][]; locations:[string,number][]; submissions:Array<Record<string,unknown>>; recentEvents:Array<Record<string,unknown>> };
+export type AnalyticsReport = { summary:{pageViews:number;sessions:number;formSubmissions:number;averageScrollDepth:number;averageDurationSeconds:number}; topPages:[string,number][]; keywords:[string,number][]; sources:[string,number][]; locations:[string,number][]; submissions:Array<Record<string,unknown>>; recentEvents:Array<Record<string,unknown>> };
 export const fetchAdminAnalytics = async (token:string):Promise<AnalyticsReport> => { const response=await fetch('/api/admin/analytics',{headers:authHeader(token),credentials:'same-origin'}); if(!response.ok) throw new Error('Unable to load analytics.'); return response.json(); };
 
 export const submitInquiry = (payload: InquiryPayload) => submitPublicForm('/api/inquiries', payload);
