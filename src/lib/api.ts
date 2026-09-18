@@ -130,8 +130,13 @@ const submitPublicForm = async (path: string, payload: unknown) => {
       throw new Error(result.message || 'Your form was saved, but the email notification could not be sent.');
     }
   }
+  const values = payload as { email?: string };
+  window.dispatchEvent(new CustomEvent('asb:form-submit', { detail: { formType: path.split('/').pop(), email: values.email || '' } }));
   return data;
 };
+
+export type AnalyticsReport = { summary:{pageViews:number;sessions:number;formSubmissions:number;averageScrollDepth:number;averageDurationSeconds:number}; topPages:[string,number][]; locations:[string,number][]; submissions:Array<Record<string,unknown>>; recentEvents:Array<Record<string,unknown>> };
+export const fetchAdminAnalytics = async (token:string):Promise<AnalyticsReport> => { const response=await fetch('/api/admin/analytics',{headers:authHeader(token),credentials:'same-origin'}); if(!response.ok) throw new Error('Unable to load analytics.'); return response.json(); };
 
 export const submitInquiry = (payload: InquiryPayload) => submitPublicForm('/api/inquiries', payload);
 

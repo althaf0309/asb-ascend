@@ -6,6 +6,7 @@ const tabs = [
   { to: '/admin/blog', label: 'Blog posts' },
   { to: '/admin/courses', label: 'Courses' },
   { to: '/admin/training', label: 'Training' },
+  { to: '/admin/analytics', label: 'Analytics' },
 ];
 
 /** Shared header for the admin pages: section links plus sign-out. */

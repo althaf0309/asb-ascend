@@ -4,6 +4,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import WhatsAppButton from "./components/WhatsAppButton";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 
 // Toast surfaces and the tooltip provider pull in Radix and Sonner but render
 // nothing until something fires. Loading them after first paint keeps them off
@@ -36,6 +37,7 @@ const BlogDetail = lazy(() => import("./pages/BlogDetail"));
 const AdminBlog = lazy(() => import("./pages/AdminBlog"));
 const AdminCourses = lazy(() => import("./pages/AdminCourses"));
 const AdminTraining = lazy(() => import("./pages/AdminTraining"));
+const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"));
 const Training = lazy(() => import("./pages/Training"));
 const TrainingDetail = lazy(() => import("./pages/TrainingDetail"));
 const Locations = lazy(() => import("./pages/Locations"));
@@ -95,6 +97,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <ScrollToTop />
+        <AnalyticsTracker />
         <Navbar />
         <Suspense fallback={<RouteFallback />}>
         <Routes>
@@ -125,6 +128,7 @@ const App = () => (
           <Route path="/admin/blog" element={<AdminBlog />} />
           <Route path="/admin/courses" element={<AdminCourses />} />
           <Route path="/admin/training" element={<AdminTraining />} />
+          <Route path="/admin/analytics" element={<AdminAnalytics />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="*" element={<NotFound />} />

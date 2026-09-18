@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 declare global {
   interface Window {
@@ -27,9 +27,10 @@ const SCRIPT_ID = 'cloudflare-turnstile-script';
 const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKey = 0 }: Props) => {
   const fieldId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [humanConfirmed, setHumanConfirmed] = useState(false);
 
   useEffect(() => {
-    if (!SITE_KEY || !containerRef.current) return;
+    if (!SITE_KEY || !containerRef.current || !humanConfirmed) return;
     let widgetId = '';
     let cancelled = false;
 
@@ -63,7 +64,9 @@ const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKe
       if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
       onTokenChange('');
     };
-  }, [onTokenChange, resetKey]);
+  }, [onTokenChange, resetKey, humanConfirmed]);
+
+  useEffect(() => { setHumanConfirmed(false); }, [resetKey]);
 
   return (
     <>
@@ -80,11 +83,13 @@ const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKe
         />
       </div>
       {SITE_KEY && (
-        <div
-          ref={containerRef}
-          className="min-h-[65px] w-full max-w-full overflow-hidden"
-          aria-label="Spam protection"
-        />
+        <div className="space-y-3">
+          <label className="flex items-center gap-3 rounded-lg border border-border bg-background/60 p-3 text-sm cursor-pointer">
+            <input type="checkbox" checked={humanConfirmed} onChange={(event) => { setHumanConfirmed(event.target.checked); onTokenChange(''); }} className="h-5 w-5 accent-primary" />
+            <span>I am human — start verification</span>
+          </label>
+          {humanConfirmed && <div ref={containerRef} className="min-h-[65px] w-full max-w-full overflow-hidden" aria-label="Spam protection" />}
+        </div>
       )}
     </>
   );
