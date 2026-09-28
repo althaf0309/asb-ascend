@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { BarChart3, Clock, Eye, FileDown, MousePointerClick, Users } from 'lucide-react';
+import { BarChart3, Clock, Eye, FileDown, MessageCircle, MousePointerClick, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminNav from '@/components/admin/AdminNav';
 import { useAdminAuth } from '@/components/admin/useAdminAuth';
@@ -70,16 +70,24 @@ const AdminAnalytics = () => {
   const [data, setData] = useState<AnalyticsReport | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const iso = (date: Date) => date.toISOString().slice(0, 10);
+  const [from, setFrom] = useState(() => iso(new Date(Date.now() - 29 * 86400000)));
+  const [to, setTo] = useState(() => iso(new Date()));
 
   const load = useCallback(() => {
     if (!token) return;
     setLoading(true);
     setError('');
-    fetchAdminAnalytics(token)
+    fetchAdminAnalytics(token, from, to)
       .then(setData)
       .catch((e) => setError(e instanceof Error ? e.message : 'Unable to load analytics.'))
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [token, from, to]);
+
+  const preset = (days: number) => {
+    setTo(iso(new Date()));
+    setFrom(iso(new Date(Date.now() - (days - 1) * 86400000)));
+  };
 
   useEffect(() => {
     if (signedIn) load();
@@ -124,6 +132,7 @@ const AdminAnalytics = () => {
         ['Page views', String(data.summary.pageViews), Eye],
         ['Sessions', String(data.summary.sessions), Users],
         ['Form submissions', String(data.summary.formSubmissions), MousePointerClick],
+        ['WhatsApp contacts', String(data.summary.directContacts || 0), MessageCircle],
         ['Average time', `${data.summary.averageDurationSeconds}s`, Clock],
         ['Average scroll', `${data.summary.averageScrollDepth}%`, BarChart3],
       ]
@@ -168,7 +177,14 @@ const AdminAnalytics = () => {
           <p className="text-destructive mb-4" role="alert">{error}</p>
         )}
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="rounded-xl border border-border bg-card p-4 mb-6 flex flex-wrap items-end gap-3">
+          <div className="flex gap-2"><Button variant="outline" onClick={()=>preset(1)}>Today</Button><Button variant="outline" onClick={()=>preset(7)}>7 days</Button><Button variant="outline" onClick={()=>preset(30)}>30 days</Button></div>
+          <label className="text-sm text-muted-foreground">From<input type="date" value={from} max={to} onChange={e=>setFrom(e.target.value)} className="block mt-1 rounded border border-input bg-background p-2 text-foreground"/></label>
+          <label className="text-sm text-muted-foreground">To<input type="date" value={to} min={from} onChange={e=>setTo(e.target.value)} className="block mt-1 rounded border border-input bg-background p-2 text-foreground"/></label>
+          <Button onClick={load} disabled={loading}>Apply timeframe</Button>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-4">
           {cards.map(([label, value, Icon]) => (
             <StatCard key={label} label={label} value={value} icon={Icon} />
           ))}
