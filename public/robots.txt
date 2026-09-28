@@ -136,10 +136,9 @@ Disallow: /api/
 
 # ---------------------------------------------------------------------------
 # SEO and research tools
-# Allowed so the site's own audits (Screaming Frog, Ahrefs, Semrush) still work,
-# but rate-limited: these crawl far harder than search engines and bring no
-# ranking benefit. Google ignores Crawl-delay; Bing, Yandex and most of these
-# tools honour it.
+# Allowed so the site's own audits (Screaming Frog, Ahrefs and Semrush) work.
+# Rate limiting belongs at the server or CDN layer; Crawl-delay is omitted
+# because it is not part of Google's supported robots.txt rules.
 # ---------------------------------------------------------------------------
 User-agent: AhrefsBot
 User-agent: SemrushBot
@@ -149,7 +148,6 @@ User-agent: DotBot
 User-agent: ImagesiftBot
 User-agent: SemanticScholarBot
 User-agent: TurnitinBot
-Crawl-delay: 10
 Allow: /
 Disallow: /admin
 Disallow: /admin/
