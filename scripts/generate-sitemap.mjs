@@ -73,7 +73,9 @@ const courses = (await readStore('courses.json', 'courses.seed.json')).filter(
 );
 const aiGuides = JSON.parse(await readFile(path.join(rootDir, 'src/data/aiGuidePages.json'), 'utf8'));
 const seoAiPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoAiPages.json'), 'utf8'));
+const seoLogisticsPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoLogisticsPages.json'), 'utf8'));
 const seoAiRoutes = ['agentic','generative'].map((family) => ({ loc: `/course-training/${family}/ai`, priority: '0.9', changefreq: 'weekly' })).concat(seoAiPages.map((page) => ({ loc: `/course-training/${page.family}/ai/${page.slug}`, priority: page.question ? '0.65' : '0.75', changefreq: 'monthly' })));
+const seoLogisticsRoutes = ['logistics','warehouse'].map((family) => ({ loc: `/course-training/${family}`, priority: '0.9', changefreq: 'weekly' })).concat(seoLogisticsPages.map((page) => ({ loc: `/course-training/${page.family}/${page.slug}`, priority: page.question ? '0.65' : '0.75', changefreq: 'monthly' })));
 const aiGuideRoutes = [{ loc: '/ai-guides', priority: '0.8', changefreq: 'monthly' }, ...aiGuides.map((guide) => ({ loc: `/ai-guides/${guide.slug}`, priority: '0.65', changefreq: 'monthly' }))];
 const keywordCourseRoutes = [{ loc: '/keyword-courses', priority: '0.85', changefreq: 'monthly' }, ...aiGuides.filter((guide) => guide.kind === 'keyword').map((guide) => ({ loc: `/keyword-courses/${guide.slug}`, priority: '0.7', changefreq: 'monthly' }))];
 
@@ -116,7 +118,7 @@ const blogRoutes = blogs.map((b) => ({
   lastmod: b.updatedAt ? b.updatedAt.slice(0, 10) : undefined,
 }));
 
-const urls = [...staticRoutes, ...aiLandingRoutes, ...aiGuideRoutes, ...keywordCourseRoutes, ...seoAiRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
+const urls = [...staticRoutes, ...aiLandingRoutes, ...aiGuideRoutes, ...keywordCourseRoutes, ...seoAiRoutes, ...seoLogisticsRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

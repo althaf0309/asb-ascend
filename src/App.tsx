@@ -49,6 +49,7 @@ const AiKeywordLanding = lazy(() => import("./pages/AiKeywordLanding"));
 const AiGuides = lazy(() => import("./pages/AiGuides"));
 const KeywordCourses = lazy(() => import("./pages/KeywordCourses"));
 const SeoAiCourses = lazy(() => import("./pages/SeoAiCourses"));
+const SeoLogisticsCourses = lazy(() => import("./pages/SeoLogisticsCourses"));
 const Apply = lazy(() => import("./pages/Apply"));
 const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -120,6 +121,8 @@ const App = () => (
           <Route path="/keyword-courses/:slug" element={<KeywordCourses />} />
           <Route path="/course-training/:family/ai" element={<SeoAiCourses />} />
           <Route path="/course-training/:family/ai/:slug" element={<SeoAiCourses />} />
+          <Route path="/course-training/:family" element={<SeoLogisticsCourses />} />
+          <Route path="/course-training/:family/:slug" element={<SeoLogisticsCourses />} />
           <Route path="/locations/kerala/:district" element={<LocationDetail />} />
           <Route path="/locations/kerala/:district/course/:slug" element={<LocationCourseDetail />} />
           <Route path="/locations/kerala/:district/:topic" element={<LocationCourse />} />
