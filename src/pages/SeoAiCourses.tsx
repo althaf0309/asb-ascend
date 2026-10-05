@@ -28,6 +28,10 @@ export default function SeoAiCourses(){
     setPageSeo({title:`${title} | ASB Training Hub`,description,keywords:page?`${page.title}, ${label} course Kerala, practical AI training`:`${label} course Kerala, ${label} training`,path,image:`/images/${family}-ai-course-hero.webp`});
     setJsonLd('seo-ai-course',page?[{'@context':'https://schema.org','@type':page.question?'FAQPage':'Course',...(page.question?{mainEntity:[{'@type':'Question',name:page.title,acceptedAnswer:{'@type':'Answer',text:description}}]}:{name:page.title,description,url:absoluteUrl(path),provider:{'@type':'EducationalOrganization',name:'ASB Training Hub'},hasCourseInstance:[{'@type':'CourseInstance',courseMode:'blended'}]})},{'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[['Home','/'],[`${label} pages`,base],[page.title,path]].map(([name,item],i)=>({'@type':'ListItem',position:i+1,name,item:absoluteUrl(item)}))}]:{'@context':'https://schema.org','@type':'ItemList',name:title,numberOfItems:list.length,itemListElement:list.map((p,i)=>({'@type':'ListItem',position:i+1,name:p.title,url:absoluteUrl(`${base}/${p.slug}`)}))});
     return()=>removeJsonLd('seo-ai-course');
+    // base, label, description and list are all derived synchronously from
+    // family/slug/page/valid, which are listed. Adding the derived values
+    // would re-run the effect on every render without changing its result.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[family,slug,page,valid]);
   if(!valid || (slug&&!page)) return <main className="min-h-[60vh] pt-32 text-center"><h1>Page not found</h1><Link to="/ai-courses">Browse AI courses</Link></main>;
   const hero=`/images/${family}-ai-course-hero.webp`;

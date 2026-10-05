@@ -34,7 +34,7 @@ import catInternship800 from '@/assets/cat-internship-800w.webp';
 import aboutCampus from '@/assets/about-campus.webp';
 import aboutCampus600 from '@/assets/about-campus-600w.webp';
 
-export const localSrcSets: Record<string, string> = {
+const localSrcSets: Record<string, string> = {
   [heroBg]: `${heroBg480} 480w, ${heroBg960} 960w, ${heroBg1920} 1920w`,
   [catErp]: `${catErp400} 400w, ${catErp800} 800w`,
   [catAi]: `${catAi400} 400w, ${catAi800} 800w`,
@@ -51,7 +51,7 @@ const UNSPLASH_WIDTHS = [400, 800, 1200];
  * Unsplash serves any width from the same photo id, so a srcset can be derived
  * from the URL rather than pre-generated.
  */
-export const unsplashSrcSet = (src: string): string | undefined => {
+const unsplashSrcSet = (src: string): string | undefined => {
   if (!src.includes('images.unsplash.com')) return undefined;
   try {
     return UNSPLASH_WIDTHS.map((w) => {
