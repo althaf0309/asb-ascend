@@ -6,7 +6,7 @@ export const DEFAULT_KEYWORDS =
   'ASB Training Hub, training institute Trivandrum, ERP courses Kerala, ERP training Trivandrum, AI training Kerala, programming courses Trivandrum, internship programs Kerala';
 
 /** Upper bound Google renders before truncating a SERP snippet. */
-export const SERP_DESCRIPTION_MAX = 160;
+const SERP_DESCRIPTION_MAX = 160;
 
 /**
  * Trims a description to the SERP budget without cutting mid-word.
@@ -63,7 +63,11 @@ export const setCanonical = (href: string) => {
   link.href = href;
 };
 
-export const setJsonLd = (id: string, data: Record<string, unknown>) => {
+/**
+ * Writes one JSON-LD block, or an array of them when a page publishes several
+ * entities (Course + FAQPage + BreadcrumbList) under a single id.
+ */
+export const setJsonLd = (id: string, data: Record<string, unknown> | Record<string, unknown>[]) => {
   let script = document.querySelector<HTMLScriptElement>(`script[data-json-ld="${id}"]`);
   if (!script) {
     script = document.createElement('script');

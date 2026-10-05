@@ -360,12 +360,6 @@ export const fetchCourse = async (slug: string): Promise<CatalogueEntry> => {
   return response.json();
 };
 
-export const fetchCourseCategories = async (): Promise<CourseCategoryInfo[]> => {
-  const response = await fetch('/api/course-categories');
-  if (!response.ok) throw new Error('Unable to load course categories.');
-  return response.json();
-};
-
 /* --- generic catalogue admin (serves both courses and training) --- */
 
 export const fetchAdminEntries = async (

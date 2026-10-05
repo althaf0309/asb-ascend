@@ -1,4 +1,6 @@
-import "@testing-library/jest-dom";
+// The /vitest entry registers the matchers AND augments Vitest's Assertion
+// interface, so toBeRequired/toHaveAttribute type-check as well as run.
+import "@testing-library/jest-dom/vitest";
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,

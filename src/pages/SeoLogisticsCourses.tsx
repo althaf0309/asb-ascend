@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowRight, Boxes, CheckCircle, MapPin, Route, Warehouse } from 'lucide-react';
 import pages from '@/data/seoLogisticsPages.json';
@@ -18,7 +18,12 @@ export default function SeoLogisticsCourses() {
   const { family, slug } = useParams();
   const valid = family === 'logistics' || family === 'warehouse';
   const details = valid ? familyDetails[family as Family] : familyDetails.logistics;
-  const list = valid ? all.filter((item) => item.family === family) : [];
+  // Memoised because it is a useEffect dependency: a fresh array each render
+  // re-ran the SEO effect on every render and rewrote the JSON-LD each time.
+  const list = useMemo(
+    () => (valid ? all.filter((item) => item.family === family) : []),
+    [valid, family],
+  );
   const page = slug ? list.find((item) => item.slug === slug) : undefined;
   const base = `/course-training/${family}`;
   const description = page
