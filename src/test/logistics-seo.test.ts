@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import pages from '@/data/seoLogisticsPages.json';
-import { logisticsPageHeroImage, logisticsPageImage, logisticsPagePath, type LogisticsSeoPage } from '@/data/logisticsSeo';
+import { logisticsPageHeroImage, logisticsPageImage, logisticsPagePath, movedLogisticsPages, type LogisticsSeoPage } from '@/data/logisticsSeo';
 
 const root = path.resolve(__dirname, '../..');
 const sitemap = readFileSync(path.join(root, 'public/sitemap.xml'), 'utf8');
@@ -16,9 +16,17 @@ describe('logistics keyword landing pages', () => {
     for (const route of routes) expect(sitemap).toContain(`<loc>https://www.asbtraininghub.com${route}</loc>`);
   });
 
+  it('redirects every moved or renamed page to a live page and drops the old route', () => {
+    const keys = new Set((pages as LogisticsSeoPage[]).map((page) => `${page.family}/${page.slug}`));
+    for (const [from, to] of Object.entries(movedLogisticsPages)) {
+      expect(keys.has(from)).toBe(false);
+      expect(keys.has(`${to.family}/${to.slug}`)).toBe(true);
+    }
+  });
+
   it('keeps the logistics and warehouse collections separate', () => {
-    expect(pages.filter((page) => page.family === 'logistics')).toHaveLength(648);
-    expect(pages.filter((page) => page.family === 'warehouse')).toHaveLength(609);
+    expect(pages.filter((page) => page.family === 'logistics')).toHaveLength(646);
+    expect(pages.filter((page) => page.family === 'warehouse')).toHaveLength(611);
   });
 
   it('uses the two requested diploma URLs as the primary canonical pages', () => {

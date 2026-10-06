@@ -2,7 +2,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowRight, Boxes, CheckCircle, MapPin, Route, Warehouse } from 'lucide-react';
 import pages from '@/data/seoLogisticsPages.json';
-import { logisticsFamilies, logisticsFamilyFromSegment, logisticsFamilyPath, logisticsPageHeroImage, logisticsPageImage, logisticsPagePath, type LogisticsSeoPage } from '@/data/logisticsSeo';
+import { logisticsFamilies, logisticsFamilyFromSegment, logisticsFamilyPath, logisticsPageHeroImage, logisticsPageImage, logisticsPagePath, movedLogisticsPagePath, type LogisticsSeoPage } from '@/data/logisticsSeo';
 import InquiryForm from '@/components/InquiryForm';
 import LogisticsGuideHub from '@/components/LogisticsGuideHub';
 import LongLogisticsContent from '@/components/LongLogisticsContent';
@@ -50,6 +50,8 @@ export default function SeoLogisticsCourses() {
     return () => removeJsonLd('seo-logistics-course');
   }, [canonicalPath, description, details, family, image, isGuideHub, list, page]);
 
+  const movedPath = family && slug ? movedLogisticsPagePath(family, slug) : undefined;
+  if (movedPath) return <Navigate replace to={movedPath} />;
   if (!family || !details || !page) return <main className="min-h-[60vh] pt-32 text-center"><h1>Page not found</h1><Link to="/courses/management">Browse management courses</Link></main>;
   if (isGuideHub) return <LogisticsGuideHub family={family} pages={list}/>;
   if (familySegment?.toLowerCase() === details.legacySegment) return <Navigate replace to={canonicalPath} />;

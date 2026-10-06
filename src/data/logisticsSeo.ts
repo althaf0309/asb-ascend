@@ -44,6 +44,24 @@ export const logisticsPagePath = (page: LogisticsSeoPage) => {
   return page.slug === logisticsFamilies[page.family].primarySlug ? base : `${base}/${page.slug}`;
 };
 
+/** Pages that were published once and later renamed or moved; keyed `family/slug`, old URLs redirect to the new page. */
+export const movedLogisticsPages: Record<string, { family: LogisticsFamily; slug: string }> = {
+  'warehouse/sap-warehouse-management-coursediploma-in-warehouse-management': { family: 'warehouse', slug: 'sap-warehouse-management-course' },
+  'logistics/warehouse-executive-course': { family: 'warehouse', slug: 'warehouse-executive-course' },
+  'logistics/inventory-executive-course': { family: 'warehouse', slug: 'inventory-executive-course' },
+  'logistics/warehouse-jobs-in-kerala': { family: 'warehouse', slug: 'warehouse-jobs-in-kerala' },
+  'logistics/inventory-executive-jobs': { family: 'warehouse', slug: 'inventory-executive-jobs' },
+  'logistics/practical-warehouse-management-training-in-kerala': { family: 'warehouse', slug: 'practical-warehouse-management-training-in-kerala' },
+  'warehouse/logistics-course-kerala': { family: 'logistics', slug: 'logistics-course-kerala' },
+  'warehouse/logistics-diploma-kerala': { family: 'logistics', slug: 'logistics-diploma-kerala' },
+  'warehouse/supply-chain-course-kerala': { family: 'logistics', slug: 'supply-chain-course-kerala' },
+};
+
+export const movedLogisticsPagePath = (family: LogisticsFamily, slug: string) => {
+  const target = movedLogisticsPages[`${family}/${slug}`];
+  return target ? `${logisticsFamilyPath(target.family)}/${target.slug}` : undefined;
+};
+
 /** A build-generated illustration unique to the canonical keyword page. */
 export const logisticsPageHeroImage = (page: LogisticsSeoPage) =>
   `/generated/logistics/${page.family}/${page.slug}.svg`;
