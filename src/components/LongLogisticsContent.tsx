@@ -1,4 +1,4 @@
-type Props = { title: string; label: string; family: 'logistics' | 'warehouse'; intent: string; location?: string };
+type Props = { title: string; slug: string; label: string; family: 'logistics' | 'warehouse'; intent: string; location?: string };
 
 const hash = (value: string) => [...value].reduce((total, char) => ((total * 31) + char.charCodeAt(0)) >>> 0, 7);
 
@@ -13,6 +13,25 @@ const locationNotes = [
   'Local learners can compare travel, classroom and live-online options before selecting a batch that supports regular attendance.',
   'Candidates should confirm the current delivery mode and schedule because availability can change between admission cycles.',
   'The right batch should fit the learner’s starting level, weekly practice time and access to the training centre.',
+];
+
+const pageAngles = [
+  'The worked example follows one order from source record to final handover, making every responsibility and control point visible.',
+  'A comparison exercise asks learners to balance service, operating cost, lead time and risk before defending a recommendation.',
+  'The practical record for this topic includes assumptions, source data, calculations, exceptions and the reason for each corrective action.',
+  'A local scenario connects the concept with realistic supplier, transport, storage and customer constraints rather than an idealised process.',
+  'Learners examine both the normal workflow and an exception case so they can recognise when escalation or investigation is required.',
+  'The case study measures accuracy, turnaround time and service impact instead of judging the result only by visual presentation.',
+  'An operations review separates symptoms from root causes and records which evidence would confirm or reject each possible explanation.',
+  'The assignment compares a manual control with a system-supported control and explains where human verification remains necessary.',
+  'A short audit task checks whether the records, physical flow and reported performance describe the same operating reality.',
+  'The scenario includes a change in demand or capacity, requiring the learner to revise the original plan and document the trade-off.',
+  'A communication exercise converts operational findings into a concise update for a supervisor, customer or partner team.',
+  'Learners define an owner, frequency and evidence for each control so an improvement can continue after the initial project ends.',
+  'The project identifies upstream and downstream effects, preventing a local improvement from shifting delay or cost to another team.',
+  'A data-quality check looks for missing values, duplicate records, inconsistent units and timing differences before analysis begins.',
+  'The review asks what could fail, how early warning would appear and which response protects people, goods and service commitments.',
+  'The final recommendation states its limits and the additional evidence needed before applying it to a larger operation.',
 ];
 
 const intentText: Record<string, string> = {
@@ -54,6 +73,7 @@ export default function LongLogisticsContent(props: Props) {
     const title = heading as string;
     const text = (copy as (p: Props) => string)(props);
     const suffix = index === 0 && props.location ? ` in ${props.location}` : '';
-    return <section key={title}><h2 className="text-2xl font-bold md:text-3xl">{title}{suffix}</h2><p className="mt-4 leading-8 text-muted-foreground">{text}</p></section>;
+    const angle = pageAngles[hash(`${props.slug}:${index}`) % pageAngles.length];
+    return <section key={title}><h2 className="text-2xl font-bold md:text-3xl">{title}{suffix}</h2><p className="mt-4 leading-8 text-muted-foreground">{text} {angle}</p></section>;
   })}</article></section>;
 }

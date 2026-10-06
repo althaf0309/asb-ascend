@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import pages from '@/data/seoLogisticsPages.json';
+import { logisticsPageImage, logisticsPagePath, type LogisticsSeoPage } from '@/data/logisticsSeo';
 
 const root = path.resolve(__dirname, '../..');
 const sitemap = readFileSync(path.join(root, 'public/sitemap.xml'), 'utf8');
@@ -10,7 +11,7 @@ const longContent = readFileSync(path.join(root, 'src/components/LongLogisticsCo
 describe('logistics keyword landing pages', () => {
   it('creates one unique canonical route for every imported keyword', () => {
     expect(pages).toHaveLength(1257);
-    const routes = pages.map((page) => `/course-training/${page.family}/${page.slug}`);
+    const routes = (pages as LogisticsSeoPage[]).map(logisticsPagePath);
     expect(new Set(routes).size).toBe(routes.length);
     for (const route of routes) expect(sitemap).toContain(`<loc>https://www.asbtraininghub.com${route}</loc>`);
   });
@@ -18,6 +19,23 @@ describe('logistics keyword landing pages', () => {
   it('keeps the logistics and warehouse collections separate', () => {
     expect(pages.filter((page) => page.family === 'logistics')).toHaveLength(648);
     expect(pages.filter((page) => page.family === 'warehouse')).toHaveLength(609);
+  });
+
+  it('uses the two requested diploma URLs as the primary canonical pages', () => {
+    const typedPages = pages as LogisticsSeoPage[];
+    const logistics = typedPages.find((page) => page.slug === 'diploma-in-logistics-and-supply-chain-management');
+    const warehouse = typedPages.find((page) => page.slug === 'diploma-in-warehouse-management');
+    expect(logistics && logisticsPagePath(logistics)).toBe('/course-training/Diploma-in-Logistics-and-Supply-Chain-Management');
+    expect(warehouse && logisticsPagePath(warehouse)).toBe('/course-training/Diploma-in-warehouse-Management');
+    expect(sitemap).not.toContain('/course-training/logistics/');
+    expect(sitemap).not.toContain('/course-training/warehouse/');
+  });
+
+  it('selects different original hero images for different search intents', () => {
+    const typedPages = pages as LogisticsSeoPage[];
+    const images = new Set(typedPages.map(logisticsPageImage));
+    expect(images.size).toBe(6);
+    expect([...images].every((image) => image.endsWith('.webp'))).toBe(true);
   });
 
   it('uses clean, crawlable slugs and complete page metadata', () => {

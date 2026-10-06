@@ -75,7 +75,16 @@ const aiGuides = JSON.parse(await readFile(path.join(rootDir, 'src/data/aiGuideP
 const seoAiPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoAiPages.json'), 'utf8'));
 const seoLogisticsPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoLogisticsPages.json'), 'utf8'));
 const seoAiRoutes = ['agentic','generative'].map((family) => ({ loc: `/course-training/${family}/ai`, priority: '0.9', changefreq: 'weekly' })).concat(seoAiPages.map((page) => ({ loc: `/course-training/${page.family}/ai/${page.slug}`, priority: page.question ? '0.65' : '0.75', changefreq: 'monthly' })));
-const seoLogisticsRoutes = ['logistics','warehouse'].map((family) => ({ loc: `/course-training/${family}`, priority: '0.9', changefreq: 'weekly' })).concat(seoLogisticsPages.map((page) => ({ loc: `/course-training/${page.family}/${page.slug}`, priority: page.question ? '0.65' : '0.75', changefreq: 'monthly' })));
+const logisticsFamilies = {
+  logistics: { segment: 'Diploma-in-Logistics-and-Supply-Chain-Management', primarySlug: 'diploma-in-logistics-and-supply-chain-management' },
+  warehouse: { segment: 'Diploma-in-warehouse-Management', primarySlug: 'diploma-in-warehouse-management' },
+};
+const logisticsPath = (page) => {
+  const family = logisticsFamilies[page.family];
+  const base = `/course-training/${family.segment}`;
+  return page.slug === family.primarySlug ? base : `${base}/${page.slug}`;
+};
+const seoLogisticsRoutes = seoLogisticsPages.map((page) => ({ loc: logisticsPath(page), priority: page.slug === logisticsFamilies[page.family].primarySlug ? '0.9' : page.question ? '0.65' : '0.75', changefreq: page.slug === logisticsFamilies[page.family].primarySlug ? 'weekly' : 'monthly' }));
 const aiGuideRoutes = [{ loc: '/ai-guides', priority: '0.8', changefreq: 'monthly' }, ...aiGuides.map((guide) => ({ loc: `/ai-guides/${guide.slug}`, priority: '0.65', changefreq: 'monthly' }))];
 const keywordCourseRoutes = [{ loc: '/keyword-courses', priority: '0.85', changefreq: 'monthly' }, ...aiGuides.filter((guide) => guide.kind === 'keyword').map((guide) => ({ loc: `/keyword-courses/${guide.slug}`, priority: '0.7', changefreq: 'monthly' }))];
 
