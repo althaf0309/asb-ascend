@@ -4,6 +4,7 @@ import { ArrowRight, Boxes, CheckCircle, MapPin, Route, Warehouse } from 'lucide
 import pages from '@/data/seoLogisticsPages.json';
 import { logisticsFamilies, logisticsFamilyFromSegment, logisticsFamilyPath, logisticsPageHeroImage, logisticsPageImage, logisticsPagePath, type LogisticsSeoPage } from '@/data/logisticsSeo';
 import InquiryForm from '@/components/InquiryForm';
+import LogisticsGuideHub from '@/components/LogisticsGuideHub';
 import LongLogisticsContent from '@/components/LongLogisticsContent';
 import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo, truncateForSerp } from '@/lib/seo';
 
@@ -18,10 +19,15 @@ export default function SeoLogisticsCourses() {
     if (!details) return undefined;
     return list.find((item) => item.slug === (slug || details.primarySlug));
   }, [details, list, slug]);
-  const canonicalPath = page ? logisticsPagePath(page) : '/courses/management';
+  const isGuideHub = Boolean(family && details && !slug && familySegment?.toLowerCase() === details.legacySegment);
+  const canonicalPath = isGuideHub && family ? `/course-training/${family}` : page ? logisticsPagePath(page) : '/courses/management';
   const image = page ? logisticsPageImage(page) : details?.defaultImage || '/images/logistics-supply-chain-course-hero.webp';
   const heroImage = page ? logisticsPageHeroImage(page) : image;
-  const description = page && details
+  const description = isGuideHub && family
+    ? family === 'warehouse'
+      ? 'Explore original warehouse management, inventory, safety, systems, career and course-selection guides before choosing a formal training pathway.'
+      : 'Explore original logistics, supply chain, career, course-selection and operations guides before choosing a formal diploma training pathway.'
+    : page && details
     ? `${page.title}: practical ${details.label.toLowerCase()} guidance covering applied operations, projects, career preparation and current admission support${page.location ? ` for learners in ${page.location}` : ''}.`
     : 'Browse practical logistics, supply chain, warehouse and inventory management courses.';
 
@@ -30,15 +36,22 @@ export default function SeoLogisticsCourses() {
       setPageSeo({ title: 'Logistics Course Page Not Found', description, keywords: 'logistics courses Kerala', path: '/courses/management', noindex: true });
       return;
     }
-    setPageSeo({ title: `${page.title} | ASB Training Hub`, description: truncateForSerp(description), keywords: `${page.title}, ${details.label} course Kerala, job oriented management training`, path: canonicalPath, image });
-    const structured = page.question
+    const seoTitle = isGuideHub
+      ? `${family === 'warehouse' ? 'Warehouse Management' : 'Logistics and Supply Chain'} Learning Guides | ASB`
+      : `${page.title} | ASB Training Hub`;
+    setPageSeo({ title: seoTitle, description: truncateForSerp(description), keywords: isGuideHub ? `${details.label} guides, course comparison Kerala, operations careers` : `${page.title}, ${details.label} course Kerala, job oriented management training`, path: canonicalPath, image });
+    const structured = isGuideHub
+      ? { '@context': 'https://schema.org', '@type': 'CollectionPage', name: seoTitle, description, url: absoluteUrl(canonicalPath), mainEntity: { '@type': 'ItemList', numberOfItems: list.length, itemListElement: list.slice(0, 100).map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.title, url: absoluteUrl(logisticsPagePath(item)) })) } }
+      : page.question
       ? { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: [{ '@type': 'Question', name: page.title, acceptedAnswer: { '@type': 'Answer', text: description } }] }
       : { '@context': 'https://schema.org', '@type': 'Course', name: page.title, description, url: absoluteUrl(canonicalPath), provider: { '@type': 'EducationalOrganization', '@id': `${absoluteUrl('/')}#organization`, name: 'ASB Training Hub' }, hasCourseInstance: [{ '@type': 'CourseInstance', courseMode: 'blended' }] };
-    setJsonLd('seo-logistics-course', [structured, { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [['Home', '/'], [details.label, logisticsFamilyPath(family)], [page.title, canonicalPath]].map(([name, item], index) => ({ '@type': 'ListItem', position: index + 1, name, item: absoluteUrl(item) })) }]);
+    const crumbs = isGuideHub ? [['Home', '/'], [seoTitle, canonicalPath]] : [['Home', '/'], [details.label, logisticsFamilyPath(family)], [page.title, canonicalPath]];
+    setJsonLd('seo-logistics-course', [structured, { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbs.map(([name, item], index) => ({ '@type': 'ListItem', position: index + 1, name, item: absoluteUrl(item) })) }]);
     return () => removeJsonLd('seo-logistics-course');
-  }, [canonicalPath, description, details, family, image, page]);
+  }, [canonicalPath, description, details, family, image, isGuideHub, list, page]);
 
   if (!family || !details || !page) return <main className="min-h-[60vh] pt-32 text-center"><h1>Page not found</h1><Link to="/courses/management">Browse management courses</Link></main>;
+  if (isGuideHub) return <LogisticsGuideHub family={family} pages={list}/>;
   if (familySegment?.toLowerCase() === details.legacySegment) return <Navigate replace to={canonicalPath} />;
 
   const related = list.filter((item) => item.slug !== page.slug && (page.location ? item.location === page.location : item.intent === page.intent)).slice(0, 8);

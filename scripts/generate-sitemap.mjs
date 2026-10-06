@@ -125,6 +125,10 @@ const logisticsPath = (page) => {
   return page.slug === family.primarySlug ? base : `${base}/${page.slug}`;
 };
 const seoLogisticsRoutes = seoLogisticsPages.map((page) => ({ loc: logisticsPath(page), priority: page.slug === logisticsFamilies[page.family].primarySlug ? '0.9' : page.question ? '0.65' : '0.75', changefreq: page.slug === logisticsFamilies[page.family].primarySlug ? 'weekly' : 'monthly' }));
+seoLogisticsRoutes.unshift(
+  { loc: '/course-training/logistics', priority: '0.85', changefreq: 'monthly' },
+  { loc: '/course-training/warehouse', priority: '0.85', changefreq: 'monthly' },
+);
 const aiGuideRoutes = [{ loc: '/ai-guides', priority: '0.8', changefreq: 'monthly' }, ...aiGuides.map((guide) => ({ loc: `/ai-guides/${guide.slug}`, priority: '0.65', changefreq: 'monthly' }))];
 const keywordCourseRoutes = [{ loc: '/keyword-courses', priority: '0.85', changefreq: 'monthly' }, ...aiGuides.filter((guide) => guide.kind === 'keyword').map((guide) => ({ loc: `/keyword-courses/${guide.slug}`, priority: '0.7', changefreq: 'monthly' }))];
 

@@ -27,8 +27,8 @@ describe('logistics keyword landing pages', () => {
     const warehouse = typedPages.find((page) => page.slug === 'diploma-in-warehouse-management');
     expect(logistics && logisticsPagePath(logistics)).toBe('/course-training/Diploma-in-Logistics-and-Supply-Chain-Management');
     expect(warehouse && logisticsPagePath(warehouse)).toBe('/course-training/Diploma-in-warehouse-Management');
-    expect(sitemap).not.toContain('/course-training/logistics/');
-    expect(sitemap).not.toContain('/course-training/warehouse/');
+    expect(sitemap).toContain('<loc>https://www.asbtraininghub.com/course-training/logistics</loc>');
+    expect(sitemap).toContain('<loc>https://www.asbtraininghub.com/course-training/warehouse</loc>');
   });
 
   it('selects different original hero images for different search intents', () => {
