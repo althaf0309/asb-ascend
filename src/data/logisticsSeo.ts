@@ -44,6 +44,10 @@ export const logisticsPagePath = (page: LogisticsSeoPage) => {
   return page.slug === logisticsFamilies[page.family].primarySlug ? base : `${base}/${page.slug}`;
 };
 
+/** A build-generated illustration unique to the canonical keyword page. */
+export const logisticsPageHeroImage = (page: LogisticsSeoPage) =>
+  `/generated/logistics/${page.family}/${page.slug}.svg`;
+
 const careerIntents = new Set(['career', 'placement', 'internship', 'after-school', 'graduate']);
 const guidanceIntents = new Set(['fees', 'admission', 'question', 'duration', 'online', 'near-me']);
 

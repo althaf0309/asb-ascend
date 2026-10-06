@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import pages from '@/data/seoLogisticsPages.json';
-import { logisticsPageImage, logisticsPagePath, type LogisticsSeoPage } from '@/data/logisticsSeo';
+import { logisticsPageHeroImage, logisticsPageImage, logisticsPagePath, type LogisticsSeoPage } from '@/data/logisticsSeo';
 
 const root = path.resolve(__dirname, '../..');
 const sitemap = readFileSync(path.join(root, 'public/sitemap.xml'), 'utf8');
@@ -36,6 +36,12 @@ describe('logistics keyword landing pages', () => {
     const images = new Set(typedPages.map(logisticsPageImage));
     expect(images.size).toBe(6);
     expect([...images].every((image) => image.endsWith('.webp'))).toBe(true);
+  });
+
+  it('assigns a unique generated hero illustration to every keyword page', () => {
+    const heroImages = (pages as LogisticsSeoPage[]).map(logisticsPageHeroImage);
+    expect(new Set(heroImages).size).toBe(pages.length);
+    expect(heroImages.every((image) => image.endsWith('.svg'))).toBe(true);
   });
 
   it('uses clean, crawlable slugs and complete page metadata', () => {

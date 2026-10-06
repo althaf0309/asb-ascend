@@ -7,7 +7,7 @@
  * added in the admin appears immediately. This build-time copy is the fallback
  * for when the backend is unreachable, and the source for llms.txt.
  */
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -74,6 +74,46 @@ const courses = (await readStore('courses.json', 'courses.seed.json')).filter(
 const aiGuides = JSON.parse(await readFile(path.join(rootDir, 'src/data/aiGuidePages.json'), 'utf8'));
 const seoAiPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoAiPages.json'), 'utf8'));
 const seoLogisticsPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoLogisticsPages.json'), 'utf8'));
+
+const svgEscape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+const hashText = (value) => [...value].reduce((total, character) => ((total * 31) + character.charCodeAt(0)) >>> 0, 7);
+const palettes = [
+  ['#071a2b', '#0f766e', '#fb923c'], ['#111827', '#1d4ed8', '#f97316'],
+  ['#172554', '#0369a1', '#f59e0b'], ['#052e2b', '#15803d', '#fb7185'],
+  ['#20102f', '#7e22ce', '#f59e0b'], ['#292524', '#b45309', '#22c55e'],
+];
+const wrapTitle = (title, maximum = 35) => {
+  const lines = [];
+  let line = '';
+  for (const word of title.split(/\s+/)) {
+    if (`${line} ${word}`.trim().length > maximum && line) {
+      lines.push(line);
+      line = word;
+    } else line = `${line} ${word}`.trim();
+  }
+  if (line) lines.push(line);
+  return lines.slice(0, 4);
+};
+const logisticsHeroSvg = (page) => {
+  const seed = hashText(`${page.family}:${page.slug}`);
+  const [dark, middle, accent] = palettes[seed % palettes.length];
+  const lines = wrapTitle(page.title);
+  const label = page.family === 'warehouse' ? 'WAREHOUSE & INVENTORY' : 'LOGISTICS & SUPPLY CHAIN';
+  const context = page.location ? `COURSE GUIDE · ${page.location.toUpperCase()}` : `PRACTICAL ${page.intent.toUpperCase()} GUIDE`;
+  const title = lines.map((line, index) => `<text x="110" y="${330 + (index * 72)}" fill="#fff" font-family="Arial, sans-serif" font-size="56" font-weight="700">${svgEscape(line)}</text>`).join('');
+  const offset = seed % 90;
+  const warehouseGraphic = `<g transform="translate(${965 + offset} 205)"><rect width="430" height="420" rx="28" fill="#fff" fill-opacity=".09" stroke="#fff" stroke-opacity=".28"/><path d="M45 150L215 55l170 95v215H45z" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-width="8"/><path d="M90 205h250M90 270h250M90 335h250M170 205v160M260 205v160" stroke="${accent}" stroke-width="10"/><rect x="110" y="225" width="40" height="25" fill="#fff"/><rect x="280" y="290" width="40" height="25" fill="#fff"/></g>`;
+  const logisticsGraphic = `<g transform="translate(${920 + offset} 205)"><circle cx="235" cy="210" r="205" fill="#fff" fill-opacity=".08" stroke="#fff" stroke-opacity=".25"/><path d="M55 295h330l-30-105H175l-45-70H55z" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/><circle cx="145" cy="335" r="35" fill="${accent}"/><circle cx="325" cy="335" r="35" fill="${accent}"/><path d="M80 80h165M245 80l-45-35m45 35l-45 35" stroke="${accent}" stroke-width="14" stroke-linecap="round"/></g>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description"><title id="title">${svgEscape(page.title)}</title><desc id="description">Original ASB Training Hub illustration for ${svgEscape(page.title)}</desc><defs><linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="${dark}"/><stop offset=".62" stop-color="${middle}"/><stop offset="1" stop-color="${accent}"/></linearGradient><pattern id="grid" width="54" height="54" patternUnits="userSpaceOnUse"><path d="M54 0H0V54" fill="none" stroke="#fff" stroke-opacity=".055"/></pattern></defs><rect width="1600" height="900" fill="url(#bg)"/><rect width="1600" height="900" fill="url(#grid)"/><circle cx="${1370 - offset}" cy="${85 + offset}" r="260" fill="${accent}" fill-opacity=".15"/><path d="M0 770C330 ${690 + offset},580 855,920 745s510-70 680 20v135H0z" fill="#000" fill-opacity=".18"/><text x="110" y="190" fill="${accent}" font-family="Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="3">${label}</text>${title}<rect x="110" y="${650 + (seed % 28)}" width="520" height="3" fill="${accent}"/><text x="110" y="730" fill="#fff" fill-opacity=".86" font-family="Arial, sans-serif" font-size="23" letter-spacing="1">${svgEscape(context)}</text>${page.family === 'warehouse' ? warehouseGraphic : logisticsGraphic}<text x="1215" y="820" fill="#fff" font-family="Arial, sans-serif" font-size="23" font-weight="700">ASB TRAINING HUB</text></svg>`;
+};
+
+const generatedHeroRoot = path.join(rootDir, 'public/generated/logistics');
+for (const family of ['logistics', 'warehouse']) await mkdir(path.join(generatedHeroRoot, family), { recursive: true });
+for (let index = 0; index < seoLogisticsPages.length; index += 50) {
+  await Promise.all(seoLogisticsPages.slice(index, index + 50).map((page) => writeFile(
+    path.join(generatedHeroRoot, page.family, `${page.slug}.svg`), logisticsHeroSvg(page), 'utf8',
+  )));
+}
 const seoAiRoutes = ['agentic','generative'].map((family) => ({ loc: `/course-training/${family}/ai`, priority: '0.9', changefreq: 'weekly' })).concat(seoAiPages.map((page) => ({ loc: `/course-training/${page.family}/ai/${page.slug}`, priority: page.question ? '0.65' : '0.75', changefreq: 'monthly' })));
 const logisticsFamilies = {
   logistics: { segment: 'Diploma-in-Logistics-and-Supply-Chain-Management', primarySlug: 'diploma-in-logistics-and-supply-chain-management' },

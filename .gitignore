@@ -40,3 +40,6 @@ NUL
 # it dynamically so new blog posts appear without a rebuild). Committing it
 # guaranteed a merge conflict on every deploy.
 public/sitemap.xml
+
+# Per-keyword SVG hero illustrations are regenerated during every build.
+public/generated/logistics/

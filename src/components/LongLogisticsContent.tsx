@@ -34,6 +34,54 @@ const pageAngles = [
   'The final recommendation states its limits and the additional evidence needed before applying it to a larger operation.',
 ];
 
+const audiences = [
+  'a first-time learner building a foundation for an operations role',
+  'a graduate translating academic knowledge into workplace evidence',
+  'a working professional preparing for wider coordination responsibility',
+  'a career changer who needs a structured route into the sector',
+  'an operations employee strengthening documentation and analysis skills',
+  'a learner preparing to discuss practical decisions during interviews',
+];
+
+const scenarios = [
+  'an inbound shipment arriving with a quantity and document mismatch',
+  'a fast-moving item repeatedly reaching its reorder point too late',
+  'a dispatch plan affected by limited capacity and an urgent customer order',
+  'a warehouse zone showing avoidable travel and picking delays',
+  'a supplier delay that changes inventory and delivery priorities',
+  'a return that must be inspected, recorded and routed correctly',
+  'a stock count that differs from the system balance',
+  'a service complaint requiring traceability across several handovers',
+];
+
+const measures = [
+  'order accuracy, lead time and exception frequency',
+  'inventory accuracy, ageing and stock availability',
+  'receiving turnaround, put-away time and location accuracy',
+  'picking productivity, dispatch accuracy and on-time completion',
+  'transport utilisation, delivery reliability and service cost',
+  'damage rate, return reasons and corrective-action closure',
+];
+
+const deliverables = [
+  'a process map with control points and named responsibilities',
+  'a checked spreadsheet supported by assumptions and source notes',
+  'an exception report with evidence, root causes and corrective actions',
+  'a concise operations dashboard with definitions for every measure',
+  'a standard operating checklist tested against a realistic case',
+  'an improvement proposal that states costs, benefits, risks and limits',
+];
+
+const pagePlan = (props: Props) => {
+  const seed = hash(`${props.family}:${props.slug}:${props.intent}:${props.location || 'kerala'}`);
+  return {
+    audience: audiences[seed % audiences.length],
+    scenario: scenarios[Math.floor(seed / 7) % scenarios.length],
+    measures: measures[Math.floor(seed / 13) % measures.length],
+    deliverable: deliverables[Math.floor(seed / 19) % deliverables.length],
+  };
+};
+
 const intentText: Record<string, string> = {
   fees: 'For a fee-focused search, the page explains what to confirm before payment: tuition scope, assessment, certification conditions, materials, taxes and any optional charges.',
   admission: 'For admission planning, candidates should check eligibility, documents, start dates, seat availability and the exact syllabus before enrolling.',
@@ -69,7 +117,8 @@ const sections = [
 ];
 
 export default function LongLogisticsContent(props: Props) {
-  return <section className="section-padding bg-muted/20"><article className="container mx-auto max-w-4xl space-y-10 px-4">{sections.map(([heading, copy], index) => {
+  const plan = pagePlan(props);
+  return <section className="section-padding bg-muted/20"><article className="container mx-auto max-w-4xl space-y-10 px-4"><section><h2 className="text-2xl font-bold md:text-3xl">A learning plan shaped for {props.title}</h2><p className="mt-4 leading-8 text-muted-foreground">This page is designed for {plan.audience}. Its anchor exercise examines {plan.scenario}. Learners use {plan.measures} to judge the result and finish with {plan.deliverable}. {props.location ? `Examples are discussed in the context of learners exploring study options around ${props.location}, while the operating methods remain transferable across employers and regions.` : 'The exercise connects the search topic to a concrete decision, measurable evidence and a result that can be explained during assessment or interview preparation.'}</p></section>{sections.map(([heading, copy], index) => {
     const title = heading as string;
     const text = (copy as (p: Props) => string)(props);
     const suffix = index === 0 && props.location ? ` in ${props.location}` : '';
