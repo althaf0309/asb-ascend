@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { fetchBlog, type BlogPost } from '@/lib/api';
+import { fetchBlog, isNotFoundError, type BlogPost } from '@/lib/api';
 import InquiryForm from '@/components/InquiryForm';
 import { removeJsonLd, setJsonLd, setPageSeo } from '@/lib/seo';
 import { sanitizeBlogHtml } from '@/lib/sanitize';
@@ -30,6 +30,7 @@ const BlogDetail = () => {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
@@ -67,7 +68,11 @@ const BlogDetail = () => {
       })
       .catch((err) => {
         setError(err instanceof Error ? err.message : 'Blog not found.');
+        setNotFound(isNotFoundError(err));
         removeJsonLd('article');
+        // Only a confirmed 404 is noindexed; a rate limit or outage keeps the
+        // server-rendered robots tag so crawlers do not drop a live post.
+        if (!isNotFoundError(err)) return;
         setPageSeo({
           title: 'Blog Not Found | ASB Training Hub',
           description: 'The requested ASB Training Hub blog post could not be found.',
@@ -86,7 +91,7 @@ const BlogDetail = () => {
   if (error || !post) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center pt-24 px-4 text-center">
-        <h1 className="text-3xl font-bold font-heading mb-3">Blog not found</h1>
+        <h1 className="text-3xl font-bold font-heading mb-3">{notFound ? 'Blog not found' : 'This post could not load'}</h1>
         <p className="text-muted-foreground mb-6">{error || 'This post may have been removed.'}</p>
         <Link to="/blog" title="Back to ASB Training Hub blog" className="inline-flex self-center"><Button>Back to Blog</Button></Link>
       </main>

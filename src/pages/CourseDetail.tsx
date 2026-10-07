@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { courseCategories } from '@/data/courseCategories';
-import { fetchCourse, fetchCourseSummaries, type Course, type CourseSummary } from '@/lib/api';
+import { fetchCourse, fetchCourseSummaries, isNotFoundError, type Course, type CourseSummary } from '@/lib/api';
 import {
   CheckCircle, Clock, MapPin, Award, Users, ArrowRight, BookOpen, Briefcase,
   MessageCircle, Sparkles, Target, Layers, GraduationCap, Rocket, ShieldCheck,
@@ -23,12 +23,14 @@ const CourseDetail = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [related, setRelated] = useState<CourseSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
     let cancelled = false;
     setLoading(true);
     setCourse(null);
+    setNotFound(false);
 
     fetchCourse(slug)
       .then((data) => {
@@ -39,7 +41,7 @@ const CourseDetail = () => {
           if (!cancelled) setRelated(list.filter((c) => c.slug !== data.slug).slice(0, 3));
         });
       })
-      .catch(() => undefined)
+      .catch((error) => { if (!cancelled) setNotFound(isNotFoundError(error)); })
       .finally(() => { if (!cancelled) setLoading(false); });
 
     return () => { cancelled = true; };
@@ -48,6 +50,9 @@ const CourseDetail = () => {
   useEffect(() => {
     if (loading) return;
     if (!course) {
+      // Only a confirmed 404 is noindexed; a rate limit or outage keeps the
+      // server-rendered robots tag so crawlers do not drop a live page.
+      if (!notFound) return;
       setPageSeo({
         title: 'Course Not Found | ASB Training Hub',
         description: 'The requested ASB Training Hub course could not be found. Browse all ERP, AI, programming, management, and internship courses.',
@@ -56,7 +61,7 @@ const CourseDetail = () => {
         noindex: true,
       });
     }
-  }, [course, slug, loading]);
+  }, [course, slug, loading, notFound]);
 
   useEffect(() => {
     if (!course) return;
@@ -171,7 +176,7 @@ const CourseDetail = () => {
   if (!course) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center pt-24 pb-12 px-4 text-center">
-        <h1 className="text-3xl font-bold font-heading mb-3">Course not found</h1>
+        <h1 className="text-3xl font-bold font-heading mb-3">{notFound ? 'Course not found' : 'This course could not load'}</h1>
         <p className="text-muted-foreground mb-6">The course you're looking for may have been renamed.</p>
         <Link to="/courses" title="Browse all ASB Training Hub courses" className="inline-flex self-center"><Button>Browse all courses</Button></Link>
       </main>

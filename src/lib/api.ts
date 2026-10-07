@@ -146,17 +146,44 @@ export const submitApplication = (payload: ApplicationPayload) =>
 export const submitNewsletter = (payload: NewsletterPayload) =>
   submitPublicForm('/api/newsletters', payload);
 
+/** The API answered 404: the record does not exist, so the page may be noindexed. */
+export class NotFoundError extends Error {}
+
+export const isNotFoundError = (error: unknown): error is NotFoundError => error instanceof NotFoundError;
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * GET a single public record. Rate limits (429), server errors and network
+ * failures are retried, because crawlers render many pages from shared IPs and
+ * a transient failure must never be reported as a missing page.
+ */
+const fetchPublicRecord = async <T>(url: string, notFoundMessage: string): Promise<T> => {
+  const delays = [600, 1800, 4000];
+  for (let attempt = 0; ; attempt += 1) {
+    let response: Response | undefined;
+    try {
+      response = await fetch(url);
+    } catch (error) {
+      if (attempt >= delays.length) throw error;
+    }
+    if (response?.ok) return response.json();
+    if (response?.status === 404) throw new NotFoundError(notFoundMessage);
+    if (response && response.status !== 429 && response.status < 500) throw new Error(notFoundMessage);
+    if (attempt >= delays.length) throw new Error('Temporarily unable to load this page. Please try again.');
+    const retryAfter = Number(response?.headers.get('Retry-After'));
+    await wait(Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter * 1000, 5000) : delays[attempt]);
+  }
+};
+
 export const fetchBlogs = async (): Promise<BlogPost[]> => {
   const response = await fetch('/api/blogs');
   if (!response.ok) throw new Error('Unable to load blogs.');
   return response.json();
 };
 
-export const fetchBlog = async (slug: string): Promise<BlogPost> => {
-  const response = await fetch(`/api/blogs/${slug}`);
-  if (!response.ok) throw new Error('Blog not found.');
-  return response.json();
-};
+export const fetchBlog = (slug: string): Promise<BlogPost> =>
+  fetchPublicRecord(`/api/blogs/${encodeURIComponent(slug)}`, 'Blog not found.');
 
 export const adminLogin = async (username: string, password: string): Promise<string> => {
   const data = await submitJson('/api/admin/login', { username, password });
@@ -354,11 +381,8 @@ export const fetchCourseSummaries = async (category?: string): Promise<Catalogue
   return response.json();
 };
 
-export const fetchCourse = async (slug: string): Promise<CatalogueEntry> => {
-  const response = await fetch(`/api/courses/${slug}`);
-  if (!response.ok) throw new Error('Course not found.');
-  return response.json();
-};
+export const fetchCourse = (slug: string): Promise<CatalogueEntry> =>
+  fetchPublicRecord(`/api/courses/${encodeURIComponent(slug)}`, 'Course not found.');
 
 /* --- generic catalogue admin (serves both courses and training) --- */
 
@@ -433,11 +457,8 @@ export const fetchTrainingSummaries = async (category?: string): Promise<Catalog
   return response.json();
 };
 
-export const fetchTrainingProgramme = async (slug: string): Promise<CatalogueEntry> => {
-  const response = await fetch(`/api/training/${slug}`);
-  if (!response.ok) throw new Error('Training programme not found.');
-  return response.json();
-};
+export const fetchTrainingProgramme = (slug: string): Promise<CatalogueEntry> =>
+  fetchPublicRecord(`/api/training/${encodeURIComponent(slug)}`, 'Training programme not found.');
 
 /* --- names kept for existing callers ------------------------------ */
 

@@ -9,7 +9,7 @@ import SmartImage from '@/components/SmartImage';
 import InquiryForm from '@/components/InquiryForm';
 import { sanitizeBlogHtml } from '@/lib/sanitize';
 import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo, truncateForSerp } from '@/lib/seo';
-import { fetchTrainingProgramme, type CatalogueEntry } from '@/lib/api';
+import { fetchTrainingProgramme, isNotFoundError, type CatalogueEntry } from '@/lib/api';
 
 /** Renders one of the structured list sections, or nothing when it is empty. */
 const ListSection = ({
@@ -43,16 +43,18 @@ const TrainingDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [programme, setProgramme] = useState<CatalogueEntry | null>(null);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
     let cancelled = false;
     setLoading(true);
     setProgramme(null);
+    setNotFound(false);
 
     fetchTrainingProgramme(slug)
       .then((data) => { if (!cancelled) setProgramme(data); })
-      .catch(() => undefined)
+      .catch((error) => { if (!cancelled) setNotFound(isNotFoundError(error)); })
       .finally(() => { if (!cancelled) setLoading(false); });
 
     return () => { cancelled = true; };
@@ -62,6 +64,9 @@ const TrainingDetail = () => {
     if (loading) return;
 
     if (!programme) {
+      // Only a confirmed 404 is noindexed; a rate limit or outage keeps the
+      // server-rendered robots tag so crawlers do not drop a live page.
+      if (!notFound) return;
       setPageSeo({
         title: 'Programme Not Found | ASB Training Hub',
         description:
@@ -160,7 +165,7 @@ const TrainingDetail = () => {
       removeJsonLd('training-breadcrumb');
       removeJsonLd('training-faq');
     };
-  }, [programme, slug, loading]);
+  }, [programme, slug, loading, notFound]);
 
   if (loading) {
     return (
@@ -173,7 +178,7 @@ const TrainingDetail = () => {
   if (!programme) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center pt-24 pb-12 px-4 text-center">
-        <h1 className="text-3xl font-bold font-heading mb-3">Programme not found</h1>
+        <h1 className="text-3xl font-bold font-heading mb-3">{notFound ? 'Programme not found' : 'This programme could not load'}</h1>
         <p className="text-muted-foreground mb-6">This programme may have been renamed or retired.</p>
         <Link to="/training" title="Browse all training programmes" className="inline-flex self-center">
           <Button>Browse all programmes</Button>
