@@ -4,7 +4,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   DEFAULT_DESCRIPTION,
-  DEFAULT_KEYWORDS,
   SITE_NAME,
   SITE_URL,
   absoluteUrl,
@@ -98,7 +97,7 @@ describe("setPageSeo", () => {
 
     expect(document.title).toBe("Courses | ASB Training Hub");
     expect(meta("description")).toBe("Job-oriented ERP, AI and programming courses in Trivandrum.");
-    expect(meta("keywords")).toBe("erp courses");
+    expect(document.querySelector('meta[name="keywords"]')).toBeNull();
     expect(meta("robots")).toBe("index, follow");
     expect(canonical()).toBe(`${SITE_URL}/courses`);
 
@@ -113,10 +112,9 @@ describe("setPageSeo", () => {
     expect(meta("twitter:image")).toBe(`${SITE_URL}/site-logo.png`);
   });
 
-  it("falls back to the site defaults when description/keywords are omitted", () => {
+  it("falls back to the site default description when it is omitted", () => {
     setPageSeo({ title: "About", path: "/about" });
     expect(meta("description")).toBe(DEFAULT_DESCRIPTION);
-    expect(meta("keywords")).toBe(DEFAULT_KEYWORDS);
   });
 
   it("emits noindex,nofollow for private routes", () => {
@@ -142,7 +140,6 @@ describe("setPageSeo", () => {
 
     for (const selector of [
       'meta[name="description"]',
-      'meta[name="keywords"]',
       'meta[name="robots"]',
       'meta[property="og:title"]',
       'meta[property="og:url"]',

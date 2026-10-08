@@ -2,8 +2,6 @@ export const SITE_URL = 'https://www.asbtraininghub.com';
 export const SITE_NAME = 'ASB Training Hub';
 export const DEFAULT_DESCRIPTION =
   'ASB Training Hub in Trivandrum offers job-oriented ERP, programming, AI, management, and internship courses with practical training and placement support.';
-export const DEFAULT_KEYWORDS =
-  'ASB Training Hub, training institute Trivandrum, ERP courses Kerala, ERP training Trivandrum, AI training Kerala, programming courses Trivandrum, internship programs Kerala';
 
 /** Upper bound Google renders before truncating a SERP snippet. */
 const SERP_DESCRIPTION_MAX = 160;
@@ -112,13 +110,15 @@ export const setPageSeo = ({
   }
 
   const finalDescription = description || DEFAULT_DESCRIPTION;
-  const finalKeywords = keywords || DEFAULT_KEYWORDS;
   const canonical = absoluteUrl(path);
   const imageUrl = absoluteUrl(image);
 
   document.title = title;
   setMetaTag('description', finalDescription);
-  setMetaTag('keywords', finalKeywords);
+  // Search engines ignore meta keywords and it publishes the target terms, so
+  // the tag is removed; `keywords` stays in the signature for existing callers.
+  void keywords;
+  document.querySelectorAll('meta[name="keywords"]').forEach((tag) => tag.remove());
   setMetaTag('robots', noindex ? 'noindex, nofollow' : 'index, follow');
   setCanonical(canonical);
 
