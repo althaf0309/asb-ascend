@@ -532,10 +532,16 @@ const AdminBlog = () => {
                                 className={`mt-1 inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium ${
                                   submission.verification === 'turnstile'
                                     ? 'bg-green-500/10 text-green-700'
-                                    : 'bg-amber-500/10 text-amber-700'
+                                    : submission.verification === 'unverified'
+                                      ? 'bg-red-500/10 text-red-700'
+                                      : 'bg-amber-500/10 text-amber-700'
                                 }`}
                               >
-                                {submission.verification === 'turnstile' ? 'Challenge passed' : 'Spam screened'}
+                                {submission.verification === 'turnstile'
+                                  ? 'Challenge passed'
+                                  : submission.verification === 'unverified'
+                                    ? 'Not verified — check before calling'
+                                    : 'Spam screened'}
                               </span>
                             </td>
                             <td className="py-3 pr-3">

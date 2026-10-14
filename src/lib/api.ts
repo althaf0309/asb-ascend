@@ -49,7 +49,7 @@ export type AdminSubmission = {
   message?: string;
   ip?: string;
   userAgent?: string;
-  verification?: 'screened' | 'turnstile';
+  verification?: 'screened' | 'turnstile' | 'unverified';
 };
 
 export type BlogPost = {

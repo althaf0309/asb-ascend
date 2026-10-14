@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -27,10 +27,12 @@ const SCRIPT_ID = 'cloudflare-turnstile-script';
 const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKey = 0 }: Props) => {
   const fieldId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [humanConfirmed, setHumanConfirmed] = useState(false);
 
+  // Runs as soon as the form mounts. A manual "I am human" checkbox used to
+  // gate this, and visitors who skipped it submitted without a token, so
+  // their enquiries never reached the team.
   useEffect(() => {
-    if (!SITE_KEY || !containerRef.current || !humanConfirmed) return;
+    if (!SITE_KEY || !containerRef.current) return;
     let widgetId = '';
     let cancelled = false;
 
@@ -40,6 +42,8 @@ const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKe
         sitekey: SITE_KEY,
         theme: 'auto',
         size: 'flexible',
+        // Invisible unless Cloudflare needs the visitor to do something.
+        appearance: 'interaction-only',
         callback: (token: string) => onTokenChange(token),
         'expired-callback': () => onTokenChange(''),
         'error-callback': () => onTokenChange(''),
@@ -64,9 +68,7 @@ const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKe
       if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
       onTokenChange('');
     };
-  }, [onTokenChange, resetKey, humanConfirmed]);
-
-  useEffect(() => { setHumanConfirmed(false); }, [resetKey]);
+  }, [onTokenChange, resetKey]);
 
   return (
     <>
@@ -82,15 +84,7 @@ const SubmissionProtection = ({ website, onWebsiteChange, onTokenChange, resetKe
           onChange={(event) => onWebsiteChange(event.target.value)}
         />
       </div>
-      {SITE_KEY && (
-        <div className="space-y-3">
-          <label className="flex items-center gap-3 rounded-lg border border-border bg-background/60 p-3 text-sm cursor-pointer">
-            <input type="checkbox" checked={humanConfirmed} onChange={(event) => { setHumanConfirmed(event.target.checked); onTokenChange(''); }} className="h-5 w-5 accent-primary" />
-            <span>I am human — start verification</span>
-          </label>
-          {humanConfirmed && <div ref={containerRef} className="min-h-[65px] w-full max-w-full overflow-hidden" aria-label="Spam protection" />}
-        </div>
-      )}
+      {SITE_KEY && <div ref={containerRef} className="w-full max-w-full overflow-hidden" aria-label="Spam protection" />}
     </>
   );
 };
