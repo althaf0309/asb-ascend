@@ -10,6 +10,7 @@ import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo } from '@/lib/seo';
 import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
 import { locationImage } from '@/data/locationImages';
 
+import { highFetchPriority } from '@/lib/utils';
 const LocationCourse = () => {
   const { district, topic: topicSlug } = useParams<{ district: string; topic: string }>();
   const location = locationBySlug(district);
@@ -69,7 +70,7 @@ const LocationCourse = () => {
 
   return <main>
     <section className="relative min-h-[620px] pt-28 flex items-center overflow-hidden bg-foreground">
-      <picture className="absolute inset-0"><source media="(max-width: 640px)" srcSet={hero.small} /><img src={hero.large} alt={`${topic.shortName} students from ${location.name}`} className="h-full w-full object-cover" fetchPriority="high" /></picture>
+      <picture className="absolute inset-0"><source media="(max-width: 640px)" srcSet={hero.small} /><img src={hero.large} alt={`${topic.shortName} students from ${location.name}`} className="h-full w-full object-cover" {...highFetchPriority} /></picture>
       <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/25" />
       <div className="container mx-auto px-4 relative z-10 grid lg:grid-cols-[1.1fr_.9fr] gap-10 items-center py-12">
         <div className="text-white"><div className="flex items-center gap-2 text-orange-300 font-semibold"><MapPin className="h-5 w-5" />{location.name}, Kerala</div><h1 className="text-4xl md:text-6xl font-bold font-heading mt-4 mb-5">{title}</h1><p className="text-lg text-gray-200 leading-relaxed max-w-2xl">{topic.summary}</p><div className="flex items-center gap-2 mt-5 text-gray-300"><Monitor className="h-5 w-5 text-primary" />{location.delivery}</div></div>

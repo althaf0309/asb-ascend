@@ -7,6 +7,7 @@ import { setPageSeo, setJsonLd, removeJsonLd, absoluteUrl } from '@/lib/seo';
 import { locationImage } from '@/data/locationImages';
 import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
 
+import { highFetchPriority } from '@/lib/utils';
 const courseLinks = [
   { label: 'AI & Generative AI Courses', href: '/courses/ai' },
   { label: 'Programming Courses', href: '/courses/programming' },
@@ -47,7 +48,7 @@ const LocationDetail = () => {
     <section className="relative min-h-[600px] pt-28 flex items-center overflow-hidden bg-foreground">
       <picture className="absolute inset-0">
         <source media="(max-width: 640px)" srcSet={hero.small} />
-        <img src={hero.large} alt={`Students attending career training for ${location.name}`} className="h-full w-full object-cover" fetchPriority="high" />
+        <img src={hero.large} alt={`Students attending career training for ${location.name}`} className="h-full w-full object-cover" {...highFetchPriority} />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/20" />
       <div className="container mx-auto px-4 relative z-10 grid lg:grid-cols-[1.15fr_.85fr] gap-10 items-center py-12">

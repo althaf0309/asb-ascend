@@ -55,6 +55,11 @@ test("keyword pages show their course photo and unique illustration", async ({ p
   }
 });
 
+test("hero images carry the fetchpriority hint the browser needs for fast LCP", async ({ page }) => {
+  await page.goto("/course-training/Diploma-in-warehouse-Management/warehouse-course-in-kochi");
+  await expect(page.locator('img[src^="/images/"]').first()).toHaveAttribute("fetchpriority", "high");
+});
+
 test("course listing links through to a course detail page", async ({ page }) => {
   await page.goto("/courses/erp");
   const first = page.locator('main a[href^="/course/"]').first();

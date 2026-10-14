@@ -8,6 +8,7 @@ import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo, truncateForSerp } fro
 import { districtPath, localizedCoursePath, locationBySlug, topicForCategory, topicPath } from '@/data/locations';
 import { locationImage } from '@/data/locationImages';
 
+import { highFetchPriority } from '@/lib/utils';
 const LocationCourseDetail = () => {
   const { district, slug } = useParams<{ district: string; slug: string }>();
   const location = locationBySlug(district);
@@ -62,7 +63,7 @@ const LocationCourseDetail = () => {
 
   return <main className="bg-background">
     <section className="relative min-h-[570px] pt-28 flex items-center overflow-hidden bg-black">
-      <picture className="absolute inset-0"><source media="(max-width:640px)" srcSet={images.small} /><img src={images.large} alt={`${location.name} learning setting for ${course.title}`} className="h-full w-full object-cover" fetchPriority="high" /></picture>
+      <picture className="absolute inset-0"><source media="(max-width:640px)" srcSet={images.small} /><img src={images.large} alt={`${location.name} learning setting for ${course.title}`} className="h-full w-full object-cover" {...highFetchPriority} /></picture>
       <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/25" />
       <div className="container mx-auto px-4 py-14 relative z-10 grid lg:grid-cols-[1.2fr_.8fr] gap-10 items-center">
         <div className="text-white"><Link to={districtPath(location)} className="text-orange-300 font-semibold inline-flex items-center gap-2"><MapPin className="h-4 w-4" />Courses in {location.name}</Link><h1 className="text-4xl md:text-6xl font-bold font-heading my-5">{course.title} Course in {location.name}</h1><p className="text-lg text-gray-200 max-w-3xl">{course.description}</p><div className="flex flex-wrap gap-3 mt-6 text-sm"><span className="rounded-full bg-black/60 px-4 py-2 flex gap-2"><Clock className="h-4 w-4" />{course.duration}</span><span className="rounded-full bg-black/60 px-4 py-2 flex gap-2"><Monitor className="h-4 w-4" />{local ? course.mode : 'Live online'}</span><span className="rounded-full bg-black/60 px-4 py-2 flex gap-2"><Award className="h-4 w-4" />Certificate</span></div></div>

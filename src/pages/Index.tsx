@@ -22,6 +22,7 @@ import catAi from '@/assets/cat-ai.webp';
 import catManagement from '@/assets/cat-management.webp';
 import catInternship from '@/assets/cat-internship.webp';
 
+import { highFetchPriority } from '@/lib/utils';
 const categoryImages: Record<string, string> = {
   erp: catErp,
   programming: catProgramming,
@@ -78,7 +79,7 @@ function HeroAnimationFallback() {
         srcSet={srcSetFor(heroBg)}
         sizes="100vw"
         alt=""
-        fetchPriority="high"
+        {...highFetchPriority}
         decoding="async"
         title="ASB Training Hub career training animated background"
         className="hero-fallback-image absolute inset-0 h-full w-full object-cover"

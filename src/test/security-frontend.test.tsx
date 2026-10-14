@@ -183,7 +183,7 @@ describe("third-party and secret surface", () => {
   });
 
   it("declares a Content-Security-Policy, by header or meta tag", () => {
-    const confPath = path.resolve(root, "../deploy-nginx-asbtraininghub.conf");
+    const confPath = path.resolve(root, "deploy-nginx-asbtraininghub.conf");
     const conf = existsSync(confPath) ? readFileSync(confPath, "utf8") : "";
 
     const headerCsp = /add_header\s+Content-Security-Policy\s+"[^"]*default-src/i.test(conf);
@@ -225,7 +225,7 @@ describe("third-party and secret surface", () => {
 });
 
 describe("deployment configuration", () => {
-  const confPath = path.resolve(root, "../deploy-nginx-asbtraininghub.conf");
+  const confPath = path.resolve(root, "deploy-nginx-asbtraininghub.conf");
   const conf = existsSync(confPath) ? readFileSync(confPath, "utf8") : "";
 
   it("the nginx config exists", () => {

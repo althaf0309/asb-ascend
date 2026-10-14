@@ -2,6 +2,7 @@ import { useState, ImgHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 import { srcSetFor } from '@/lib/responsiveImages';
 
+import { highFetchPriority } from '@/lib/utils';
 interface SmartImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
@@ -113,7 +114,7 @@ const SmartImage = ({
           alt={alt}
           title={alt || undefined}
           loading={eager ? 'eager' : 'lazy'}
-          fetchPriority={eager ? 'high' : undefined}
+          {...(eager ? highFetchPriority : {})}
           decoding="async"
           onLoad={() => setLoaded(true)}
           onError={() => {
