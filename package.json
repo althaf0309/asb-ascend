@@ -18,7 +18,8 @@
     "test:pages": "vitest run src/test/pages.test.tsx",
     "test:e2e": "node e2e/build.mjs && playwright test",
     "test:e2e:only": "playwright test",
-    "test:all": "npm test && npm run test:e2e"
+    "test:all": "npm test && npm run test:e2e",
+    "check:live": "playwright test --config=e2e-live/playwright.live.config.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
