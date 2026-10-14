@@ -277,8 +277,8 @@ export default function Index() {
           <HeroVideo />
           <div className="hero-motion-layer" aria-hidden />
           <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/70 to-navy/90" />
-          <div className="absolute top-20 left-10 w-72 h-72 rounded-full bg-primary/10 blur-3xl animate-float" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-secondary/10 blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+          <div className="pointer-events-none absolute -top-4 -left-14 h-[26rem] w-[26rem] rounded-full animate-float will-change-transform" style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.12) 0%, transparent 65%)' }} />
+          <div className="pointer-events-none absolute -bottom-12 -right-14 h-[32rem] w-[32rem] rounded-full animate-float will-change-transform" style={{ background: 'radial-gradient(circle, hsl(var(--secondary) / 0.12) 0%, transparent 65%)', animationDelay: '1s' }} />
         </div>
         <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
           <div className="max-w-4xl mx-auto text-center">

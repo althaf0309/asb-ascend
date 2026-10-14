@@ -32,6 +32,12 @@
 
       (function () {
         var loaded = false;
+        // Runs work when the main thread is free, so it never delays the
+        // response to a tap or key press (Interaction to Next Paint).
+        function whenIdle(fn) {
+          if (window.requestIdleCallback) window.requestIdleCallback(fn, { timeout: 3000 });
+          else setTimeout(fn, 300);
+        }
         function loadAnalytics() {
           if (loaded) return;
           loaded = true;
@@ -46,19 +52,26 @@
           gtm.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-W7JXM8VD';
           document.head.appendChild(gtm);
 
-          // Microsoft Clarity (heatmaps and session recordings), project ywidbulkwe.
-          (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "ywidbulkwe");
+          // Microsoft Clarity (heatmaps and session recordings), project
+          // ywidbulkwe. It serialises the whole DOM when it starts, so it gets
+          // its own idle slot instead of running back to back with GTM.
+          whenIdle(function () {
+            (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "ywidbulkwe");
+          });
         }
 
         // Whichever comes first: the page settling, or the visitor doing
         // something. The interaction listeners matter for bounce tracking on
         // slow connections where load fires late.
+        // An interaction only schedules the load; doing it inside the input
+        // handler made the first tap wait for the scripts.
+        function scheduleAnalytics() { whenIdle(loadAnalytics); }
         ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (evt) {
-          window.addEventListener(evt, loadAnalytics, { once: true, passive: true });
+          window.addEventListener(evt, scheduleAnalytics, { once: true, passive: true });
         });
 
         if (document.readyState === 'complete') {

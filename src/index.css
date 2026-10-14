@@ -132,9 +132,11 @@
     backdrop-filter: blur(20px);
     border: 1px solid hsla(0, 0%, 100%, 0.1);
   }
+  /* No backdrop-filter: these cards sit on a flat dark gradient where a blur
+     is invisible, yet it made every repaint after a tap re-blur the area
+     behind each card (poor INP on the homepage and About page). */
   .glass-card {
     background: hsla(0, 0%, 100%, 0.08);
-    backdrop-filter: blur(16px);
     border: 1px solid hsla(0, 0%, 100%, 0.12);
   }
   .gradient-text {
