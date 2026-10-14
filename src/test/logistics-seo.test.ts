@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import pages from '@/data/seoLogisticsPages.json';
 import { logisticsPageHeroImage, logisticsPageImage, logisticsPagePath, movedLogisticsPages, type LogisticsSeoPage } from '@/data/logisticsSeo';
@@ -50,6 +50,17 @@ describe('logistics keyword landing pages', () => {
     const heroImages = (pages as LogisticsSeoPage[]).map(logisticsPageHeroImage);
     expect(new Set(heroImages).size).toBe(pages.length);
     expect(heroImages.every((image) => image.endsWith('.svg'))).toBe(true);
+  });
+
+  // Every illustration was once served with a bare "&" in its label, which
+  // made all 1,257 of them fail to decode in browsers.
+  const generatedDir = path.join(root, 'public/generated/logistics');
+  it.skipIf(!existsSync(generatedDir))('generates hero illustrations that browsers can decode', () => {
+    for (const page of pages as LogisticsSeoPage[]) {
+      const svg = readFileSync(path.join(root, 'public', logisticsPageHeroImage(page)), 'utf8');
+      const doc = new DOMParser().parseFromString(svg, 'image/svg+xml');
+      expect(doc.getElementsByTagName('parsererror').length, page.slug).toBe(0);
+    }
   });
 
   it('uses clean, crawlable slugs and complete page metadata', () => {

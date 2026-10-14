@@ -43,3 +43,8 @@ public/sitemap.xml
 
 # Per-keyword SVG hero illustrations are regenerated during every build.
 public/generated/logistics/
+
+# End-to-end test build and reports
+dist-e2e
+test-results
+playwright-report
