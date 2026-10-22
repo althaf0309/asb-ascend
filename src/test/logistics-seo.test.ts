@@ -61,7 +61,8 @@ describe('logistics keyword landing pages', () => {
       const doc = new DOMParser().parseFromString(svg, 'image/svg+xml');
       expect(doc.getElementsByTagName('parsererror').length, page.slug).toBe(0);
     }
-  });
+    // Parses 1,257 files; the 5s default is too tight on a busy machine.
+  }, 30_000);
 
   it('uses clean, crawlable slugs and complete page metadata', () => {
     for (const page of pages) {

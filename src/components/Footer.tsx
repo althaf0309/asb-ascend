@@ -211,7 +211,7 @@ const Footer = () => (
       </div>
     </div>
     <div className="border-t border-white/10 py-4 text-center text-xs text-gray-500">
-      Â© {new Date().getFullYear()} ASB Training Hub. All rights reserved. | Best Training Institute in Trivandrum, Kerala
+      © {new Date().getFullYear()} ASB Training Hub. All rights reserved. | Best Training Institute in Trivandrum, Kerala
     </div>
   </footer>
 );

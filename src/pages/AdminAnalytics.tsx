@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { BarChart3, Clock, Eye, FileDown, MessageCircle, MousePointerClick, Users } from 'lucide-react';
+import { BarChart3, Clock, Eye, FileDown, MapPin, MessageCircle, MousePointerClick, Send, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AdminNav from '@/components/admin/AdminNav';
 import { useAdminAuth } from '@/components/admin/useAdminAuth';
-import { fetchAdminAnalytics, type AnalyticsReport } from '@/lib/api';
+import { fetchAdminAnalytics, type AnalyticsClick, type AnalyticsReport } from '@/lib/api';
+import { escapeCsvCell } from '@/lib/csv';
 
 /** One headline number. Uses theme tokens so it stays legible in both themes. */
 const StatCard = ({
@@ -63,6 +64,55 @@ const CountList = ({ rows, className = '' }: { rows: [string, number][]; classNa
   );
 };
 
+
+/** Human names for the click channels the tracker records. */
+const CHANNEL_LABELS: Record<string, string> = {
+  whatsapp: 'WhatsApp', phone: 'Phone call', email: 'Email', maps: 'Google Maps', social: 'Social media',
+  form: 'Form button', navigation: 'Page link', external: 'External link', button: 'Other button', other: 'Other',
+};
+const channelName = (channel: string) => CHANNEL_LABELS[channel] || channel;
+const CONTACT = new Set(['whatsapp', 'phone', 'email']);
+
+const istTime = (iso: string) =>
+  new Date(iso).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+const downloadCsv = (name: string, rows: unknown[][]) => {
+  const csv = rows.map((r) => r.map(escapeCsvCell).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = `${name}-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+/** A plain table with a header row and an empty state. */
+const Table = ({ head, rows, empty = 'Nothing recorded yet.' }: { head: string[]; rows: React.ReactNode[][]; empty?: string }) => (
+  <div className="overflow-x-auto mt-4">
+    <table className="w-full text-sm">
+      <thead>
+        <tr className="text-left text-muted-foreground border-b border-border">
+          {head.map((h) => <th key={h} className="p-2 font-medium whitespace-nowrap">{h}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.length === 0 ? (
+          <tr><td colSpan={head.length} className="p-4 text-center text-muted-foreground">{empty}</td></tr>
+        ) : rows.map((cells, i) => (
+          <tr key={i} className="border-t border-border text-foreground align-top">
+            {cells.map((cell, j) => <td key={j} className="p-2">{cell}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+const ChannelBadge = ({ channel }: { channel: string }) => (
+  <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium whitespace-nowrap ${CONTACT.has(channel) ? 'bg-primary/15 text-primary' : 'bg-muted text-muted-foreground'}`}>
+    {channelName(channel)}
+  </span>
+);
+
 const AdminAnalytics = () => {
   const { token, loggingIn, login, logout, signedIn } = useAdminAuth();
   const [username, setUsername] = useState('');
@@ -73,6 +123,7 @@ const AdminAnalytics = () => {
   const iso = (date: Date) => date.toISOString().slice(0, 10);
   const [from, setFrom] = useState(() => iso(new Date(Date.now() - 29 * 86400000)));
   const [to, setTo] = useState(() => iso(new Date()));
+  const [channelFilter, setChannelFilter] = useState('contact');
 
   const load = useCallback(() => {
     if (!token) return;
@@ -127,36 +178,36 @@ const AdminAnalytics = () => {
     );
   }
 
-  const cards: [string, string, typeof Eye][] = data
+  const summary = data?.summary;
+  const cards: [string, string, typeof Eye][] = summary
     ? [
-        ['Page views', String(data.summary.pageViews), Eye],
-        ['Sessions', String(data.summary.sessions), Users],
-        ['Form submissions', String(data.summary.formSubmissions), MousePointerClick],
-        ['WhatsApp contacts', String(data.summary.directContacts || 0), MessageCircle],
-        ['Average time', `${data.summary.averageDurationSeconds}s`, Clock],
-        ['Average scroll', `${data.summary.averageScrollDepth}%`, BarChart3],
+        ['Visitors', String(summary.visitors ?? summary.sessions), Users],
+        ['Page views', String(summary.pageViews), Eye],
+        ['Contact clicks (WhatsApp, call, email)', `${summary.contactClicks ?? 0} by ${summary.contactVisitors ?? 0} people`, MessageCircle],
+        ['All clicks', `${summary.clicks ?? 0} by ${summary.uniqueClickers ?? 0} people`, MousePointerClick],
+        ['Form submissions', String(summary.formSubmissions), Send],
+        ['Average time / scroll', `${summary.averageDurationSeconds}s · ${summary.averageScrollDepth}%`, Clock],
       ]
     : [];
 
-  const exportCsv = () => {
-    if (!data) return;
-    const rows = [
-      ['Event', 'Page', 'Keyword', 'Source', 'Time', 'Scroll', 'IP', 'City', 'Email'],
-      ...data.recentEvents.map((e) => [
-        e.eventType, e.path, e.searchTerm || e.landingKeyword, e.source,
-        e.durationSeconds, e.scrollDepth, e.ip, e.city, e.email,
+  const filteredClicks: AnalyticsClick[] = (data?.clickLog || []).filter((c) =>
+    channelFilter === 'all' ? true : channelFilter === 'contact' ? CONTACT.has(c.channel) : c.channel === channelFilter,
+  );
+
+  const exportClicks = () =>
+    downloadCsv('asb-clicks', [
+      ['Time (IST)', 'Page', 'Clicked', 'App / type', 'Link', 'Where on page', 'Location', 'Device', 'Visitor', 'Click no.', 'IP'],
+      ...filteredClicks.map((c) => [istTime(c.createdAt), c.path, c.label, channelName(c.channel), c.target, c.placement, c.location, [c.device, c.os, c.browser].filter(Boolean).join(' / '), c.visitor, c.repeat, c.ip]),
+    ]);
+
+  const exportEvents = () =>
+    downloadCsv('asb-analytics', [
+      ['Event', 'Time (IST)', 'Page', 'Keyword', 'Source', 'Seconds', 'Scroll', 'Location', 'Device', 'IP', 'Email'],
+      ...(data?.recentEvents || []).map((e) => [
+        e.eventType, istTime(String(e.createdAt)), e.path, e.searchTerm || e.landingKeyword, e.source, e.durationSeconds, e.scrollDepth,
+        [e.city, e.region, e.country].filter(Boolean).join(', '), e.device, e.ip, e.email,
       ]),
-    ];
-    const csv = rows
-      .map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','))
-      .join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `asb-analytics-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  };
+    ]);
 
   return (
     <main className="min-h-screen pt-28 pb-16 px-4">
@@ -184,7 +235,7 @@ const AdminAnalytics = () => {
           <Button onClick={load} disabled={loading}>Apply timeframe</Button>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {cards.map(([label, value, Icon]) => (
             <StatCard key={label} label={label} value={value} icon={Icon} />
           ))}
@@ -192,16 +243,94 @@ const AdminAnalytics = () => {
 
         {data && (
           <>
-            <div className="grid lg:grid-cols-2 gap-6 mt-8">
+            <Panel
+              title="Contact clicks by app"
+              note="Total clicks, and how many different people clicked. A repeat is the same person clicking again; identical double-taps within 2 seconds are not counted."
+              className="mt-8"
+            >
+              <Table
+                head={['App / type', 'Total clicks', 'People', 'Repeat clicks', 'Last click']}
+                rows={data.channels.map((c) => [
+                  <ChannelBadge key="c" channel={c.channel} />, c.total, c.unique, c.repeats, c.last ? istTime(c.last) : '',
+                ])}
+              />
+            </Panel>
+
+            <div className="grid lg:grid-cols-2 gap-6 mt-6">
+              <Panel
+                title="Visitor locations"
+                note="City from the visitor's IP address, looked up on our own server. Mobile networks can place people in a nearby town."
+              >
+                <Table
+                  head={['Location', 'People', 'Page views', 'Contact clicks', 'Forms']}
+                  rows={data.locations.map((l) => [
+                    <span key="l" className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />{l.location}</span>,
+                    l.visitors, l.pageViews, l.contactClicks, l.formSubmissions,
+                  ])}
+                />
+              </Panel>
+
+              <Panel title="Most clicked">
+                <Table
+                  head={['Clicked', 'App / type', 'Total', 'People']}
+                  rows={data.topClicks.slice(0, 15).map((c) => [
+                    <span key="l" className="block max-w-[14rem] truncate" title={c.target}>{c.label || c.target || '(no label)'}</span>,
+                    <ChannelBadge key="c" channel={c.channel} />, c.total, c.unique,
+                  ])}
+                />
+              </Panel>
+            </div>
+
+            <Panel
+              title="Click log"
+              note="Every recorded click, newest first. Times are India Standard Time. Visitor is a short anonymous ID for the same browser."
+              className="mt-6"
+              action={
+                <div className="flex flex-wrap gap-2">
+                  <label className="sr-only" htmlFor="channel-filter">Show</label>
+                  <select
+                    id="channel-filter"
+                    value={channelFilter}
+                    onChange={(e) => setChannelFilter(e.target.value)}
+                    className="h-10 rounded-md border border-input bg-background px-2 text-sm text-foreground"
+                  >
+                    <option value="contact">WhatsApp, call and email</option>
+                    <option value="all">All clicks</option>
+                    {Object.keys(CHANNEL_LABELS).map((c) => <option key={c} value={c}>{channelName(c)}</option>)}
+                  </select>
+                  <Button onClick={exportClicks} variant="outline">
+                    <FileDown className="h-4 w-4 mr-2" aria-hidden /> Export clicks
+                  </Button>
+                </div>
+              }
+            >
+              <Table
+                head={['Time (IST)', 'Page', 'Clicked', 'App', 'Location', 'Device', 'Visitor']}
+                rows={filteredClicks.map((c) => [
+                  <span key="t" className="whitespace-nowrap">{istTime(c.createdAt)}</span>,
+                  <span key="p" className="block max-w-[12rem] truncate" title={c.path}>{c.path}</span>,
+                  <span key="l" className="block max-w-[12rem] truncate" title={c.target}>{c.label || c.target}</span>,
+                  <ChannelBadge key="c" channel={c.channel} />,
+                  c.location,
+                  [c.device, c.os].filter(Boolean).join(' · '),
+                  <span key="v" className="whitespace-nowrap">
+                    {c.visitor}
+                    {c.repeat > 1 && <span className="ml-1 rounded bg-muted px-1.5 text-[11px] text-muted-foreground">repeat #{c.repeat}</span>}
+                  </span>,
+                ])}
+                empty="No clicks of this kind in the selected dates."
+              />
+            </Panel>
+
+            <div className="grid lg:grid-cols-3 gap-6 mt-6">
               <Panel title="Top pages">
                 <CountList rows={data.topPages} />
               </Panel>
-
-              <Panel
-                title="Visitor locations"
-                note={'Uses location headers supplied by Cloudflare; “Unknown” appears when unavailable.'}
-              >
-                <CountList rows={data.locations} />
+              <Panel title="Traffic sources" note="Campaign tag, or the site the visitor came from.">
+                <CountList rows={data.sources} />
+              </Panel>
+              <Panel title="Devices">
+                <CountList rows={data.devices} />
               </Panel>
             </div>
 
@@ -210,56 +339,35 @@ const AdminAnalytics = () => {
               note="Exact terms appear for tagged campaigns or site searches. Organic Google visits use the landing-page topic because Google normally hides the query."
               className="mt-6"
             >
-              <CountList
-                rows={data.keywords}
-                className="grid md:grid-cols-2 gap-x-8 gap-y-3 mt-4"
-              />
+              <CountList rows={data.keywords} className="grid md:grid-cols-2 gap-x-8 gap-y-3 mt-4" />
             </Panel>
 
             <Panel
-              title="Recent activity and conversions"
+              title="Recent activity"
               className="mt-6"
               action={
-                <Button onClick={exportCsv} variant="outline">
+                <Button onClick={exportEvents} variant="outline">
                   <FileDown className="h-4 w-4 mr-2" aria-hidden /> Export CSV
                 </Button>
               }
             >
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm mt-5">
-                  <thead>
-                    <tr className="text-left text-muted-foreground border-b border-border">
-                      <th className="p-2 font-medium">Event</th>
-                      <th className="p-2 font-medium">Page</th>
-                      <th className="p-2 font-medium">Time</th>
-                      <th className="p-2 font-medium">Scroll</th>
-                      <th className="p-2 font-medium">IP / location</th>
-                      <th className="p-2 font-medium">Email</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.recentEvents.length === 0 ? (
-                      <tr>
-                        <td colSpan={6} className="p-4 text-center text-muted-foreground">
-                          No activity recorded yet.
-                        </td>
-                      </tr>
-                    ) : (
-                      data.recentEvents.map((e, i) => (
-                        <tr key={String(e.id || i)} className="border-t border-border text-foreground">
-                          <td className="p-2">{String(e.eventType || '')}</td>
-                          <td className="p-2 truncate max-w-[16rem]">{String(e.path || '')}</td>
-                          <td className="p-2">{String(e.durationSeconds || 0)}s</td>
-                          <td className="p-2">{String(e.scrollDepth || 0)}%</td>
-                          <td className="p-2">{String(e.ip || '')} {String(e.city || '')}</td>
-                          <td className="p-2">{String(e.email || '')}</td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
+              <Table
+                head={['Event', 'Time (IST)', 'Page', 'Seconds', 'Scroll', 'Location', 'Device']}
+                rows={data.recentEvents.map((e) => [
+                  String(e.eventType || ''),
+                  <span key="t" className="whitespace-nowrap">{istTime(String(e.createdAt))}</span>,
+                  <span key="p" className="block max-w-[14rem] truncate">{String(e.path || '')}</span>,
+                  `${e.durationSeconds || 0}s`, `${e.scrollDepth || 0}%`,
+                  [e.city, e.region, e.country].filter(Boolean).join(', ') || 'Unknown',
+                  String(e.device || ''),
+                ])}
+                empty="No activity recorded yet."
+              />
             </Panel>
+
+            <p className="mt-6 text-xs text-muted-foreground">
+              IP geolocation by <a className="underline" href="https://db-ip.com" target="_blank" rel="noopener noreferrer">DB-IP</a> (CC BY 4.0).
+            </p>
           </>
         )}
       </div>

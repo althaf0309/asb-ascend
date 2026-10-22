@@ -135,7 +135,31 @@ const submitPublicForm = async (path: string, payload: unknown) => {
   return data;
 };
 
-export type AnalyticsReport = { range:{from:string;to:string}; summary:{pageViews:number;sessions:number;formSubmissions:number;directContacts:number;averageScrollDepth:number;averageDurationSeconds:number}; topPages:[string,number][]; keywords:[string,number][]; sources:[string,number][]; locations:[string,number][]; submissions:Array<Record<string,unknown>>; recentEvents:Array<Record<string,unknown>> };
+/** Total clicks plus distinct visitors, so repeat clicks by one person are visible. */
+export type ClickTally = { total: number; unique: number; repeats: number; last: string };
+export type AnalyticsClick = {
+  id: string; createdAt: string; path: string; title?: string; label: string; target: string;
+  channel: string; placement?: string; location: string; device?: string; os?: string; browser?: string;
+  visitor: string; repeat: number; ip?: string;
+};
+export type AnalyticsReport = {
+  range: { from: string; to: string };
+  summary: {
+    pageViews: number; sessions: number; visitors: number; formSubmissions: number;
+    clicks: number; uniqueClickers: number; contactClicks: number; contactVisitors: number;
+    directContacts: number; averageScrollDepth: number; averageDurationSeconds: number;
+  };
+  channels: Array<ClickTally & { channel: string }>;
+  topClicks: Array<ClickTally & { channel: string; label: string; target: string }>;
+  locations: Array<{ location: string; visitors: number; pageViews: number; contactClicks: number; formSubmissions: number }>;
+  clickLog: AnalyticsClick[];
+  devices: [string, number][];
+  topPages: [string, number][];
+  keywords: [string, number][];
+  sources: [string, number][];
+  submissions: Array<Record<string, unknown>>;
+  recentEvents: Array<Record<string, unknown>>;
+};
 export const fetchAdminAnalytics = async (token:string,from?:string,to?:string):Promise<AnalyticsReport> => { const query=new URLSearchParams();if(from)query.set('from',from);if(to)query.set('to',to);const response=await fetch(`/api/admin/analytics?${query}`,{headers:authHeader(token),credentials:'same-origin'}); if(!response.ok) throw new Error('Unable to load analytics.'); return response.json(); };
 
 export const submitInquiry = (payload: InquiryPayload) => submitPublicForm('/api/inquiries', payload);

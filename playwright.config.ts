@@ -10,7 +10,9 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   fullyParallel: true,
   workers: 4,
-  retries: process.env.CI ? 1 : 0,
+  // One retry absorbs a slow response from the external Turnstile test script;
+  // a real failure fails twice, and a pass on retry is reported as "flaky".
+  retries: 1,
   reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]],
   use: {
     baseURL: "http://127.0.0.1:4173",
