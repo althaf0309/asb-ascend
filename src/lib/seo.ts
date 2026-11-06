@@ -3,6 +3,12 @@ export const SITE_NAME = 'ASB Training Hub';
 export const DEFAULT_DESCRIPTION =
   'ASB Training Hub in Trivandrum offers job-oriented ERP, programming, AI, management, and internship courses with practical training and placement support.';
 
+/** Keeps a keyword page's title inside what a search result shows. */
+export const seoPageTitle = (title: string) => {
+  const full = `${title} | ${SITE_NAME}`;
+  return full.length <= 60 ? full : `${title} | ASB`;
+};
+
 /** Upper bound Google renders before truncating a SERP snippet. */
 const SERP_DESCRIPTION_MAX = 160;
 

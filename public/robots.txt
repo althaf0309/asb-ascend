@@ -165,3 +165,5 @@ Sitemap: https://www.asbtraininghub.com/sitemap.xml
 
 # Machine-readable site summary for AI assistants:
 # https://www.asbtraininghub.com/llms.txt
+# Article feed:
+# https://www.asbtraininghub.com/feed.xml

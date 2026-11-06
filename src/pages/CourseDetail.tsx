@@ -11,6 +11,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import InquiryForm from '@/components/InquiryForm';
 
 import { getCourseImages } from '@/data/courseImages';
+import CourseAnswers from '@/components/CourseAnswers';
 import SmartImage from '@/components/SmartImage';
 import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo, truncateForSerp } from '@/lib/seo';
 import { sanitizeBlogHtml } from '@/lib/sanitize';
@@ -251,6 +252,8 @@ const CourseDetail = () => {
           </div>
         </div>
       </section>
+
+      <CourseAnswers path={`course/${course.slug}`} />
 
       <section className="section-padding">
         <div className="container mx-auto">

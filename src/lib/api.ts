@@ -405,6 +405,15 @@ export const fetchCourseSummaries = async (category?: string): Promise<Catalogue
   return response.json();
 };
 
+export type CourseAnswersData = {
+  facts: { label: string; value: string }[];
+  answers: { q: string; a: string }[];
+};
+
+/** Quick facts and answers for a page; `path` is "course/<slug>", "keyword/<family>/<slug>" or "ai/<family>/<slug>". */
+export const fetchCourseAnswers = (path: string): Promise<CourseAnswersData> =>
+  fetchPublicRecord(`/api/answers/${path}`, 'Answers not found.');
+
 export const fetchCourse = (slug: string): Promise<CatalogueEntry> =>
   fetchPublicRecord(`/api/courses/${encodeURIComponent(slug)}`, 'Course not found.');
 

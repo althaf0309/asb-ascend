@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(here, "..", "dist-e2e");
 const backendEntry = path.resolve(here, "..", "..", "backend", "src", "index.js");
-const port = Number(process.env.E2E_PORT || 4173);
+const port = Number(process.env.E2E_PORT || 4273);
 
 // Must be set before the backend module is imported: it reads env on load.
 process.env.DATA_DIR = await mkdtemp(path.join(tmpdir(), "asb-e2e-"));
