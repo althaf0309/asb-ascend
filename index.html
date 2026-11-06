@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Google tag (gtag.js). Kept in <head> because Search Console verifies site
-         ownership through it; Tag Manager below no longer loads G-1MSBPYNK3L. -->
+    <!-- Google tag (gtag.js). The only GA4 tag on the site, and kept in <head>
+         because Search Console verifies site ownership through it. -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-1MSBPYNK3L"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -52,10 +52,9 @@
           if (loaded) return;
           loaded = true;
 
-          // Only the GTM container is loaded here. It already configures
-          // G-1MSBPYNK3L (and G-NJCYZDHX8T), so the standalone gtag.js snippet
-          // that used to sit alongside it was fetching the same 168KB library
-          // for the same property a second time.
+          // The GTM container carries the Google Ads tag. GA4 is not in it: the
+          // gtag.js snippet at the top of <head> is the only thing that sends
+          // to G-1MSBPYNK3L, so adding GA4 back to GTM would double-count.
           window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
           var gtm = document.createElement('script');
           gtm.async = true;

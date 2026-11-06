@@ -7,6 +7,9 @@ test("pages send security headers with Clarity and GA4 allowed by the CSP", asyn
   expect(csp).toContain("https://www.clarity.ms");
   expect(csp).toMatch(/https:\/\/\*\.clarity\.ms/);
   expect(csp).toMatch(/https:\/\/\*\.google-analytics\.com/);
+  // The Google Ads tag in Tag Manager needs these or conversions are lost.
+  expect(csp).toContain("https://googleads.g.doubleclick.net");
+  expect(csp).toContain("https://ad.doubleclick.net");
   expect(headers["x-content-type-options"]).toBe("nosniff");
   // nginx owns HSTS in production; the backend must not duplicate it.
   expect(headers["strict-transport-security"]).toBeUndefined();
