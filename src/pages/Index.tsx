@@ -223,7 +223,7 @@ export default function Index() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'ASB Training Hub | ERP, ERP, AI & Programming Courses in Trivandrum',
+      title: 'ASB Training Hub | ERP, AI & Programming Courses in Trivandrum',
       description: 'Job-oriented ERP, AI, programming, management and internship courses near Technopark, Trivandrum, with practical training and placement support.',
       keywords: 'ASB Training Hub, best training institute Trivandrum, ERP training Trivandrum, ERP courses Kerala, AI training Trivandrum, programming courses Kerala, internship programs Trivandrum',
       path: '/',

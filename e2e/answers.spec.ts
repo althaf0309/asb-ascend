@@ -38,6 +38,12 @@ test("the homepage hero pauses when scrolled away", async ({ page }) => {
   await expect(hero).not.toHaveClass(/hero-offscreen/);
 });
 
+test("the homepage keeps a clean title after the page loads", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  await expect(page).toHaveTitle("ASB Training Hub | ERP, AI & Programming Courses in Trivandrum");
+});
+
 test("a course page shows its quick facts", async ({ page }) => {
   await page.goto("/course/warehouse-management");
   await expect(page.getByRole("heading", { name: "Quick facts" })).toBeVisible();
