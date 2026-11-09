@@ -37,12 +37,14 @@ export const useAnimatedCounter = (end: number, duration = 2000) => {
   useEffect(() => {
     if (!started) return;
     let start = 0;
-    const step = end / (duration / 16);
+    // Ten updates a second reads as counting; sixty only re-renders the page more.
+    const tick = 100;
+    const step = end / (duration / tick);
     const timer = setInterval(() => {
       start += step;
       if (start >= end) { setCount(end); clearInterval(timer); }
       else setCount(Math.floor(start));
-    }, 16);
+    }, tick);
     return () => clearInterval(timer);
   }, [started, end, duration]);
 

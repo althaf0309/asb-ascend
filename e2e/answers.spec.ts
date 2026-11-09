@@ -19,6 +19,25 @@ test("visitors see the same answers after the page loads", async ({ page }) => {
   await expect(page.locator(".citable-answer").first()).toContainText("learners in Kochi join through live-online batches");
 });
 
+test("the rendered page keeps the same search snippet the server sent", async ({ page, request }) => {
+  const html = await (await request.get(KEYWORD)).text();
+  const served = html.match(/<title>([^<]+)<\/title>/)![1];
+  await page.goto(KEYWORD);
+  await expect(page.locator(".citable-answer").first()).toBeVisible();
+  await expect(page).toHaveTitle(served);
+  expect(served).toContain("Warehouse Course in Kochi");
+});
+
+test("the homepage hero pauses when scrolled away", async ({ page }) => {
+  await page.goto("/");
+  const hero = page.locator("section").first();
+  await expect(hero).not.toHaveClass(/hero-offscreen/);
+  await page.evaluate(() => scrollTo(0, 3000));
+  await expect(hero).toHaveClass(/hero-offscreen/);
+  await page.evaluate(() => scrollTo(0, 0));
+  await expect(hero).not.toHaveClass(/hero-offscreen/);
+});
+
 test("a course page shows its quick facts", async ({ page }) => {
   await page.goto("/course/warehouse-management");
   await expect(page.getByRole("heading", { name: "Quick facts" })).toBeVisible();

@@ -9,6 +9,16 @@ export const seoPageTitle = (title: string) => {
   return full.length <= 60 ? full : `${title} | ASB`;
 };
 
+/** Applies the search snippet the server built, once it has loaded. */
+export const applySeoSnippet = ({ title, description }: { title: string; description: string }) => {
+  document.title = title;
+  setMetaTag('description', description);
+  setPropertyTag('og:title', title);
+  setPropertyTag('og:description', description);
+  setMetaTag('twitter:title', title);
+  setMetaTag('twitter:description', description);
+};
+
 /** Upper bound Google renders before truncating a SERP snippet. */
 const SERP_DESCRIPTION_MAX = 160;
 

@@ -5,16 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { courseCategories } from '@/data/courseCategories';
 import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { setPageSeo } from '@/lib/seo';
 
 import { getCourseImages } from '@/data/courseImages';
 import SmartImage from '@/components/SmartImage';
-
-const ScrollReveal = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
-  const { ref, isVisible } = useScrollReveal();
-  return <div ref={ref} className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`} style={{ transitionDelay: `${delay}ms` }}>{children}</div>;
-};
 
 const Courses = () => {
   const { category } = useParams<{ category?: string }>();
@@ -156,8 +150,8 @@ const Courses = () => {
             <div className="text-center py-16 text-muted-foreground">No courses found matching your search.</div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((course, i) => (
-                <ScrollReveal key={course.id} delay={(i % 6) * 80}>
+              {filtered.map((course) => (
+                <div key={course.id} className="cv-card">
                   <Link to={`/course/${course.slug}`} title={`${course.title} course | ASB Training Hub`} className="group block h-full">
                     <div className="rounded-2xl border border-border bg-card overflow-hidden hover-lift h-full flex flex-col">
                       <div className="h-36 relative overflow-hidden">
@@ -168,7 +162,7 @@ const Courses = () => {
                           wrapperClassName="absolute inset-0"
                           className="group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className={`absolute inset-0 bg-gradient-to-br ${courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary'} opacity-25 mix-blend-multiply pointer-events-none`} />
+                        <div className={`absolute inset-0 bg-gradient-to-br ${courseCategories.find(c => c.id === course.category)?.color || 'from-primary to-secondary'} opacity-25 pointer-events-none`} />
                         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-foreground/70 to-transparent pointer-events-none" />
                         {course.internship && <span className="absolute top-3 right-3 bg-green-700 text-white text-xs font-semibold px-2 py-1 rounded-full">Internship</span>}
                       </div>
@@ -183,7 +177,7 @@ const Courses = () => {
                       </div>
                     </div>
                   </Link>
-                </ScrollReveal>
+                </div>
               ))}
             </div>
           )}

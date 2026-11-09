@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { ArrowRight, BookOpen, Users, Award, Briefcase, Star, ChevronDown, Sparkles, Brain, Code2, GraduationCap, Database, CheckCircle, TrendingUp, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { courseCategories } from '@/data/courseCategories';
@@ -193,6 +193,24 @@ export default function Index() {
   // Fetched rather than bundled: the homepage shows whatever six courses the
   // admin currently has, and the 100KB catalogue no longer ships in the entry
   // chunk.
+  const heroRef = useRef<HTMLElement>(null);
+
+  // The hero's animations and video run for as long as they exist. Once it has
+  // scrolled away they only cost frames, so stop them until it returns.
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      hero.classList.toggle('hero-offscreen', !entry.isIntersecting);
+      hero.querySelectorAll('video').forEach((video) => {
+        if (entry.isIntersecting) video.play().catch(() => undefined);
+        else video.pause();
+      });
+    });
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
   const [popularCourses, setPopularCourses] = useState<CourseSummary[]>([]);
 
   useEffect(() => {
@@ -273,7 +291,7 @@ export default function Index() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <HeroVideo />
           <div className="hero-motion-layer" aria-hidden />
@@ -397,7 +415,7 @@ export default function Index() {
                       wrapperClassName="absolute inset-0"
                       className="group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 gradient-primary opacity-25 mix-blend-multiply pointer-events-none" />
+                    <div className="absolute inset-0 gradient-primary opacity-25 pointer-events-none" />
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-card/90 to-transparent pointer-events-none" />
                     <Code2 className="absolute inset-0 m-auto h-16 w-16 text-white/20" />
                     {course.internship && (

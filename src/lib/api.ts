@@ -408,6 +408,7 @@ export const fetchCourseSummaries = async (category?: string): Promise<Catalogue
 export type CourseAnswersData = {
   facts: { label: string; value: string }[];
   answers: { q: string; a: string }[];
+  seo?: { title: string; description: string };
 };
 
 /** Quick facts and answers for a page; `path` is "course/<slug>", "keyword/<family>/<slug>" or "ai/<family>/<slug>". */

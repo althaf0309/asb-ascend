@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchCourseAnswers, type CourseAnswersData } from '@/lib/api';
+import { applySeoSnippet } from '@/lib/seo';
 
 /**
  * Quick facts and direct answers for a course or keyword page. The text comes
@@ -13,7 +14,11 @@ const CourseAnswers = ({ path }: { path: string }) => {
     let cancelled = false;
     setData(null);
     fetchCourseAnswers(path)
-      .then((next) => { if (!cancelled) setData(next); })
+      .then((next) => {
+        if (cancelled) return;
+        setData(next);
+        if (next?.seo) applySeoSnippet(next.seo);
+      })
       .catch(() => undefined);
     return () => { cancelled = true; };
   }, [path]);

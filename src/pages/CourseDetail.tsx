@@ -200,7 +200,7 @@ const CourseDetail = () => {
           {/* Bottom-up depth gradient that blends into the stats strip */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/35" />
           {/* Subtle category color tint */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-25 mix-blend-overlay`} />
+          <div className={`absolute inset-0 bg-gradient-to-br ${catColor} opacity-25`} />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <Link to={`/courses/${course.category}`} title={`${course.categoryLabel} courses at ASB Training Hub`} className="text-white/90 hover:text-white text-sm mb-2 inline-flex items-center gap-1 [text-shadow:0_1px_3px_rgba(0,0,0,0.7)]">

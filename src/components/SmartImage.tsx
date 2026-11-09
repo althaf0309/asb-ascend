@@ -67,7 +67,8 @@ const SmartImage = ({
       )}
 
       {/* Blur-up placeholder */}
-      {blurSrc && !errored && (
+      {/* Removed once loaded: a blur left in place costs paint on every scroll. */}
+      {blurSrc && !errored && !loaded && (
         <img
           src={blurSrc}
           alt=""

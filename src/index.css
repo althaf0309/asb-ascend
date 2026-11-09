@@ -127,9 +127,10 @@
   .glass {
     @apply bg-white/10 backdrop-blur-xl border border-white/20;
   }
+  /* Solid rather than backdrop-blurred: this sits on the fixed navbar, where a
+     blur is recalculated for every frame of scrolling on every page. */
   .glass-dark {
-    background: hsla(20, 30%, 6%, 0.7);
-    backdrop-filter: blur(20px);
+    background: hsla(20, 30%, 6%, 0.96);
     border: 1px solid hsla(0, 0%, 100%, 0.1);
   }
   /* No backdrop-filter: these cards sit on a flat dark gradient where a blur
@@ -265,7 +266,29 @@
     background: linear-gradient(135deg, hsl(16 90% 45%), hsl(36 100% 55%));
   }
   .hover-lift {
-    @apply transition-all duration-300;
+    transition: transform 300ms, box-shadow 300ms;
+  }
+  /* Off-screen cards skip layout and paint until they are near the viewport. */
+  .cv-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 340px;
+  }
+  /* Animates opacity only, so the compositor does it without repainting. */
+  .whatsapp-glow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 34px hsla(142, 71%, 45%, 0.65);
+    opacity: 0;
+    pointer-events: none;
+    animation: whatsapp-glow 2s ease-in-out infinite;
+  }
+  /* Nothing in the hero needs to move once it has scrolled out of view. */
+  .hero-offscreen *,
+  .hero-offscreen *::before,
+  .hero-offscreen *::after {
+    animation-play-state: paused !important;
   }
   .hover-lift:hover {
     transform: translateY(-6px);
@@ -327,6 +350,10 @@
   .blog-content pre {
     @apply rounded-lg bg-muted p-4 overflow-auto my-5 text-sm;
   }
+}
+
+@keyframes whatsapp-glow {
+  50% { opacity: 1; }
 }
 
 @keyframes hero-motion-pan {
@@ -413,7 +440,8 @@
   .animate-fade-in,
   .animate-float,
   .animate-bounce,
-  .animate-pulse-glow {
+  .animate-pulse-glow,
+  .whatsapp-glow::after {
     opacity: 1 !important;
     transform: none !important;
   }
