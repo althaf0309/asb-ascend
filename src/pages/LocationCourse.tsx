@@ -6,7 +6,7 @@ import {
   districtPath, locationBySlug, locations, locationTopicBySlug, locationTopics,
   localizedCoursePath, topicKeywordsForLocation, topicPath,
 } from '@/data/locations';
-import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo } from '@/lib/seo';
+import { absoluteUrl, removeJsonLd, setJsonLd, setPageSeo, topicPageDescription, topicPageTitle } from '@/lib/seo';
 import { fetchCourseSummaries, type CourseSummary } from '@/lib/api';
 import { locationImage } from '@/data/locationImages';
 
@@ -39,9 +39,9 @@ const LocationCourse = () => {
     }
     const path = topicPath(location, topic);
     const title = `${topic.name} in ${location.name}`;
-    const description = `${topic.summary} Join from ${location.name} through ${location.delivery.toLowerCase()}.`;
+    const description = topicPageDescription(topic, location);
     const keywords = topicKeywordsForLocation(location, topic);
-    setPageSeo({ title: `${title} | ASB Training Hub`, description, keywords: keywords.join(', '), path, image: locationImage(location.slug).large });
+    setPageSeo({ title: topicPageTitle(topic, location), description, keywords: keywords.join(', '), path, image: locationImage(location.slug).large });
     setJsonLd('location-course-schema', [
       {
         '@context': 'https://schema.org', '@type': 'Course', name: title, description,

@@ -9,6 +9,48 @@ export const seoPageTitle = (title: string) => {
   return full.length <= 60 ? full : `${title} | ASB`;
 };
 
+// Mirrors guidePageSeo / keywordCoursePageSeo / topicPageDescription in the
+// backend's answers.js, so a page keeps the title and description the server sent.
+const fitFirst = (options: string[], limit: number) => options.find((o) => o.length <= limit) || options[options.length - 1];
+const COURSE_WORDS = /\b(course|courses|training|certification|program|programme|diploma|bootcamp|class|classes|internship)\b/i;
+
+export const guidePageSeo = (guide: { title: string; description: string; kind: string }) => {
+  if (guide.kind === 'question') {
+    const title = guide.title.replace(/\?$/, '');
+    return { title: fitFirst([`${title}? Quick Answer | ASB`, `${title}? Answered | ASB`, `${title} | ASB Guide`], 60), description: guide.description };
+  }
+  return {
+    title: fitFirst([`${guide.title} Guide | ${SITE_NAME}`, `${guide.title} Guide | ASB`], 60),
+    description: fitFirst([
+      `Guide to ${guide.title}: what it covers, who it suits and how to compare courses. From ASB Training Hub, Trivandrum.`,
+      `Guide to ${guide.title}: what it covers, who it suits and how to compare courses.`,
+    ], 155),
+  };
+};
+
+export const keywordCoursePageSeo = (item: { title: string; description: string }) => {
+  const options = COURSE_WORDS.test(item.title)
+    ? [`${item.title}: Modules & Projects | ASB`, `${item.title}: Syllabus | ASB`, `${item.title} Syllabus | ASB`]
+    : [`${item.title}: What You Will Learn | ASB`, `${item.title}: Skills & Projects | ASB`, `${item.title} Skills | ASB`];
+  return {
+    title: fitFirst(options, 60),
+    description: item.description,
+  };
+};
+
+export const topicPageTitle = (topic: { name: string }, location: { name: string; delivery: string }) => {
+  const how = /classroom/i.test(location.delivery) ? 'Classroom & Online' : 'Live Online';
+  const base = `${topic.name} in ${location.name}`;
+  return fitFirst([`${base}: ${how} | ASB`, `${base} (${how})`, `${base} | ASB`], 60);
+};
+
+export const topicPageDescription = (topic: { name: string }, location: { name: string; delivery: string }) =>
+  fitFirst([
+    `${topic.name} in ${location.name}: ${location.delivery.toLowerCase()} batches with guided projects and career support. Call +91 87147 73304.`,
+    `${topic.name} in ${location.name}: ${location.delivery.toLowerCase()} batches with guided projects and career support.`,
+    `${topic.name} in ${location.name}: ${/classroom/i.test(location.delivery) ? 'classroom and online' : 'live online'} batches with guided projects. Call +91 87147 73304.`,
+  ], 155);
+
 /** Applies the search snippet the server built, once it has loaded. */
 export const applySeoSnippet = ({ title, description }: { title: string; description: string }) => {
   document.title = title;
