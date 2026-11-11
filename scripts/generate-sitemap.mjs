@@ -74,6 +74,8 @@ const courses = (await readStore('courses.json', 'courses.seed.json')).filter(
 const aiGuides = JSON.parse(await readFile(path.join(rootDir, 'src/data/aiGuidePages.json'), 'utf8'));
 const seoAiPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoAiPages.json'), 'utf8'));
 const seoLogisticsPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoLogisticsPages.json'), 'utf8'));
+const seoPythonPages = JSON.parse(await readFile(path.join(rootDir, 'src/data/seoPythonPages.json'), 'utf8'));
+const { PYTHON_PRIMARY_SLUG, pythonPagePath, pythonTopic } = await import('../src/data/pythonContent.js');
 
 const svgEscape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 const hashText = (value) => [...value].reduce((total, character) => ((total * 31) + character.charCodeAt(0)) >>> 0, 7);
@@ -114,6 +116,31 @@ for (let index = 0; index < seoLogisticsPages.length; index += 50) {
     path.join(generatedHeroRoot, page.family, `${page.slug}.svg`), logisticsHeroSvg(page), 'utf8',
   )));
 }
+// Python pages get their own illustration: a code editor whose lines follow the page topic.
+const pythonCode = {
+  django: ['class Course(models.Model):', '    title = models.CharField()', 'urlpatterns = [path("api/", ...)]', 'Course.objects.filter(live=True)'],
+  fullstack: ['@app.route("/api/projects")', 'def projects(): return jsonify(rows)', 'fetch("/api/projects")', 'docker compose up --build'],
+  ai: ['import pandas as pd', 'data = pd.read_csv("marks.csv")', 'def predict(row): ...', 'return {"score": result}'],
+  beginner: ['name = input("Your name: ")', 'for day in range(1, 8):', '    print(f"Day {day}: practise")', 'marks = {"python": 90}'],
+  career: ['git checkout -b feature/login', 'def test_login(client): ...', 'pytest -q', 'git push origin feature/login'],
+  projects: ['class Order(models.Model): ...', 'def checkout(request): ...', 'async def chat(ws): ...', 'deploy: render.yaml'],
+  core: ['def greet(name: str) -> str:', '    return f"Hello, {name}"', 'class Student: ...', 'print(greet("Kerala"))'],
+};
+const pythonHeroSvg = (page) => {
+  const seed = hashText(`python:${page.slug}`);
+  const [dark, middle, accent] = palettes[seed % palettes.length];
+  const lines = wrapTitle(page.title, 26);
+  const context = page.location && page.location !== 'Kerala' ? `PYTHON COURSE GUIDE · ${page.location.toUpperCase()}` : `PYTHON ${page.question ? 'QUESTION' : page.intent.replace('-', ' ').toUpperCase()} GUIDE`;
+  const title = lines.map((line, index) => `<text x="110" y="${330 + (index * 72)}" fill="#fff" font-family="Arial, sans-serif" font-size="56" font-weight="700">${svgEscape(line)}</text>`).join('');
+  const code = pythonCode[pythonTopic(page.title)].map((line, index) => `<text x="40" y="${130 + index * 58}" fill="${index % 2 ? '#e2e8f0' : accent}" font-family="Consolas, monospace" font-size="24" xml:space="preserve">${svgEscape(line)}</text>`).join('');
+  const editor = `<g transform="translate(${930 + (seed % 60)} 215)"><rect width="520" height="400" rx="26" fill="#0b1220" fill-opacity=".82" stroke="#fff" stroke-opacity=".25"/><circle cx="40" cy="40" r="10" fill="#f87171"/><circle cx="72" cy="40" r="10" fill="#fbbf24"/><circle cx="104" cy="40" r="10" fill="#34d399"/>${code}<rect x="40" y="350" width="${120 + (seed % 200)}" height="12" rx="6" fill="${accent}" fill-opacity=".7"/></g>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description"><title id="title">${svgEscape(page.title)}</title><desc id="description">Original ASB Training Hub illustration for ${svgEscape(page.title)}</desc><defs><linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="${dark}"/><stop offset=".65" stop-color="${middle}"/><stop offset="1" stop-color="${dark}"/></linearGradient></defs><rect width="1600" height="900" fill="url(#bg)"/><text x="110" y="170" fill="${accent}" font-family="Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="3">PYTHON FULL STACK · ASB TRAINING HUB</text><text x="110" y="225" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="24" letter-spacing="2">${svgEscape(context)}</text>${title}${editor}<text x="110" y="800" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="26">Python · Django · Flask · REST APIs · PostgreSQL · React · Docker</text></svg>`;
+};
+const generatedPythonRoot = path.join(rootDir, 'public/generated/python');
+await mkdir(generatedPythonRoot, { recursive: true });
+await Promise.all(seoPythonPages.map((page) => writeFile(path.join(generatedPythonRoot, `${page.slug}.svg`), pythonHeroSvg(page), 'utf8')));
+const seoPythonRoutes = seoPythonPages.map((page) => ({ loc: pythonPagePath(page), priority: page.slug === PYTHON_PRIMARY_SLUG ? '0.9' : page.question ? '0.65' : '0.75', changefreq: page.slug === PYTHON_PRIMARY_SLUG ? 'weekly' : 'monthly' }));
+
 const seoAiRoutes = ['agentic','generative'].map((family) => ({ loc: `/course-training/${family}/ai`, priority: '0.9', changefreq: 'weekly' })).concat(seoAiPages.map((page) => ({ loc: `/course-training/${page.family}/ai/${page.slug}`, priority: page.question ? '0.65' : '0.75', changefreq: 'monthly' })));
 const logisticsFamilies = {
   logistics: { segment: 'Diploma-in-Logistics-and-Supply-Chain-Management', primarySlug: 'diploma-in-logistics-and-supply-chain-management' },
@@ -171,7 +198,7 @@ const blogRoutes = blogs.map((b) => ({
   lastmod: b.updatedAt ? b.updatedAt.slice(0, 10) : undefined,
 }));
 
-const urls = [...staticRoutes, ...aiLandingRoutes, ...aiGuideRoutes, ...keywordCourseRoutes, ...seoAiRoutes, ...seoLogisticsRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
+const urls = [...staticRoutes, ...aiLandingRoutes, ...aiGuideRoutes, ...keywordCourseRoutes, ...seoAiRoutes, ...seoLogisticsRoutes, ...seoPythonRoutes, ...locationRoutes, ...categoryRoutes, ...courseRoutes, ...localizedCourseRoutes, ...trainingRoutes, ...blogRoutes];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

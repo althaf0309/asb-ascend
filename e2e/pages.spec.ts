@@ -18,6 +18,8 @@ const pages: Array<[string, RegExp]> = [
   ["/course-training/Diploma-in-Logistics-and-Supply-Chain-Management", /Logistics/i],
   ["/course-training/Diploma-in-warehouse-Management/warehouse-course-in-kochi", /Warehouse course in Kochi/i],
   ["/course-training/logistics", /Logistics/i],
+  ["/course-training/python-full-stack", /Python full stack development course in Kerala/i],
+  ["/course-training/python-full-stack/python-course-in-kochi", /Python course in Kochi/i],
   ["/locations/kerala", /Kerala/i],
   ["/locations/kerala/kochi-ernakulam", /Kochi/i],
   ["/faq", /question/i],
@@ -80,6 +82,19 @@ test("blog listing links through to a post", async ({ page }) => {
 test("related keyword links navigate between logistics pages", async ({ page }) => {
   await page.goto("/course-training/Diploma-in-warehouse-Management/warehouse-course-in-kochi");
   const related = page.locator('aside a[href^="/course-training/"]').first();
+  const href = await related.getAttribute("href");
+  await related.click();
+  await expect(page).toHaveURL(new RegExp(`${href}$`));
+});
+
+test("python keyword pages show answers, their illustration and working related links", async ({ page }) => {
+  await page.goto("/course-training/python-full-stack/python-course-in-kochi");
+  await expect(page.locator("#quick-facts-heading")).toBeVisible();
+  await expect(page.getByText("Live online from Kochi").first()).toBeVisible();
+  const art = page.locator('figure img[src="/generated/python/python-course-in-kochi.svg"]');
+  await art.scrollIntoViewIfNeeded();
+  await expect.poll(() => art.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
+  const related = page.locator('aside a[href^="/course-training/python-full-stack/"]').first();
   const href = await related.getAttribute("href");
   await related.click();
   await expect(page).toHaveURL(new RegExp(`${href}$`));
